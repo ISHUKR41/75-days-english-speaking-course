@@ -67,6 +67,389 @@ const SECTIONS = [
   { key: "summary" as Section, icon: GraduationCap, label: "Summary", color: "text-teal-500", bg: "bg-teal-500/10" },
 ];
 
+// ============================================================
+// Content Generators for Days 2-75
+// These generate rich lesson content for any subtopic/day
+// Real Day 1 content comes from day-1-content.ts
+// ============================================================
+
+// Generate rich content for Day 2 (Self Introduction) subtopics
+function generateDay2Content(
+  subtopicId: string,
+  subtopicTitle: string
+): LessonContentType | null {
+  // Map of subtopic IDs to their specific content
+  // Returns a full LessonContent object tailored to Self Introduction
+  const day2ContentMap: Record<string, Partial<LessonContentType>> = {
+    // Subtopic: The Power of First Impressions
+    "d2-t1-s1": {
+      whyLearnThis: `First impressions are formed in just 7 seconds! When you meet someone for the first time — whether in an interview, at a party, in a meeting, or online — the way you introduce yourself determines how they will see you FOREVER.\n\nIn English, a strong introduction shows:\n• You are confident\n• You are professional\n• You can communicate clearly\n• You respect others\n\nThis skill is used EVERY DAY of your life. Mastering it will open doors in your career, social life, and relationships.`,
+      conceptExplanation: `A first impression includes THREE things:\n\n1. WORDS — What you say (your introduction)\n2. TONE — How you say it (confident, warm, clear)\n3. BODY LANGUAGE — How you look (eye contact, smile, posture)\n\nIn English, a good first impression starts with:\n• A greeting: "Hello!", "Hi!", "Good morning!"\n• Your name: "My name is..." or "I am..."\n• Something about yourself: your role, where you're from, why you're here\n\nExample:\n"Hello! I am Rahul Sharma. I am a software engineer from Bangalore. Nice to meet you!"`,
+      rules: [
+        { rule: "Always start with a greeting", explanation: "Never skip the greeting. 'Hello', 'Hi', or 'Good morning/afternoon' sets a positive tone.", example: "Hello! My name is Priya." },
+        { rule: "State your name clearly", explanation: "Speak slowly and clearly when saying your name so people remember it.", example: "My name is Arjun. Arjun Patel." },
+        { rule: "Add context", explanation: "Tell people one relevant fact about yourself — your job, city, or why you're meeting.", example: "I am from Mumbai. I work at TCS." },
+        { rule: "End with a social phrase", explanation: "Always end with 'Nice to meet you' or 'Pleased to meet you' to be polite.", example: "Nice to meet you!" },
+      ],
+      commonMistakes: [
+        { wrong: "I am Rahul from IT.", correct: "My name is Rahul and I work in IT.", explanation: "Always include your full name and use complete sentences." },
+        { wrong: "Nice meeting you. (said right after meeting)", correct: "Nice to meet you.", explanation: "Use 'Nice to meet you' when meeting for the FIRST time. 'Nice meeting you' is used when saying GOODBYE." },
+        { wrong: "I am doing the engineer.", correct: "I am an engineer.", explanation: "Do not use 'doing the' before job titles. Say 'I am a/an + job title'." },
+      ],
+      speakingTips: [
+        "Practice your name pronunciation clearly — say it slowly the first time",
+        "Maintain eye contact while introducing yourself — it shows confidence",
+        "Smile when you greet — it makes you seem approachable and friendly",
+        "Speak at a medium pace — not too fast, not too slow",
+        "Use your hands naturally — don't fold them or hide them",
+      ],
+      memoryTricks: [
+        "Remember: GHNA formula — Greeting + Hello + Name + About yourself",
+        "Think of introducing yourself like a MOVIE TRAILER — short, interesting, memorable",
+        "'Nice to MEET you' (first time) vs 'Nice MEETING you' (saying goodbye)",
+      ],
+      summary: [
+        "First impressions happen in 7 seconds — make them count",
+        "Always start with a greeting before your name",
+        "State your name clearly and add one relevant fact",
+        "End with 'Nice to meet you' to be polite",
+        "Confidence + Smile + Eye contact = Great first impression",
+      ],
+    },
+  };
+
+  // Get specific content for this subtopic ID if available
+  const specificContent = day2ContentMap[subtopicId];
+
+  // Build full content object with defaults for missing fields
+  return {
+    id: `day2-${subtopicId}`,
+    subtopicId,
+    whyLearnThis: specificContent?.whyLearnThis ?? `Learning "${subtopicTitle}" is essential for Day 2 of your 75-day English journey. Self Introduction is one of the most used English skills in daily life — from job interviews to meeting new friends, from office meetings to social gatherings. Mastering this topic will give you immediate confidence to communicate in English.`,
+    conceptExplanation: specificContent?.conceptExplanation ?? `"${subtopicTitle}" is a fundamental part of introducing yourself in English. This skill is used multiple times every day by professionals, students, and everyday people. Understanding how to use this correctly will make your English sound natural and confident.\n\nKey points:\n• Use clear, simple sentences\n• Speak at a comfortable pace\n• Be specific — give details, not vague statements\n• Practice until it feels natural`,
+    simpleExplanation: `Think of it like this: when you meet someone new, you want them to remember you. The best way is to say who you are, what you do, and one interesting thing about yourself. That is all! Keep it simple, clear, and friendly.`,
+    hindiExplanation: `"${subtopicTitle}" मतलब है खुद को अंग्रेजी में सही तरीके से पेश करना। यह skill रोज काम आती है — interview में, office में, नए लोगों से मिलने पर। इसे सीखने के बाद आप किसी से भी English में confidently बात कर पाएंगे। याद रखें: practice से ही fluency आती है!`,
+    rules: specificContent?.rules ?? [
+      { rule: "Use 'My name is...' or 'I am...'", explanation: "Both are correct. 'My name is' is slightly more formal.", example: "My name is Anjali. / I am Anjali." },
+      { rule: "Keep your introduction brief", explanation: "A good introduction is 3-5 sentences. Don't make it too long.", example: "Hi! I am Vikram. I am from Pune. I work as a teacher." },
+      { rule: "Use present tense for current facts", explanation: "Talk about what you do NOW using simple present tense.", example: "I live in Delhi. I work at Infosys." },
+    ],
+    commonMistakes: specificContent?.commonMistakes ?? [
+      { wrong: "I am from the India.", correct: "I am from India.", explanation: "Do not use 'the' before country names (India, USA, France)." },
+      { wrong: "My self is Raj.", correct: "My name is Raj. / I am Raj.", explanation: "'My self is' is incorrect. Use 'My name is' or 'I am'." },
+      { wrong: "I am doing job in IT.", correct: "I work in IT. / I am an IT professional.", explanation: "Don't say 'doing job'. Say 'I work in...' or 'I am a/an...'." },
+    ],
+    sentencePatterns: [
+      {
+        pattern: "Greeting + Name + Origin",
+        hindiPattern: "अभिवादन + नाम + स्थान",
+        examples: [
+          { english: "Hello! My name is Priya and I am from Chennai.", hindi: "नमस्ते! मेरा नाम प्रिया है और मैं चेन्नई से हूँ।" },
+          { english: "Hi! I am Rohan and I am from Jaipur.", hindi: "हाय! मैं रोहन हूँ और मैं जयपुर से हूँ।" },
+          { english: "Good morning! I am Sunita from Kolkata.", hindi: "शुभ प्रभात! मैं कोलकाता की सुनीता हूँ।" },
+        ],
+      },
+    ],
+    speakingTips: specificContent?.speakingTips ?? [
+      "Practice your introduction in front of a mirror every morning",
+      "Record yourself and listen back — you will notice areas to improve",
+      "Start slow and build speed as you get more confident",
+      "Focus on pronunciation of YOUR NAME — people need to hear it clearly",
+      "Always end with 'Nice to meet you' — it shows good manners",
+    ],
+    memoryTricks: specificContent?.memoryTricks ?? [
+      "Use the PINE formula: Profession + Introduction + Name + Extra detail",
+      "Think of your introduction as a tweet — keep it short and impactful",
+      "Practice 3 versions: 30 seconds (elevator), 1 minute (meeting), 2 minutes (interview)",
+    ],
+    professionalUsage: [
+      { situation: "Job Interview", english: "Good morning! I am Rahul Verma. I have 5 years of experience in software development at Wipro.", hindi: "शुभ प्रभात! मैं राहुल वर्मा हूँ। मुझे विप्रो में सॉफ्टवेयर डेवलपमेंट का 5 साल का अनुभव है।" },
+      { situation: "Business Meeting", english: "Hello everyone! I am Neha Singh, the project manager for this initiative.", hindi: "नमस्ते सभी! मैं नेहा सिंह हूँ, इस प्रोजेक्ट की प्रोजेक्ट मैनेजर।" },
+      { situation: "Conference", english: "Good afternoon! My name is Dr. Amit Shah. I specialize in data science and machine learning.", hindi: "शुभ अपराह्न! मेरा नाम डॉ. अमित शाह है। मैं डेटा साइंस और मशीन लर्निंग में विशेषज्ञ हूँ।" },
+    ],
+    dailyUsage: [
+      { situation: "Meeting a new neighbor", english: "Hi! I am Kavya. I just moved in next door. Nice to meet you!", hindi: "हाय! मैं काव्या हूँ। मैं अभी बगल में रहने आई हूँ। आपसे मिलकर खुशी हुई!" },
+      { situation: "Joining a new class", english: "Hello everyone! My name is Sanjay and I am new here. I hope we can be friends!", hindi: "नमस्ते सभी! मेरा नाम संजय है और मैं यहाँ नया हूँ। मुझे उम्मीद है हम दोस्त बन सकते हैं!" },
+    ],
+    officeUsage: [
+      { situation: "First day at work", english: "Good morning team! I am Divya Krishnan, your new marketing executive. I am excited to work with all of you!", hindi: "शुभ प्रभात टीम! मैं दिव्या कृष्णन हूँ, आपकी नई मार्केटिंग एक्जीक्यूटिव। मैं आप सभी के साथ काम करने के लिए उत्साहित हूँ!" },
+    ],
+    interviewUsage: [
+      { situation: "Classic 'Tell me about yourself'", english: "My name is Arun Kumar. I am a mechanical engineer with 3 years of experience. I am passionate about innovation and problem-solving. I am currently looking for growth opportunities in the manufacturing sector.", hindi: "मेरा नाम अरुण कुमार है। मैं 3 साल के अनुभव के साथ एक मैकेनिकल इंजीनियर हूँ।" },
+    ],
+    story: {
+      title: "Ravi's Big Day",
+      paragraphs: [
+        "Ravi was nervous. It was his first day at a new company in Mumbai. He did not know anyone.",
+        "When he walked into the office, everyone looked at him. His manager said, 'Please introduce yourself to the team.'",
+        "Ravi took a deep breath. He smiled and said, 'Good morning everyone! My name is Ravi Shankar. I am from Hyderabad. I have 2 years of experience in web development. I am very happy to join this wonderful team. I hope we can work well together!'",
+        "Everyone clapped. A colleague named Priya came to him and said, 'Great introduction, Ravi! Nice to meet you!'",
+        "Ravi smiled. His first impression was perfect. That day, he made five new friends.",
+      ],
+      moral: "A confident and clear introduction can open many doors. Practice it until it feels natural!",
+      keyWords: [
+        { word: "introduction", meaning: "presenting yourself to others" },
+        { word: "nervous", meaning: "feeling worried or anxious" },
+        { word: "confident", meaning: "feeling sure of yourself" },
+        { word: "impression", meaning: "the feeling someone gets about you" },
+      ],
+    },
+    essay: {
+      title: "Why Self Introduction is Important in English",
+      paragraphs: [
+        "Self introduction is one of the most basic and important skills in English communication. Every day, we meet new people — at work, in college, at events, and online.",
+        "A good self introduction tells others who you are, where you are from, what you do, and why you are there. It should be clear, confident, and friendly.",
+        "In professional settings like job interviews, a strong introduction can be the difference between getting hired and being rejected. Interviewers form opinions in the first 30 seconds.",
+        "The key to a great self introduction is practice. Prepare 2-3 versions of your introduction for different situations — formal, semi-formal, and casual.",
+      ],
+      keyPoints: [
+        "Self introduction = Name + Background + Purpose + Friendly close",
+        "Practice makes perfect — rehearse daily",
+        "Adapt your introduction to the situation (formal vs casual)",
+        "Always end with a polite phrase like 'Nice to meet you'",
+      ],
+    },
+    dialogue: {
+      title: "Two People Meeting at a Conference",
+      setting: "A professional conference in Delhi. Two professionals meet for the first time.",
+      lines: [
+        { speaker: "Amit", text: "Hello! I don't think we've met. I am Amit Gupta.", hindi: "नमस्ते! मुझे नहीं लगता हम मिले हैं। मैं अमित गुप्ता हूँ।" },
+        { speaker: "Neha", text: "Hi Amit! I am Neha Sharma. Nice to meet you!", hindi: "हाय अमित! मैं नेहा शर्मा हूँ। आपसे मिलकर खुशी हुई!" },
+        { speaker: "Amit", text: "Nice to meet you too, Neha! Are you from Delhi?", hindi: "मुझे भी खुशी हुई, नेहा! क्या आप दिल्ली से हैं?" },
+        { speaker: "Neha", text: "No, I am from Jaipur. I work as a digital marketing manager. What about you?", hindi: "नहीं, मैं जयपुर से हूँ। मैं डिजिटल मार्केटिंग मैनेजर के रूप में काम करती हूँ। आप?" },
+        { speaker: "Amit", text: "I am a software engineer from Bangalore. I am here to learn about the latest trends in AI.", hindi: "मैं बेंगलुरु से एक सॉफ्टवेयर इंजीनियर हूँ। मैं AI के नवीनतम रुझानों के बारे में जानने यहाँ आया हूँ।" },
+        { speaker: "Neha", text: "That's great! AI and marketing are becoming so connected these days.", hindi: "बहुत अच्छा! AI और मार्केटिंग आजकल बहुत जुड़े हुए हो रहे हैं।" },
+      ],
+      notes: [
+        "Use 'Nice to meet you' the FIRST time you meet someone",
+        "Ask follow-up questions to show interest",
+        "Share something relevant about yourself, not just your name",
+        "In professional settings, mention your job/role",
+      ],
+    },
+    summary: specificContent?.summary ?? [
+      `"${subtopicTitle}" is a key skill for English communication`,
+      "Practice your introduction until it feels natural and confident",
+      "Adapt your introduction for different situations (formal, casual, professional)",
+      "Always include: Greeting + Name + Background + Friendly close",
+      "End every introduction with 'Nice to meet you' or 'Pleased to meet you'",
+    ],
+  };
+}
+
+// ─── Generic Content Generator for Days 3-75 ─────────────────
+// Creates rich lesson content for any day/subtopic combination
+// Used as a fallback until specific content files are created
+function generateGenericContent(
+  subtopicId: string,
+  subtopicTitle: string,
+  dayNumber: number
+): LessonContentType | null {
+  // Get the day title from the days config data
+  const DAY_TITLES: Record<number, string> = {
+    3: "Imperative Sentence", 4: "Be Verb", 5: "Demonstrative Pronoun",
+    6: "Has / Have", 7: "Had", 8: "Will Have", 9: "Use of There",
+    10: "Revision + Practice", 11: "Use of Want", 12: "Use of Wanted",
+    13: "Use of Let", 14: "Use of Let's", 15: "Would Like To",
+    16: "Can", 17: "Should", 18: "May", 19: "Must", 20: "Revision",
+    21: "Used To", 22: "Could", 23: "Should Have", 24: "Must Have",
+    25: "Could Have", 26: "Would Have", 27: "May Have", 28: "Might Have",
+    29: "Will / Shall", 30: "Would + Ought To + Dare",
+  };
+  const dayTitle = DAY_TITLES[dayNumber] || subtopicTitle;
+
+  // Build comprehensive content for any topic
+  return {
+    id: `day${dayNumber}-${subtopicId}`,
+    subtopicId,
+    // Motivational opening about why this topic matters
+    whyLearnThis: `"${subtopicTitle}" is an essential part of Day ${dayNumber} of your 75-day English journey.\n\nUnderstanding "${dayTitle}" will help you:\n• Speak more naturally in conversations\n• Write correct English sentences\n• Build confidence in professional settings\n• Pass grammar tests and interviews\n• Communicate clearly with native speakers\n\nThis topic comes up EVERY DAY in real English communication. Master it today and you will use it for life!`,
+    // Full teacher-style explanation of the concept
+    conceptExplanation: `Let's learn "${subtopicTitle}" step by step.\n\nIn English, this concept is used to express specific ideas clearly. Think of it as a tool in your English toolkit — once you understand it, you will notice it everywhere: in books, movies, conversations, and emails.\n\nKey concepts:\n\n1. WHAT it is: The grammatical structure of "${subtopicTitle}"\n2. WHEN to use it: The situations where this applies\n3. HOW to form it: The exact pattern with subject, verb, and objects\n4. WHY it matters: Real-world examples from daily life\n\nLet's go through each concept with clear examples in both English and Hindi so you understand everything perfectly.`,
+    // Simplified explanation for beginners
+    simpleExplanation: `Think of "${subtopicTitle}" like this:\n\nJust like in Hindi we have specific ways to say things, English has its own patterns. "${subtopicTitle}" is the English way to express this idea. \n\nThe simple formula is:\nSubject + ${dayTitle} + Rest of sentence\n\nExample:\nHindi: मैं पढ़ना चाहता हूँ।\nEnglish: I want to read.\n\nOnce you see the pattern, it becomes easy!`,
+    // Hindi explanation for Indian learners
+    hindiExplanation: `"${subtopicTitle}" का मतलब है अंग्रेजी में एक खास तरीके से बात करना।\n\nयह structure use होता है जब आप "${dayTitle}" के बारे में बात करना चाहते हैं।\n\nमहत्वपूर्ण बात: ${dayTitle} को हिंदी में इस तरह समझें:\n• यह तब use होता है जब...\n• Formula है: Subject + ${dayTitle} + Object\n• Example: I ${dayTitle.toLowerCase()} reading. (मैं पढ़ ${dayTitle.toLowerCase()} करता हूँ।)\n\nयाद रखें: रोज practice करो और जल्दी याद हो जाएगा!`,
+    // Grammar rules
+    rules: [
+      {
+        rule: `Basic structure of ${subtopicTitle}`,
+        explanation: `The fundamental pattern for using "${subtopicTitle}" correctly in English sentences.`,
+        example: `Subject + ${dayTitle} + Object/Complement`,
+        exception: "Some irregular forms exist — these are covered in the examples below",
+      },
+      {
+        rule: "Use with different subjects",
+        explanation: "The structure changes slightly depending on whether we use I/You/We/They or He/She/It.",
+        example: "I/You/We/They + verb (base form) | He/She/It + verb + s/es",
+      },
+      {
+        rule: "Negative form",
+        explanation: "To make a negative sentence, add 'not' or 'don't/doesn't/didn't' before the main verb.",
+        example: "I do not want to go. / She does not like it. / They did not come.",
+      },
+      {
+        rule: "Question form",
+        explanation: "To make a question, move the auxiliary verb to the front of the sentence.",
+        example: "Do you want to go? / Does she like it? / Did they come?",
+      },
+    ],
+    // Common mistakes learners make
+    commonMistakes: [
+      {
+        wrong: "He don't know the answer.",
+        correct: "He doesn't know the answer.",
+        explanation: "With He/She/It, always use 'doesn't' (not 'don't') in present tense.",
+      },
+      {
+        wrong: "She is knowing him.",
+        correct: "She knows him.",
+        explanation: "State verbs like 'know', 'like', 'love', 'hate' are NOT used in continuous (-ing) form.",
+      },
+      {
+        wrong: "I am having a car.",
+        correct: "I have a car.",
+        explanation: "When 'have' shows possession (ownership), don't use -ing form. Only use 'having' for experiences like 'I am having lunch'.",
+      },
+      {
+        wrong: "Did you went there?",
+        correct: "Did you go there?",
+        explanation: "After 'did', always use the BASE form of the verb (go, not went).",
+      },
+    ],
+    // Sentence patterns with examples
+    sentencePatterns: [
+      {
+        pattern: "Positive sentence",
+        hindiPattern: "सकारात्मक वाक्य",
+        examples: [
+          { english: `I understand ${subtopicTitle} now.`, hindi: `मैं अब ${subtopicTitle} समझता/समझती हूँ।` },
+          { english: `She practices English every day.`, hindi: `वह हर दिन अंग्रेजी का अभ्यास करती है।` },
+          { english: `They speak English fluently.`, hindi: `वे धाराप्रवाह अंग्रेजी बोलते हैं।` },
+          { english: `We learn something new every day.`, hindi: `हम हर दिन कुछ नया सीखते हैं।` },
+          { english: `He works hard to improve his English.`, hindi: `वह अपनी अंग्रेजी सुधारने के लिए कड़ी मेहनत करता है।` },
+        ],
+      },
+      {
+        pattern: "Negative sentence",
+        hindiPattern: "नकारात्मक वाक्य",
+        examples: [
+          { english: `I don't understand this yet, but I will.`, hindi: `मैं अभी यह नहीं समझता, लेकिन समझूंगा।` },
+          { english: `She doesn't make this mistake anymore.`, hindi: `वह अब यह गलती नहीं करती।` },
+          { english: `They don't speak Hindi at the office.`, hindi: `वे ऑफिस में हिंदी नहीं बोलते।` },
+        ],
+      },
+      {
+        pattern: "Question sentence",
+        hindiPattern: "प्रश्नवाचक वाक्य",
+        examples: [
+          { english: `Do you understand this concept?`, hindi: `क्या आप यह concept समझते हैं?` },
+          { english: `Does she practice every day?`, hindi: `क्या वह हर दिन अभ्यास करती है?` },
+          { english: `How often do you speak English?`, hindi: `आप कितनी बार अंग्रेजी बोलते हैं?` },
+        ],
+      },
+    ],
+    // Speaking tips
+    speakingTips: [
+      `Practice "${subtopicTitle}" sentences out loud 5 times every morning`,
+      "Record yourself speaking and listen back to improve pronunciation",
+      "Use this pattern in real conversations today — even just one sentence",
+      "Write 5 original sentences using this pattern and read them aloud",
+      "Find this pattern in English songs, movies, or videos you watch",
+    ],
+    // Memory tricks
+    memoryTricks: [
+      `Remember the pattern: SUBJECT + ${dayTitle.toUpperCase()} + OBJECT`,
+      `Associate "${subtopicTitle}" with a real-life situation you face every day`,
+      "Create a song or rhyme using the pattern — music helps memory",
+      "Write the pattern on a sticky note and put it where you study",
+    ],
+    // Professional usage
+    professionalUsage: [
+      { situation: "Email writing", english: `I would like to discuss the ${subtopicTitle} guidelines in our next meeting.`, hindi: `मैं अगली मीटिंग में ${subtopicTitle} दिशानिर्देशों पर चर्चा करना चाहूंगा।` },
+      { situation: "Meeting", english: `Can you please explain how ${subtopicTitle} applies to our project?`, hindi: `क्या आप कृपया बता सकते हैं कि ${subtopicTitle} हमारे project पर कैसे लागू होता है?` },
+      { situation: "Presentation", english: `Today I will present three examples of ${subtopicTitle} in our industry.`, hindi: `आज मैं हमारे उद्योग में ${subtopicTitle} के तीन उदाहरण प्रस्तुत करूंगा।` },
+    ],
+    // Daily life usage
+    dailyUsage: [
+      { situation: "With friends", english: `Do you want to practice English together using ${subtopicTitle}?`, hindi: `क्या तुम ${subtopicTitle} का उपयोग करके मेरे साथ अंग्रेजी का अभ्यास करना चाहते हो?` },
+      { situation: "At home", english: `I am practicing ${subtopicTitle} sentences every day to improve my English.`, hindi: `मैं अपनी अंग्रेजी सुधारने के लिए हर दिन ${subtopicTitle} वाक्यों का अभ्यास कर रहा/रही हूँ।` },
+      { situation: "Shopping", english: `Could you please show me the English menu? I am learning ${subtopicTitle}.`, hindi: `क्या आप कृपया मुझे अंग्रेजी मेनू दिखा सकते हैं? मैं ${subtopicTitle} सीख रहा/रही हूँ।` },
+    ],
+    // Office usage
+    officeUsage: [
+      { situation: "Team briefing", english: `Good morning everyone! Today we will focus on ${subtopicTitle} to improve our communication.`, hindi: `शुभ प्रभात सभी! आज हम अपने communication को बेहतर बनाने के लिए ${subtopicTitle} पर ध्यान देंगे।` },
+      { situation: "Report writing", english: `The report clearly demonstrates the importance of ${subtopicTitle} in our workflow.`, hindi: `रिपोर्ट हमारे कार्यप्रवाह में ${subtopicTitle} के महत्व को स्पष्ट रूप से दर्शाती है।` },
+    ],
+    // Interview usage
+    interviewUsage: [
+      { situation: "Interview question about communication", english: `I always make sure to use correct grammar, including ${subtopicTitle}, when communicating with clients and colleagues.`, hindi: `मैं हमेशा सुनिश्चित करता/करती हूँ कि clients और colleagues के साथ communicate करते समय ${subtopicTitle} सहित सही grammar का उपयोग करूं।` },
+    ],
+    // Short story
+    story: {
+      title: `Riya Learns ${subtopicTitle}`,
+      paragraphs: [
+        `Riya was a young woman from a small town in India. She dreamed of working for a big company in a major city. But there was one problem — her English was not confident.`,
+        `One day, her teacher introduced her to the concept of "${subtopicTitle}". At first, it seemed difficult. But her teacher explained it with simple Hindi examples, and suddenly it made sense!`,
+        `Riya practiced "${subtopicTitle}" sentences every morning for 30 minutes. She wrote 10 sentences, spoke them aloud, and recorded herself. Within a week, she was using this structure naturally.`,
+        `Three months later, Riya went for a job interview at a top company. When the interviewer spoke to her in English, she answered confidently using everything she had learned — including "${subtopicTitle}".`,
+        `She got the job. When her friends asked her secret, she smiled: "Learn one thing at a time. Master it completely. Then move on."`,
+      ],
+      moral: `Master one concept at a time and practice it every day. Small steps lead to great destinations!`,
+      keyWords: [
+        { word: subtopicTitle.split(" ")[0], meaning: `The main concept of today's lesson` },
+        { word: "confident", meaning: "sure of yourself and your abilities" },
+        { word: "practice", meaning: "to do something repeatedly to get better" },
+        { word: "master", meaning: "to become an expert at something" },
+      ],
+    },
+    // Essay
+    essay: {
+      title: `The Importance of ${subtopicTitle} in English Communication`,
+      paragraphs: [
+        `English is the global language of communication, and mastering its grammar is essential for success. Among the many grammatical structures, "${subtopicTitle}" holds special importance.`,
+        `"${subtopicTitle}" is used in countless daily situations — from sending emails to attending meetings, from casual conversations to formal presentations. Understanding this structure allows speakers to express their thoughts clearly and precisely.`,
+        `For Indian learners of English, "${subtopicTitle}" can initially seem challenging because it may not have a direct equivalent in Hindi or regional languages. However, with practice and proper understanding, it becomes a natural part of speech.`,
+        `The key to mastering "${subtopicTitle}" is consistent practice. Write five sentences using this structure every day, speak them aloud, and try to use them in real conversations. Within weeks, it will become automatic.`,
+      ],
+      keyPoints: [
+        `"${subtopicTitle}" is essential for clear English communication`,
+        "Used in both formal and informal settings daily",
+        "Practice 5 original sentences every day",
+        "Look for this pattern in English media — movies, books, songs",
+        "Teaching others is the fastest way to master a concept",
+      ],
+    },
+    // Dialogue
+    dialogue: {
+      title: `Learning ${subtopicTitle} Together`,
+      setting: "Two students, Aryan and Pooja, are studying English together at a library.",
+      lines: [
+        { speaker: "Aryan", text: `Hey Pooja! I am really confused about "${subtopicTitle}". Can you help me?`, hindi: `हे पूजा! मैं "${subtopicTitle}" के बारे में बहुत confused हूँ। क्या तुम मेरी help कर सकती हो?` },
+        { speaker: "Pooja", text: `Of course! It is actually quite simple once you understand the pattern.`, hindi: `बिल्कुल! एक बार pattern समझने के बाद यह काफी simple है।` },
+        { speaker: "Aryan", text: `Really? Can you give me an example?`, hindi: `सच में? क्या तुम मुझे एक example दे सकती हो?` },
+        { speaker: "Pooja", text: `Sure! Let's start with something you do every day. Do you study English every day?`, hindi: `ज़रूर! चलो किसी ऐसी चीज़ से शुरू करते हैं जो तुम रोज करते हो। क्या तुम रोज अंग्रेजी पढ़ते हो?` },
+        { speaker: "Aryan", text: `Yes, I study English every day now! I understand the pattern!`, hindi: `हाँ, मैं अब रोज अंग्रेजी पढ़ता हूँ! मैं pattern समझ गया!` },
+        { speaker: "Pooja", text: `Perfect! That is exactly how "${subtopicTitle}" works. You are getting it!`, hindi: `बिल्कुल सही! यही है "${subtopicTitle}" का काम करने का तरीका। तुम समझ रहे हो!` },
+      ],
+      notes: [
+        "Studying with a partner makes learning faster and more fun",
+        "Use real examples from YOUR life to practice new grammar",
+        `"${subtopicTitle}" becomes natural with daily practice`,
+        "Don't be afraid to make mistakes — that's how you learn",
+      ],
+    },
+    // Summary
+    summary: [
+      `"${subtopicTitle}" is a key English grammar structure used in daily communication`,
+      "The basic pattern: Subject + Verb (correct form) + Object/Complement",
+      "Practice 5-10 sentences every day using this structure",
+      "Use it in real conversations, emails, and writing immediately",
+      `Day ${dayNumber} complete! You are one step closer to fluent English!`,
+    ],
+  };
+}
+
 // ─── Main Component ──────────────────────────────────────────
 export function LessonContent({
   dayNumber,
