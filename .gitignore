@@ -50,3 +50,16 @@ Thumbs.db
 .vercel
 coverage/
 .cache/
+
+# Database files (SQLite - local dev only)
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# Prisma generated client (regenerated via prisma generate)
+# Keep schema.prisma but ignore generated output
+apps/web/node_modules/
+
+# Next.js types
+next-env.d.ts
