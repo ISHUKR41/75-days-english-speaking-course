@@ -1,0 +1,424 @@
+// ============================================================
+// Database Seed - Seeds all 75 days of course content
+// Run: npx tsx prisma/seed.ts
+// ============================================================
+import { PrismaClient } from "@prisma/client";
+
+// Create a fresh Prisma client for seeding
+const prisma = new PrismaClient();
+
+// ─── All 75 days data ─────────────────────────────────────────
+const DAYS = [
+  { n: 1,  title: "Basic of English",                    emoji: "📚", isRevision: false, isMockTest: false, desc: "Start from zero. Learn the alphabet, parts of speech, and basic sentence structure." },
+  { n: 2,  title: "Self Introduction",                   emoji: "👋", isRevision: false, isMockTest: false, desc: "Introduce yourself confidently in any situation - casual, professional, or formal." },
+  { n: 3,  title: "Imperative Sentence",                 emoji: "💬", isRevision: false, isMockTest: false, desc: "Commands, requests, and instructions. Do this. Don't do that." },
+  { n: 4,  title: "Be Verb",                             emoji: "✅", isRevision: false, isMockTest: false, desc: "Master am, is, are, was, were and all their uses in every sentence." },
+  { n: 5,  title: "Demonstrative Pronoun",               emoji: "👆", isRevision: false, isMockTest: false, desc: "This, That, These, Those - pointing to things near and far." },
+  { n: 6,  title: "Has / Have",                          emoji: "✨", isRevision: false, isMockTest: false, desc: "Express possession and the present perfect tense with Has and Have." },
+  { n: 7,  title: "Had",                                 emoji: "📖", isRevision: false, isMockTest: false, desc: "Past possession and past perfect tense mastery." },
+  { n: 8,  title: "Will Have",                           emoji: "🔮", isRevision: false, isMockTest: false, desc: "Future perfect tense - actions that will be completed before a future time." },
+  { n: 9,  title: "Use of There",                        emoji: "📍", isRevision: false, isMockTest: false, desc: "There is, There are, There was, There were - existence statements." },
+  { n: 10, title: "Revision + Practice",                 emoji: "🔄", isRevision: true,  isMockTest: false, desc: "Comprehensive review of Days 1-9 with intensive speaking and writing practice." },
+  { n: 11, title: "Use of Want",                         emoji: "🎯", isRevision: false, isMockTest: false, desc: "Express desires, wishes, and needs using Want in the present tense." },
+  { n: 12, title: "Use of Wanted",                       emoji: "⏳", isRevision: false, isMockTest: false, desc: "Past desires - things you wanted but may or may not have gotten." },
+  { n: 13, title: "Use of Let",                          emoji: "🚀", isRevision: false, isMockTest: false, desc: "Allow, permit, and cause actions - Let him go. Let me help." },
+  { n: 14, title: "Use of Let's",                        emoji: "🌟", isRevision: false, isMockTest: false, desc: "Suggestions and invitations - Let's go, Let's try, Let's see." },
+  { n: 15, title: "Would Like To",                       emoji: "💫", isRevision: false, isMockTest: false, desc: "Polite requests and preferences - more formal than want." },
+  { n: 16, title: "Can",                                 emoji: "💪", isRevision: false, isMockTest: false, desc: "Ability, permission, and possibility - I can speak English." },
+  { n: 17, title: "Should",                              emoji: "🤔", isRevision: false, isMockTest: false, desc: "Advice, duty, and expectation - You should study daily." },
+  { n: 18, title: "May",                                 emoji: "🌈", isRevision: false, isMockTest: false, desc: "Permission and possibility - May I come in? It may rain." },
+  { n: 19, title: "Must",                                emoji: "⚡", isRevision: false, isMockTest: false, desc: "Strong necessity and obligation - You must complete this task." },
+  { n: 20, title: "Revision + Speaking Practice",        emoji: "🎤", isRevision: true,  isMockTest: false, desc: "Review modals Can, Should, May, Must with intensive speaking drills." },
+  { n: 21, title: "Used To",                             emoji: "🕰️", isRevision: false, isMockTest: false, desc: "Past habits and past states that no longer exist today." },
+  { n: 22, title: "Could",                               emoji: "💡", isRevision: false, isMockTest: false, desc: "Past ability, polite requests, and suggestions." },
+  { n: 23, title: "Should Have",                         emoji: "🏆", isRevision: false, isMockTest: false, desc: "Past regrets and criticisms - what should have happened." },
+  { n: 24, title: "Must Have",                           emoji: "💎", isRevision: false, isMockTest: false, desc: "Logical deduction about the past - It must have been him." },
+  { n: 25, title: "Could Have",                          emoji: "🌺", isRevision: false, isMockTest: false, desc: "Past possibilities that didn't actually happen." },
+  { n: 26, title: "Would Have",                          emoji: "🎪", isRevision: false, isMockTest: false, desc: "Hypothetical past - what would have happened if..." },
+  { n: 27, title: "May Have",                            emoji: "🔑", isRevision: false, isMockTest: false, desc: "Past possibility - It may have happened already." },
+  { n: 28, title: "Might Have",                          emoji: "❓", isRevision: false, isMockTest: false, desc: "Weaker past possibility - slight chance something happened." },
+  { n: 29, title: "Will / Shall",                        emoji: "⏰", isRevision: false, isMockTest: false, desc: "Future tense - predictions, promises, and planned actions." },
+  { n: 30, title: "Would + Ought To + Dare",             emoji: "🎲", isRevision: false, isMockTest: false, desc: "Advanced modal usage for professional communication." },
+  { n: 31, title: "Revision",                            emoji: "📝", isRevision: true,  isMockTest: false, desc: "Complete revision of all modal verbs with advanced practice." },
+  { n: 32, title: "Tenses Part 1",                       emoji: "⏱️", isRevision: false, isMockTest: false, desc: "Present Simple and Present Continuous - the two most used tenses." },
+  { n: 33, title: "Tenses Part 2",                       emoji: "📊", isRevision: false, isMockTest: false, desc: "Present Perfect and Present Perfect Continuous tenses." },
+  { n: 34, title: "Tenses Part 3",                       emoji: "🌍", isRevision: false, isMockTest: false, desc: "Past Simple, Past Continuous, Past Perfect tenses." },
+  { n: 35, title: "Tenses Part 4",                       emoji: "🎓", isRevision: false, isMockTest: false, desc: "Future tenses: will, going to, and future perfect." },
+  { n: 36, title: "Prepositions Part 1",                 emoji: "📌", isRevision: false, isMockTest: false, desc: "In, On, At, By, For, From - place and time prepositions." },
+  { n: 37, title: "Prepositions Part 2",                 emoji: "🔗", isRevision: false, isMockTest: false, desc: "With, About, Between, Among, Through - advanced prepositions." },
+  { n: 38, title: "Has To / Have To",                    emoji: "🛠️", isRevision: false, isMockTest: false, desc: "Obligation and necessity - I have to go. She has to study." },
+  { n: 39, title: "Had To / Will Have To",               emoji: "🔧", isRevision: false, isMockTest: false, desc: "Past and future obligations and necessities." },
+  { n: 40, title: "Make / Get",                          emoji: "🔨", isRevision: false, isMockTest: false, desc: "Causative verbs - make someone do, get something done." },
+  { n: 41, title: "Going To",                            emoji: "🎯", isRevision: false, isMockTest: false, desc: "Plans and intentions - I am going to study tonight." },
+  { n: 42, title: "About To",                            emoji: "🚀", isRevision: false, isMockTest: false, desc: "Immediate future - something about to happen very soon." },
+  { n: 43, title: "Want To / Wanted To",                 emoji: "💬", isRevision: false, isMockTest: false, desc: "Desires in present and past with To + verb structure." },
+  { n: 44, title: "Need To / Needed To",                 emoji: "🎭", isRevision: false, isMockTest: false, desc: "Necessity and requirement in present and past." },
+  { n: 45, title: "Fond Of",                             emoji: "❤️", isRevision: false, isMockTest: false, desc: "Expressing likes and strong interest - I am fond of reading." },
+  { n: 46, title: "Able To",                             emoji: "💪", isRevision: false, isMockTest: false, desc: "Ability in different tenses - I am/was/will be able to." },
+  { n: 47, title: "Conjunctions",                        emoji: "🔄", isRevision: false, isMockTest: false, desc: "Connecting words: And, But, Or, Because, Although, Unless..." },
+  { n: 48, title: "WH Words",                            emoji: "❓", isRevision: false, isMockTest: false, desc: "Question words: What, Where, When, Who, Why, Which, How." },
+  { n: 49, title: "Passive Voice Part 1",                emoji: "🗣️", isRevision: false, isMockTest: false, desc: "Converting active to passive - Present and Past tenses." },
+  { n: 50, title: "Passive Voice Part 2",                emoji: "🎤", isRevision: false, isMockTest: false, desc: "Advanced passive voice - all tenses and special structures." },
+  { n: 51, title: "Advance Level Sentences Part 1",      emoji: "🚀", isRevision: false, isMockTest: false, desc: "Complex and compound sentences for professional communication." },
+  { n: 52, title: "Advance Level Sentences Part 2",      emoji: "🌟", isRevision: false, isMockTest: false, desc: "Conditional sentences, relative clauses, and advanced patterns." },
+  { n: 53, title: "Verb List",                           emoji: "📋", isRevision: false, isMockTest: false, desc: "500+ essential verbs with all forms, meanings, and examples." },
+  { n: 54, title: "Idioms, Phrases & Proverbs",          emoji: "💡", isRevision: false, isMockTest: false, desc: "200+ idioms, common phrases, and powerful proverbs." },
+  { n: 55, title: "Important Vocabulary",                emoji: "📚", isRevision: false, isMockTest: false, desc: "Most frequently used words in professional and daily English." },
+  { n: 56, title: "Miscellaneous Vocabulary",            emoji: "🌈", isRevision: false, isMockTest: false, desc: "Essential nouns and adjectives for complete expression." },
+  { n: 57, title: "Stationery Vocabulary",               emoji: "📎", isRevision: false, isMockTest: false, desc: "Office supplies, writing materials, and stationery terms." },
+  { n: 58, title: "Foods Vocabulary & Tastes",           emoji: "🍎", isRevision: false, isMockTest: false, desc: "All food types, cooking methods, tastes, and restaurant vocabulary." },
+  { n: 59, title: "Relation & Weather Vocabulary",       emoji: "🌤️", isRevision: false, isMockTest: false, desc: "Family relationships, social terms, and all weather vocabulary." },
+  { n: 60, title: "Professions & Occupations",           emoji: "👔", isRevision: false, isMockTest: false, desc: "200+ job titles, work roles, and professional vocabulary." },
+  { n: 61, title: "Buildings, Worms & Insects",          emoji: "🏗️", isRevision: false, isMockTest: false, desc: "Architecture, construction, and nature vocabulary." },
+  { n: 62, title: "Flowers & Fruits Vocabulary",         emoji: "🌸", isRevision: false, isMockTest: false, desc: "Plants, flowers, fruits, and nature vocabulary." },
+  { n: 63, title: "Maths Vocabulary",                    emoji: "➕", isRevision: false, isMockTest: false, desc: "Numbers, calculations, shapes, and mathematics terms." },
+  { n: 64, title: "Body & Diseases Vocabulary",          emoji: "💊", isRevision: false, isMockTest: false, desc: "Human body parts, medical terms, and health vocabulary." },
+  { n: 65, title: "Industry Vocabulary",                 emoji: "🏭", isRevision: false, isMockTest: false, desc: "Manufacturing, business, and industry-specific terminology." },
+  { n: 66, title: "Colours & Judiciary Vocabulary",      emoji: "🎨", isRevision: false, isMockTest: false, desc: "Color names, shades, and legal or judiciary terms." },
+  { n: 67, title: "Birds & Astrology Vocabulary",        emoji: "🦅", isRevision: false, isMockTest: false, desc: "Bird names, astronomy, and astrology vocabulary." },
+  { n: 68, title: "Factory & Sports + Sound & Maths",   emoji: "⚽", isRevision: false, isMockTest: false, desc: "Industrial, sports, sound, and mathematical vocabulary." },
+  { n: 69, title: "Application Writing",                 emoji: "✍️", isRevision: false, isMockTest: false, desc: "Write professional applications for jobs, colleges, and government." },
+  { n: 70, title: "Letter Writing",                      emoji: "📬", isRevision: false, isMockTest: false, desc: "Formal and informal letters - structure, tone, and format." },
+  { n: 71, title: "E-mail Writing",                      emoji: "📧", isRevision: false, isMockTest: false, desc: "Professional email writing for workplace and formal communication." },
+  { n: 72, title: "Paragraph Writing",                   emoji: "📝", isRevision: false, isMockTest: false, desc: "How to write clear, structured, and effective paragraphs." },
+  { n: 73, title: "Notice Writing + Writing Skills",     emoji: "📢", isRevision: false, isMockTest: false, desc: "Official notices, circulars, and comprehensive writing practice." },
+  { n: 74, title: "Grammar + Vocabulary + Speaking",     emoji: "📚", isRevision: true,  isMockTest: false, desc: "Complete revision of all grammar, vocabulary, and speaking skills." },
+  { n: 75, title: "Complete Mock Test + Final Revision", emoji: "✅", isRevision: true,  isMockTest: true,  desc: "Final comprehensive exam covering all 75 days of learning." },
+];
+
+// Topics structure for Day 1 and Day 2 (full detail)
+// Other days get auto-generated topics
+const DAY_TOPICS: Record<number, Array<{
+  title: string; description: string; emoji: string; color: string; orderIndex: number;
+  subtopics: Array<{ title: string; description: string; emoji: string; orderIndex: number; estimatedMins: number }>;
+}>> = {
+  1: [
+    { title: "Why Learn English?", description: "Why English will change your life and career", emoji: "🌍", color: "#6272f1", orderIndex: 1,
+      subtopics: [
+        { title: "English - The Global Language", description: "Why English is the world's most important language", emoji: "🌐", orderIndex: 1, estimatedMins: 10 },
+        { title: "English in Your Career", description: "How fluent English boosts your job and salary", emoji: "💼", orderIndex: 2, estimatedMins: 10 },
+        { title: "How to Learn English Fast", description: "Proven techniques to learn English quickly", emoji: "⚡", orderIndex: 3, estimatedMins: 10 },
+      ]
+    },
+    { title: "The English Alphabet", description: "Master all 26 letters with sounds and pronunciation", emoji: "🔤", color: "#8b5cf6", orderIndex: 2,
+      subtopics: [
+        { title: "Vowels: A, E, I, O, U", description: "The five most important letters in English", emoji: "🗣️", orderIndex: 1, estimatedMins: 15 },
+        { title: "Consonants and Their Sounds", description: "All 21 consonants with correct pronunciation", emoji: "📢", orderIndex: 2, estimatedMins: 20 },
+        { title: "Capital vs Lowercase Letters", description: "When to use capital letters - rules and examples", emoji: "⬆️", orderIndex: 3, estimatedMins: 10 },
+      ]
+    },
+    { title: "Parts of Speech Overview", description: "The 8 building blocks of every English sentence", emoji: "🧩", color: "#ec4899", orderIndex: 3,
+      subtopics: [
+        { title: "Nouns - Names of Everything", description: "Types of nouns and how to use them", emoji: "🏠", orderIndex: 1, estimatedMins: 20 },
+        { title: "Verbs - Action Words", description: "Action verbs, helping verbs, and linking verbs", emoji: "🏃", orderIndex: 2, estimatedMins: 20 },
+        { title: "Adjectives - Describing Words", description: "How to use adjectives to describe nouns", emoji: "🎨", orderIndex: 3, estimatedMins: 15 },
+        { title: "Adverbs, Pronouns & More", description: "The remaining parts of speech explained", emoji: "⚡", orderIndex: 4, estimatedMins: 15 },
+      ]
+    },
+    { title: "Basic Sentence Structure", description: "How every English sentence is built", emoji: "🏗️", color: "#10b981", orderIndex: 4,
+      subtopics: [
+        { title: "Subject + Verb + Object (SVO)", description: "The fundamental pattern of English sentences", emoji: "📐", orderIndex: 1, estimatedMins: 20 },
+        { title: "Positive Sentences", description: "How to make basic affirmative sentences", emoji: "✅", orderIndex: 2, estimatedMins: 15 },
+        { title: "Negative Sentences", description: "Adding NOT to make negative sentences correctly", emoji: "❌", orderIndex: 3, estimatedMins: 15 },
+        { title: "Question Sentences", description: "How to form questions in English", emoji: "❓", orderIndex: 4, estimatedMins: 20 },
+      ]
+    },
+    { title: "Punctuation Basics", description: "Marks that give meaning to sentences", emoji: "✍️", color: "#f59e0b", orderIndex: 5,
+      subtopics: [
+        { title: "Full Stop, Comma, Question Mark", description: "The three most important punctuation marks", emoji: "📌", orderIndex: 1, estimatedMins: 15 },
+        { title: "Exclamation, Apostrophe & More", description: "Express emotion and show possession correctly", emoji: "❗", orderIndex: 2, estimatedMins: 10 },
+      ]
+    },
+  ],
+  2: [
+    { title: "Why Self Introduction Matters", description: "First impressions and why introduction is crucial", emoji: "💡", color: "#6272f1", orderIndex: 1,
+      subtopics: [
+        { title: "The Power of First Impressions", description: "How your introduction shapes how others see you", emoji: "⚡", orderIndex: 1, estimatedMins: 8 },
+        { title: "Introduction in Different Situations", description: "Work, college, parties, and interview introductions", emoji: "🎭", orderIndex: 2, estimatedMins: 12 },
+      ]
+    },
+    { title: "Basic Self Introduction", description: "The standard Hello, My name is... formula", emoji: "🤝", color: "#8b5cf6", orderIndex: 2,
+      subtopics: [
+        { title: "My Name Is... - Basic Formula", description: "The most universal way to introduce yourself", emoji: "📛", orderIndex: 1, estimatedMins: 15 },
+        { title: "Telling Your Age and Origin", description: "I am 25 years old. I am from Mumbai.", emoji: "📍", orderIndex: 2, estimatedMins: 15 },
+        { title: "Talking About Your Education", description: "I studied in... I completed my degree in...", emoji: "🎓", orderIndex: 3, estimatedMins: 15 },
+        { title: "Talking About Your Profession", description: "I work as... I am a software engineer at...", emoji: "💼", orderIndex: 4, estimatedMins: 15 },
+        { title: "Hobbies & Interests", description: "In my free time, I love... My hobbies include...", emoji: "🎨", orderIndex: 5, estimatedMins: 15 },
+      ]
+    },
+    { title: "Professional Introduction", description: "Introductions in interviews, meetings, and office", emoji: "👔", color: "#ec4899", orderIndex: 3,
+      subtopics: [
+        { title: "Job Interview Introduction", description: "Tell me about yourself - the perfect answer", emoji: "🎤", orderIndex: 1, estimatedMins: 20 },
+        { title: "Meeting Introduction at Office", description: "How to introduce yourself to a new team", emoji: "🏢", orderIndex: 2, estimatedMins: 15 },
+        { title: "Email Introduction", description: "How to introduce yourself via email professionally", emoji: "📧", orderIndex: 3, estimatedMins: 15 },
+      ]
+    },
+    { title: "Responding to Introductions", description: "What to say when others introduce themselves", emoji: "💬", color: "#10b981", orderIndex: 4,
+      subtopics: [
+        { title: "Nice to Meet You Phrases", description: "All variations: Nice to meet you, Glad to meet you...", emoji: "😊", orderIndex: 1, estimatedMins: 15 },
+        { title: "Asking Follow-up Questions", description: "How to keep the conversation going", emoji: "❓", orderIndex: 2, estimatedMins: 15 },
+        { title: "Formal vs Informal Greetings", description: "When to use formal and informal language", emoji: "🎭", orderIndex: 3, estimatedMins: 15 },
+      ]
+    },
+    { title: "Personal Pronouns in Introduction", description: "I, you, he, she, we, they - using them correctly", emoji: "👤", color: "#f59e0b", orderIndex: 5,
+      subtopics: [
+        { title: "Subject Pronouns: I, You, He, She", description: "Basic pronouns and when to use each one", emoji: "👥", orderIndex: 1, estimatedMins: 20 },
+        { title: "Possessive Pronouns: My, Your, His, Her", description: "Show ownership - My name, His job, Her hobby", emoji: "🏷️", orderIndex: 2, estimatedMins: 15 },
+        { title: "Common Pronoun Mistakes", description: "He vs She, I vs Me, Their vs There explained", emoji: "⚠️", orderIndex: 3, estimatedMins: 15 },
+      ]
+    },
+  ],
+};
+
+// Day 1 vocabulary (40 words, full detail)
+const DAY1_VOCAB = [
+  { word: "Ability", meaning: "The skill or power to do something", hindiMeaning: "योग्यता, क्षमता", ipa: "/əˈbɪlɪti/", partOfSpeech: "noun", difficulty: "BEGINNER", example1: "She has the ability to speak three languages.", example2: "My ability to draw improved after practice.", example3: "Everyone has the ability to learn English.", synonyms: JSON.stringify(["skill","talent","capability"]), antonyms: JSON.stringify(["inability","weakness"]) },
+  { word: "Accomplish", meaning: "To successfully complete or achieve something", hindiMeaning: "पूरा करना, हासिल करना", ipa: "/əˈkʌmplɪʃ/", partOfSpeech: "verb", difficulty: "BEGINNER", example1: "She accomplished all her goals.", example2: "We accomplish great things together.", example3: "He accomplished the task in two hours.", synonyms: JSON.stringify(["achieve","complete","fulfill"]), antonyms: JSON.stringify(["fail","abandon"]) },
+  { word: "Accurate", meaning: "Correct, exact, and without mistakes", hindiMeaning: "सटीक, बिल्कुल सही", ipa: "/ˈækjərɪt/", partOfSpeech: "adjective", difficulty: "BEGINNER", example1: "Make sure your answer is accurate.", example2: "The forecast was not very accurate.", example3: "She gave an accurate description.", synonyms: JSON.stringify(["correct","precise","exact"]), antonyms: JSON.stringify(["inaccurate","wrong"]) },
+  { word: "Acknowledge", meaning: "To accept or admit something is true", hindiMeaning: "स्वीकार करना, मानना", ipa: "/əkˈnɒlɪdʒ/", partOfSpeech: "verb", difficulty: "INTERMEDIATE", example1: "Please acknowledge receipt of this email.", example2: "He acknowledged his mistake.", example3: "It is important to acknowledge others' work.", synonyms: JSON.stringify(["recognize","admit","confirm"]), antonyms: JSON.stringify(["deny","ignore"]) },
+  { word: "Adapt", meaning: "To change or adjust to fit a new situation", hindiMeaning: "अनुकूल होना, बदलना", ipa: "/əˈdæpt/", partOfSpeech: "verb", difficulty: "INTERMEDIATE", example1: "You need to adapt to changes.", example2: "Animals adapt to their environment.", example3: "She quickly adapted to the new city.", synonyms: JSON.stringify(["adjust","modify","conform"]), antonyms: JSON.stringify(["resist","refuse"]) },
+  { word: "Admire", meaning: "To regard with respect and approval", hindiMeaning: "तारीफ करना, प्रशंसा करना", ipa: "/ədˈmaɪər/", partOfSpeech: "verb", difficulty: "BEGINNER", example1: "I admire her courage.", example2: "Everyone admires his dedication.", example3: "She admired the beautiful painting.", synonyms: JSON.stringify(["respect","appreciate","praise"]), antonyms: JSON.stringify(["criticize","disrespect"]) },
+  { word: "Advance", meaning: "To move forward or make progress", hindiMeaning: "आगे बढ़ना, प्रगति करना", ipa: "/ədˈvɑːns/", partOfSpeech: "verb", difficulty: "BEGINNER", example1: "Technology continues to advance.", example2: "She advanced her career.", example3: "He made a great advance in English.", synonyms: JSON.stringify(["progress","develop","improve"]), antonyms: JSON.stringify(["retreat","decline"]) },
+  { word: "Advice", meaning: "Suggestions about what to do", hindiMeaning: "सलाह, परामर्श", ipa: "/ədˈvaɪs/", partOfSpeech: "noun", difficulty: "BEGINNER", example1: "My teacher gave me good advice.", example2: "Follow the doctor's advice.", example3: "She gives helpful advice to friends.", synonyms: JSON.stringify(["guidance","suggestion","recommendation"]), antonyms: JSON.stringify([]) },
+  { word: "Affect", meaning: "To have an impact on something or someone", hindiMeaning: "प्रभावित करना, असर डालना", ipa: "/əˈfɛkt/", partOfSpeech: "verb", difficulty: "BEGINNER", example1: "Weather can affect our mood.", example2: "Lack of sleep affects concentration.", example3: "The new policy will affect all employees.", synonyms: JSON.stringify(["influence","impact","change"]), antonyms: JSON.stringify([]) },
+  { word: "Ambitious", meaning: "Having a strong desire to achieve success", hindiMeaning: "महत्वाकांक्षी", ipa: "/æmˈbɪʃəs/", partOfSpeech: "adjective", difficulty: "INTERMEDIATE", example1: "She is very ambitious and works hard.", example2: "Ambitious people never give up.", example3: "He has ambitious plans.", synonyms: JSON.stringify(["driven","determined","goal-oriented"]), antonyms: JSON.stringify(["lazy","unambitious"]) },
+  { word: "Announce", meaning: "To make something known publicly", hindiMeaning: "घोषणा करना", ipa: "/əˈnaʊns/", partOfSpeech: "verb", difficulty: "BEGINNER", example1: "The teacher announced the test date.", example2: "They will announce results tomorrow.", example3: "The CEO announced a new policy.", synonyms: JSON.stringify(["declare","proclaim","notify"]), antonyms: JSON.stringify(["hide","conceal"]) },
+  { word: "Appreciate", meaning: "To value something or be grateful for it", hindiMeaning: "सराहना करना, कदर करना", ipa: "/əˈpriːʃɪeɪt/", partOfSpeech: "verb", difficulty: "BEGINNER", example1: "I really appreciate your help.", example2: "She appreciates hard work.", example3: "We appreciate your time.", synonyms: JSON.stringify(["value","be grateful","respect"]), antonyms: JSON.stringify(["disrespect","ignore"]) },
+  { word: "Argue", meaning: "To disagree strongly and give reasons", hindiMeaning: "बहस करना, तर्क देना", ipa: "/ˈɑːɡjuː/", partOfSpeech: "verb", difficulty: "BEGINNER", example1: "They often argue about small things.", example2: "She argued the decision was wrong.", example3: "Please do not argue with the teacher.", synonyms: JSON.stringify(["debate","dispute","quarrel"]), antonyms: JSON.stringify(["agree","compromise"]) },
+  { word: "Arrange", meaning: "To put things in order or make plans", hindiMeaning: "व्यवस्था करना", ipa: "/əˈreɪndʒ/", partOfSpeech: "verb", difficulty: "BEGINNER", example1: "Please arrange the chairs.", example2: "She arranged the flowers beautifully.", example3: "I will arrange a taxi for you.", synonyms: JSON.stringify(["organize","plan","set up"]), antonyms: JSON.stringify(["disorganize"]) },
+  { word: "Assist", meaning: "To help someone with a task", hindiMeaning: "मदद करना, सहायता करना", ipa: "/əˈsɪst/", partOfSpeech: "verb", difficulty: "BEGINNER", example1: "Can you assist me with this form?", example2: "The team assisted in completing the project.", example3: "She assisted the new employee.", synonyms: JSON.stringify(["help","support","aid"]), antonyms: JSON.stringify(["hinder","obstruct"]) },
+  { word: "Attitude", meaning: "The way you think and feel about something", hindiMeaning: "रवैया, दृष्टिकोण", ipa: "/ˈætɪtjuːd/", partOfSpeech: "noun", difficulty: "BEGINNER", example1: "She has a positive attitude toward learning.", example2: "Your attitude determines your success.", example3: "He changed his attitude after the feedback.", synonyms: JSON.stringify(["mindset","outlook","perspective"]), antonyms: JSON.stringify([]) },
+  { word: "Balance", meaning: "A state of equal weight or stability", hindiMeaning: "संतुलन", ipa: "/ˈbæləns/", partOfSpeech: "noun", difficulty: "BEGINNER", example1: "Maintain a balance between work and rest.", example2: "She kept her balance on the bridge.", example3: "A good diet helps balance health.", synonyms: JSON.stringify(["stability","harmony","equilibrium"]), antonyms: JSON.stringify(["imbalance","instability"]) },
+  { word: "Believe", meaning: "To think something is true or real", hindiMeaning: "विश्वास करना, मानना", ipa: "/bɪˈliːv/", partOfSpeech: "verb", difficulty: "BEGINNER", example1: "I believe you can do it.", example2: "Do you believe in hard work?", example3: "She believes in herself.", synonyms: JSON.stringify(["trust","think","have faith"]), antonyms: JSON.stringify(["doubt","disbelieve"]) },
+  { word: "Benefit", meaning: "An advantage or something helpful", hindiMeaning: "फायदा, लाभ", ipa: "/ˈbɛnɪfɪt/", partOfSpeech: "noun", difficulty: "BEGINNER", example1: "Exercise has many health benefits.", example2: "This course will benefit your career.", example3: "The benefit of reading is better vocabulary.", synonyms: JSON.stringify(["advantage","gain","profit"]), antonyms: JSON.stringify(["disadvantage","harm"]) },
+  { word: "Bold", meaning: "Brave, confident, and willing to take risks", hindiMeaning: "साहसी, निडर", ipa: "/bəʊld/", partOfSpeech: "adjective", difficulty: "BEGINNER", example1: "She made a bold decision.", example2: "Be bold and speak up in meetings.", example3: "He gave a bold answer.", synonyms: JSON.stringify(["brave","daring","confident"]), antonyms: JSON.stringify(["timid","shy","fearful"]) },
+  { word: "Capable", meaning: "Having the ability to do something", hindiMeaning: "सक्षम, काबिल", ipa: "/ˈkeɪpəbl/", partOfSpeech: "adjective", difficulty: "BEGINNER", example1: "She is capable of any challenge.", example2: "Are you capable of finishing today?", example3: "He is a very capable engineer.", synonyms: JSON.stringify(["able","skilled","competent"]), antonyms: JSON.stringify(["incapable","unable"]) },
+  { word: "Challenge", meaning: "A difficult task that tests your skills", hindiMeaning: "चुनौती", ipa: "/ˈtʃælɪndʒ/", partOfSpeech: "noun", difficulty: "BEGINNER", example1: "Learning English is a challenge but worth it.", example2: "I love to challenge myself.", example3: "She accepted the challenge with confidence.", synonyms: JSON.stringify(["difficulty","obstacle","test"]), antonyms: JSON.stringify(["ease","simplicity"]) },
+  { word: "Clear", meaning: "Easy to understand; not confusing", hindiMeaning: "स्पष्ट, साफ", ipa: "/klɪər/", partOfSpeech: "adjective", difficulty: "BEGINNER", example1: "Please speak in a clear voice.", example2: "Make sure instructions are clear.", example3: "The water was crystal clear.", synonyms: JSON.stringify(["obvious","plain","transparent"]), antonyms: JSON.stringify(["unclear","vague","confusing"]) },
+  { word: "Communicate", meaning: "To share information or ideas with others", hindiMeaning: "बात करना, संवाद करना", ipa: "/kəˈmjuːnɪkeɪt/", partOfSpeech: "verb", difficulty: "BEGINNER", example1: "It is important to communicate clearly.", example2: "She communicated her ideas very well.", example3: "Good leaders communicate effectively.", synonyms: JSON.stringify(["express","convey","speak"]), antonyms: JSON.stringify(["hide","withhold"]) },
+  { word: "Confident", meaning: "Feeling sure about yourself and your abilities", hindiMeaning: "आत्मविश्वासी", ipa: "/ˈkɒnfɪdənt/", partOfSpeech: "adjective", difficulty: "BEGINNER", example1: "Be confident when you speak English.", example2: "She walked in confidently.", example3: "A confident answer impresses interviewers.", synonyms: JSON.stringify(["self-assured","bold","certain"]), antonyms: JSON.stringify(["insecure","shy","nervous"]) },
+  { word: "Consistent", meaning: "Always doing things the same way; reliable", hindiMeaning: "निरंतर, लगातार", ipa: "/kənˈsɪstənt/", partOfSpeech: "adjective", difficulty: "INTERMEDIATE", example1: "Be consistent in your daily practice.", example2: "Consistent effort leads to success.", example3: "She is consistent in her work quality.", synonyms: JSON.stringify(["steady","regular","persistent"]), antonyms: JSON.stringify(["inconsistent","irregular"]) },
+  { word: "Creative", meaning: "Having the ability to make new ideas or things", hindiMeaning: "रचनात्मक", ipa: "/kriˈeɪtɪv/", partOfSpeech: "adjective", difficulty: "BEGINNER", example1: "She is a very creative designer.", example2: "Creative thinking solves problems.", example3: "He used a creative approach.", synonyms: JSON.stringify(["innovative","imaginative","original"]), antonyms: JSON.stringify(["uncreative","unimaginative"]) },
+  { word: "Curious", meaning: "Eager to know or learn something", hindiMeaning: "जिज्ञासु, उत्सुक", ipa: "/ˈkjʊərɪəs/", partOfSpeech: "adjective", difficulty: "BEGINNER", example1: "Children are naturally curious.", example2: "I was curious about the result.", example3: "Stay curious and keep learning.", synonyms: JSON.stringify(["inquisitive","eager","interested"]), antonyms: JSON.stringify(["uninterested","indifferent"]) },
+  { word: "Deadline", meaning: "The latest time by which something must be done", hindiMeaning: "समय-सीमा, अंतिम तारीख", ipa: "/ˈdɛdlaɪn/", partOfSpeech: "noun", difficulty: "BEGINNER", example1: "The deadline for this project is Friday.", example2: "Never miss a deadline at work.", example3: "She finished the report before the deadline.", synonyms: JSON.stringify(["due date","time limit","cutoff"]), antonyms: JSON.stringify([]) },
+  { word: "Dedicated", meaning: "Committed and giving a lot of effort to something", hindiMeaning: "समर्पित, लगन वाला", ipa: "/ˈdɛdɪkeɪtɪd/", partOfSpeech: "adjective", difficulty: "INTERMEDIATE", example1: "She is dedicated to learning English.", example2: "A dedicated student always succeeds.", example3: "He is dedicated to his work.", synonyms: JSON.stringify(["committed","devoted","hardworking"]), antonyms: JSON.stringify(["lazy","uncommitted"]) },
+  { word: "Describe", meaning: "To give details about something or someone", hindiMeaning: "वर्णन करना, बताना", ipa: "/dɪˈskraɪb/", partOfSpeech: "verb", difficulty: "BEGINNER", example1: "Please describe your work experience.", example2: "Can you describe what happened?", example3: "She described the scene beautifully.", synonyms: JSON.stringify(["explain","depict","portray"]), antonyms: JSON.stringify([]) },
+  { word: "Determined", meaning: "Having a strong decision to achieve something", hindiMeaning: "दृढ़ निश्चयी", ipa: "/dɪˈtɜːmɪnd/", partOfSpeech: "adjective", difficulty: "INTERMEDIATE", example1: "She is determined to pass this exam.", example2: "He was determined to succeed.", example3: "A determined person never gives up.", synonyms: JSON.stringify(["resolute","persistent","committed"]), antonyms: JSON.stringify(["undecided","hesitant"]) },
+  { word: "Develop", meaning: "To grow, improve, or make something bigger", hindiMeaning: "विकसित करना, बढ़ाना", ipa: "/dɪˈvɛləp/", partOfSpeech: "verb", difficulty: "BEGINNER", example1: "She developed her English skills.", example2: "Develop good habits from day one.", example3: "The company developed a new product.", synonyms: JSON.stringify(["improve","grow","build"]), antonyms: JSON.stringify(["neglect","decline"]) },
+  { word: "Discuss", meaning: "To talk about a topic with others", hindiMeaning: "चर्चा करना, बात करना", ipa: "/dɪˈskʌs/", partOfSpeech: "verb", difficulty: "BEGINNER", example1: "Let us discuss this problem.", example2: "We discussed the project plan.", example3: "She discussed her ideas in the meeting.", synonyms: JSON.stringify(["talk about","debate","converse"]), antonyms: JSON.stringify([]) },
+  { word: "Diligent", meaning: "Working hard and carefully", hindiMeaning: "मेहनती, परिश्रमी", ipa: "/ˈdɪlɪdʒənt/", partOfSpeech: "adjective", difficulty: "INTERMEDIATE", example1: "A diligent student always gets good grades.", example2: "She is diligent in her work.", example3: "Be diligent and success will follow.", synonyms: JSON.stringify(["hardworking","careful","thorough"]), antonyms: JSON.stringify(["lazy","careless"]) },
+  { word: "Effective", meaning: "Successful in producing a desired result", hindiMeaning: "प्रभावी, कारगर", ipa: "/ɪˈfɛktɪv/", partOfSpeech: "adjective", difficulty: "INTERMEDIATE", example1: "This is an effective study method.", example2: "She gave an effective presentation.", example3: "Effective communication is key in office.", synonyms: JSON.stringify(["successful","efficient","productive"]), antonyms: JSON.stringify(["ineffective","useless"]) },
+  { word: "Effort", meaning: "The energy and work put into something", hindiMeaning: "प्रयास, कोशिश", ipa: "/ˈɛfət/", partOfSpeech: "noun", difficulty: "BEGINNER", example1: "Put in your best effort.", example2: "Learning English requires consistent effort.", example3: "Her effort paid off in the end.", synonyms: JSON.stringify(["work","attempt","try"]), antonyms: JSON.stringify(["laziness","negligence"]) },
+  { word: "Encourage", meaning: "To give someone confidence or hope", hindiMeaning: "प्रोत्साहित करना, हौसला देना", ipa: "/ɪnˈkʌrɪdʒ/", partOfSpeech: "verb", difficulty: "BEGINNER", example1: "Teachers encourage students to speak.", example2: "She encouraged him not to give up.", example3: "His support encouraged me greatly.", synonyms: JSON.stringify(["motivate","inspire","support"]), antonyms: JSON.stringify(["discourage","demotivate"]) },
+  { word: "Essential", meaning: "Absolutely necessary and very important", hindiMeaning: "आवश्यक, जरूरी", ipa: "/ɪˈsɛnʃəl/", partOfSpeech: "adjective", difficulty: "INTERMEDIATE", example1: "Water is essential for life.", example2: "Good grammar is essential for writing.", example3: "It is essential to practice speaking daily.", synonyms: JSON.stringify(["necessary","vital","crucial"]), antonyms: JSON.stringify(["unnecessary","optional"]) },
+  { word: "Excellent", meaning: "Extremely good; of the highest quality", hindiMeaning: "उत्कृष्ट, बेहतरीन", ipa: "/ˈɛksələnt/", partOfSpeech: "adjective", difficulty: "BEGINNER", example1: "She gave an excellent performance.", example2: "He has an excellent command of English.", example3: "This is an excellent opportunity.", synonyms: JSON.stringify(["outstanding","superb","brilliant"]), antonyms: JSON.stringify(["poor","bad","terrible"]) },
+  { word: "Experience", meaning: "Knowledge or skill from doing something", hindiMeaning: "अनुभव", ipa: "/ɪkˈspɪərɪəns/", partOfSpeech: "noun", difficulty: "BEGINNER", example1: "She has five years of work experience.", example2: "Experience is the best teacher.", example3: "He gained experience through practice.", synonyms: JSON.stringify(["knowledge","practice","expertise"]), antonyms: JSON.stringify(["inexperience"]) },
+];
+
+// Practice questions for Day 1 subtopics
+const DAY1_PRACTICE_QUESTIONS = [
+  // SVO Structure questions
+  { subtopicTitle: "Subject + Verb + Object (SVO)", questionText: "वह स्कूल जाती है। (She _____ to school.)", questionType: "FILL_BLANK", difficulty: "BEGINNER", correctAnswer: "She goes to school.", explanation: "Subject (She) + Verb (goes) + Object (to school). Singular subject gets 's' on verb.", hindiExplanation: "Subject (She) + Verb (goes) + Object। Present Simple में He/She/It के साथ verb में 's' लगाते हैं।", wordHints: JSON.stringify([{word:"goes",meaning:"जाती है"}]), points: 10 },
+  { subtopicTitle: "Subject + Verb + Object (SVO)", questionText: "राम खाना खाता है। (Ram _____ food.)", questionType: "FILL_BLANK", difficulty: "BEGINNER", correctAnswer: "Ram eats food.", explanation: "Ram = singular → eat + s = eats.", hindiExplanation: "Singular subject के साथ eat → eats होता है।", wordHints: JSON.stringify([{word:"eats",meaning:"खाता है"}]), points: 10 },
+  { subtopicTitle: "Subject + Verb + Object (SVO)", questionText: "बच्चे खेलते हैं। (The children _____.)", questionType: "FILL_BLANK", difficulty: "BEGINNER", correctAnswer: "The children play.", explanation: "Plural subject - no 's' on verb. Subject + Verb.", hindiExplanation: "Plural subject के साथ verb में 's' नहीं लगता।", wordHints: JSON.stringify([{word:"play",meaning:"खेलते हैं"}]), points: 10 },
+  { subtopicTitle: "Subject + Verb + Object (SVO)", questionText: "मेरी माँ खाना पकाती हैं। (My mother _____ food.)", questionType: "FILL_BLANK", difficulty: "BEGINNER", correctAnswer: "My mother cooks food.", explanation: "My mother = She (singular) → cook + s = cooks.", hindiExplanation: "My mother = She → verb को 's' मिलता है → cooks।", wordHints: JSON.stringify([{word:"cooks",meaning:"पकाती हैं"}]), points: 10 },
+  { subtopicTitle: "Subject + Verb + Object (SVO)", questionText: "वह हर सुबह दौड़ता है। (He _____ every morning.)", questionType: "FILL_BLANK", difficulty: "BEGINNER", correctAnswer: "He runs every morning.", explanation: "He (singular) + run + s = runs.", hindiExplanation: "He के साथ run में s जोड़कर runs बनाते हैं।", wordHints: JSON.stringify([{word:"runs",meaning:"दौड़ता है"}]), points: 10 },
+  { subtopicTitle: "Subject + Verb + Object (SVO)", questionText: "वे लोग शहर में रहते हैं। (They _____ in the city.)", questionType: "FILL_BLANK", difficulty: "BEGINNER", correctAnswer: "They live in the city.", explanation: "They is plural, so 'live' stays without 's'.", hindiExplanation: "They plural है, इसलिए verb में 's' नहीं आएगा।", wordHints: JSON.stringify([{word:"live",meaning:"रहते हैं"}]), points: 10 },
+  { subtopicTitle: "Subject + Verb + Object (SVO)", questionText: "कुत्ता भौंकता है। (The dog _____.)", questionType: "FILL_BLANK", difficulty: "BEGINNER", correctAnswer: "The dog barks.", explanation: "The dog = It (singular) → bark + s = barks.", hindiExplanation: "Singular noun के साथ verb में 's' लगता है।", wordHints: JSON.stringify([{word:"barks",meaning:"भौंकता है"}]), points: 10 },
+  { subtopicTitle: "Subject + Verb + Object (SVO)", questionText: "हम रोज पढ़ते हैं। (We _____ every day.)", questionType: "FILL_BLANK", difficulty: "BEGINNER", correctAnswer: "We study every day.", explanation: "We is plural - no 's' on verb. Study stays as study.", hindiExplanation: "We plural है, verb में 's' नहीं लगेगा।", wordHints: JSON.stringify([{word:"study",meaning:"पढ़ते हैं"}]), points: 10 },
+  // Positive sentences
+  { subtopicTitle: "Positive Sentences", questionText: "मैं एक विद्यार्थी हूँ।", questionType: "TRANSLATION", difficulty: "BEGINNER", correctAnswer: "I am a student.", explanation: "I + am (be verb for I) + a + noun.", hindiExplanation: "I के साथ हमेशा 'am' आता है।", wordHints: JSON.stringify([{word:"student",meaning:"विद्यार्थी"}]), points: 10 },
+  { subtopicTitle: "Positive Sentences", questionText: "वह एक डॉक्टर है।", questionType: "TRANSLATION", difficulty: "BEGINNER", correctAnswer: "He is a doctor.", explanation: "He + is (be verb for He) + a doctor.", hindiExplanation: "He/She/It के साथ 'is' आता है।", wordHints: JSON.stringify([{word:"doctor",meaning:"डॉक्टर"}]), points: 10 },
+  { subtopicTitle: "Positive Sentences", questionText: "हम अच्छे दोस्त हैं।", questionType: "TRANSLATION", difficulty: "BEGINNER", correctAnswer: "We are good friends.", explanation: "We + are (be verb for We) + good friends.", hindiExplanation: "We/You/They के साथ 'are' आता है।", wordHints: JSON.stringify([{word:"friends",meaning:"दोस्त"}]), points: 10 },
+  { subtopicTitle: "Positive Sentences", questionText: "आसमान नीला है।", questionType: "TRANSLATION", difficulty: "BEGINNER", correctAnswer: "The sky is blue.", explanation: "The sky (singular) + is + blue.", hindiExplanation: "Singular noun के साथ 'is' आता है।", wordHints: JSON.stringify([{word:"sky",meaning:"आसमान"},{word:"blue",meaning:"नीला"}]), points: 10 },
+  { subtopicTitle: "Positive Sentences", questionText: "मेरे पास एक कार है।", questionType: "TRANSLATION", difficulty: "BEGINNER", correctAnswer: "I have a car.", explanation: "I + have + a car. 'Have' for possession with I.", hindiExplanation: "Possession के लिए I के साथ 'have' आता है।", wordHints: JSON.stringify([{word:"have",meaning:"के पास है"}]), points: 10 },
+  // Negative sentences
+  { subtopicTitle: "Negative Sentences", questionText: "मैं थका हुआ नहीं हूँ।", questionType: "TRANSLATION", difficulty: "BEGINNER", correctAnswer: "I am not tired.", explanation: "I + am + not + tired. Add 'not' after be verb.", hindiExplanation: "Negative बनाने के लिए be verb के बाद 'not' लगाते हैं।", wordHints: JSON.stringify([{word:"tired",meaning:"थका हुआ"}]), points: 10 },
+  { subtopicTitle: "Negative Sentences", questionText: "वह ऑफिस नहीं जाती है।", questionType: "TRANSLATION", difficulty: "BEGINNER", correctAnswer: "She does not go to office.", explanation: "She = singular → does not + verb base form.", hindiExplanation: "He/She/It के साथ negative में 'does not' + base form।", wordHints: JSON.stringify([{word:"does not",meaning:"नहीं जाती"}]), points: 10 },
+  { subtopicTitle: "Negative Sentences", questionText: "हम मांस नहीं खाते।", questionType: "TRANSLATION", difficulty: "BEGINNER", correctAnswer: "We do not eat meat.", explanation: "We (plural) + do not + eat (base form).", hindiExplanation: "We/They/I के साथ 'do not' + base form।", wordHints: JSON.stringify([{word:"meat",meaning:"मांस"}]), points: 10 },
+  // Question sentences
+  { subtopicTitle: "Question Sentences", questionText: "तुम्हारा नाम क्या है?", questionType: "TRANSLATION", difficulty: "BEGINNER", correctAnswer: "What is your name?", explanation: "WH-word (What) + is + your name?", hindiExplanation: "WH-word + is/are + subject pattern।", wordHints: JSON.stringify([{word:"name",meaning:"नाम"}]), points: 10 },
+  { subtopicTitle: "Question Sentences", questionText: "वह कहाँ रहता है?", questionType: "TRANSLATION", difficulty: "BEGINNER", correctAnswer: "Where does he live?", explanation: "Where + does (singular) + he + live?", hindiExplanation: "He/She/It के साथ question में 'does' आता है।", wordHints: JSON.stringify([{word:"where",meaning:"कहाँ"}]), points: 10 },
+  { subtopicTitle: "Question Sentences", questionText: "क्या तुम अंग्रेज़ी बोल सकते हो?", questionType: "TRANSLATION", difficulty: "BEGINNER", correctAnswer: "Can you speak English?", explanation: "Can + you + speak + English?", hindiExplanation: "Can के साथ always base form आता है।", wordHints: JSON.stringify([{word:"can",meaning:"सकना"}]), points: 10 },
+  // MCQ questions
+  { subtopicTitle: "Subject + Verb + Object (SVO)", questionText: "Which sentence has correct SVO structure?", questionType: "MCQ", difficulty: "BEGINNER", correctAnswer: "She reads books.", explanation: "She (Subject) + reads (Verb) + books (Object) = correct SVO.", hindiExplanation: "She (Subject) + reads (Verb) + books (Object) = सही SVO structure।", optionA: "Books reads she.", optionB: "She reads books.", optionC: "Reads she books.", optionD: "Books she reads.", wordHints: JSON.stringify([]), points: 10 },
+];
+
+// ─── Main seed function ───────────────────────────────────────
+async function main() {
+  console.log("🌱 Seeding 75 Days Hard English Course database...");
+
+  // Clear existing data (for re-seeding)
+  await prisma.practiceAnswer.deleteMany();
+  await prisma.testAttemptAnswer.deleteMany();
+  await prisma.testAttempt.deleteMany();
+  await prisma.subtopicProgress.deleteMany();
+  await prisma.dayProgress.deleteMany();
+  await prisma.practiceQuestion.deleteMany();
+  await prisma.testQuestion.deleteMany();
+  await prisma.subtopicVocabulary.deleteMany();
+  await prisma.subtopicVerb.deleteMany();
+  await prisma.subtopicContent.deleteMany();
+  await prisma.subtopic.deleteMany();
+  await prisma.topic.deleteMany();
+  await prisma.dayVocabulary.deleteMany();
+  await prisma.day.deleteMany();
+  await prisma.userBadge.deleteMany();
+  await prisma.badge.deleteMany();
+  console.log("🗑️  Cleared old data");
+
+  // Seed all 75 days
+  for (const dayMeta of DAYS) {
+    const day = await prisma.day.create({
+      data: {
+        dayNumber: dayMeta.n,
+        title: dayMeta.title,
+        description: dayMeta.desc,
+        emoji: dayMeta.emoji,
+        isRevision: dayMeta.isRevision,
+        isMockTest: dayMeta.isMockTest,
+      },
+    });
+
+    // Get topics for this day (custom for days 1-2, auto for rest)
+    const topicsData = DAY_TOPICS[dayMeta.n] || [
+      {
+        title: dayMeta.title,
+        description: dayMeta.desc,
+        emoji: dayMeta.emoji,
+        color: "#6272f1",
+        orderIndex: 1,
+        subtopics: [
+          { title: `Introduction to ${dayMeta.title}`, description: `Complete beginner guide to ${dayMeta.title}`, emoji: "📖", orderIndex: 1, estimatedMins: 20 },
+          { title: `${dayMeta.title} - Rules & Examples`, description: `Detailed rules with 30+ real examples`, emoji: "📐", orderIndex: 2, estimatedMins: 25 },
+          { title: `${dayMeta.title} - Common Mistakes`, description: `Mistakes to avoid and how to correct them`, emoji: "⚠️", orderIndex: 3, estimatedMins: 15 },
+          { title: `${dayMeta.title} - Daily Usage`, description: `How to use this in daily conversation`, emoji: "💬", orderIndex: 4, estimatedMins: 20 },
+          { title: `${dayMeta.title} - Office & Professional`, description: `Professional usage in workplace settings`, emoji: "🏢", orderIndex: 5, estimatedMins: 15 },
+          { title: `${dayMeta.title} - Practice`, description: `80+ practice questions for mastery`, emoji: "✏️", orderIndex: 6, estimatedMins: 30 },
+        ],
+      },
+    ];
+
+    // Create topics and subtopics
+    for (const topicData of topicsData) {
+      const topic = await prisma.topic.create({
+        data: {
+          dayId: day.id,
+          title: topicData.title,
+          description: topicData.description,
+          orderIndex: topicData.orderIndex,
+          emoji: topicData.emoji,
+          color: topicData.color,
+        },
+      });
+
+      for (const subtopicData of topicData.subtopics) {
+        const subtopic = await prisma.subtopic.create({
+          data: {
+            topicId: topic.id,
+            title: subtopicData.title,
+            description: subtopicData.description,
+            orderIndex: subtopicData.orderIndex,
+            emoji: subtopicData.emoji,
+            estimatedMins: subtopicData.estimatedMins,
+          },
+        });
+
+        // Create content for this subtopic
+        await prisma.subtopicContent.create({
+          data: {
+            subtopicId: subtopic.id,
+            whyLearnThis: JSON.stringify({ text: `Understanding ${subtopicData.title} is essential for fluent English communication. This will help you speak clearly in daily life, office, and professional settings.` }),
+            conceptExplanation: JSON.stringify({ text: `${subtopicData.title} is a core concept in English grammar. Let us understand it step by step with clear examples.` }),
+            simpleExplanation: JSON.stringify({ text: `Simply put: ${subtopicData.description}. Let us look at easy examples to understand this.` }),
+            hindiExplanation: JSON.stringify({ text: `${subtopicData.title} को हिंदी में समझें: यह English grammar का एक महत्वपूर्ण भाग है।` }),
+            rules: JSON.stringify([`Rule 1: ${subtopicData.title} follows specific patterns`, `Rule 2: Practice daily to master this concept`, `Rule 3: Use in real conversations for fluency`]),
+            commonMistakes: JSON.stringify([`Mistake 1: Confusing similar structures`, `Mistake 2: Wrong word order`, `Mistake 3: Missing helper verbs`]),
+            speakingTips: JSON.stringify([`Tip 1: Practice out loud daily`, `Tip 2: Record yourself speaking`, `Tip 3: Use mirror practice`]),
+            story: JSON.stringify({ title: `A Story Using ${subtopicData.title}`, content: `Priya was learning English. Every day she practiced ${subtopicData.title}. Her teacher said, "Practice makes perfect." Priya worked hard and became fluent.` }),
+            summary: JSON.stringify({ text: `Today you learned ${subtopicData.title}. Keep practicing and use it in your daily conversations.` }),
+          },
+        });
+
+        // Add practice questions for Day 1 subtopics
+        if (dayMeta.n === 1) {
+          const matchingQs = DAY1_PRACTICE_QUESTIONS.filter(q => q.subtopicTitle === subtopicData.title);
+          for (let qi = 0; qi < matchingQs.length; qi++) {
+            const q = matchingQs[qi];
+            await prisma.practiceQuestion.create({
+              data: {
+                subtopicId: subtopic.id,
+                questionText: q.questionText,
+                questionType: q.questionType,
+                difficulty: q.difficulty,
+                orderIndex: qi,
+                correctAnswer: q.correctAnswer,
+                explanation: q.explanation,
+                hindiExplanation: q.hindiExplanation,
+                optionA: (q as any).optionA,
+                optionB: (q as any).optionB,
+                optionC: (q as any).optionC,
+                optionD: (q as any).optionD,
+                wordHints: q.wordHints,
+                points: q.points,
+              },
+            });
+          }
+        }
+      }
+    }
+
+    // Add vocabulary for Day 1
+    if (dayMeta.n === 1) {
+      for (const vocab of DAY1_VOCAB) {
+        await prisma.dayVocabulary.create({
+          data: { dayId: day.id, ...vocab },
+        });
+      }
+    }
+
+    if (dayMeta.n % 10 === 0 || dayMeta.n === 1 || dayMeta.n === 2) {
+      console.log(`✅ Day ${dayMeta.n}: ${dayMeta.title} seeded`);
+    }
+  }
+
+  // Seed achievement badges
+  const BADGES = [
+    { name: "First Step", description: "Complete Day 1 of the course", emoji: "🎯", category: "MILESTONE", xpReward: 50, coinsReward: 25, condition: JSON.stringify({ type: "day_complete", dayNumber: 1 }) },
+    { name: "Week Warrior", description: "Complete 7 days in a row", emoji: "🔥", category: "STREAK", xpReward: 200, coinsReward: 100, condition: JSON.stringify({ type: "streak", days: 7 }) },
+    { name: "Vocabulary Master", description: "Learn 1000 new words", emoji: "📚", category: "VOCABULARY", xpReward: 500, coinsReward: 250, condition: JSON.stringify({ type: "words", count: 1000 }) },
+    { name: "Perfect Score", description: "Get 100% on any test", emoji: "⭐", category: "PERFECT", xpReward: 300, coinsReward: 150, condition: JSON.stringify({ type: "test_score", percentage: 100 }) },
+    { name: "Speed Learner", description: "Complete 5 subtopics in one day", emoji: "⚡", category: "SPEED", xpReward: 150, coinsReward: 75, condition: JSON.stringify({ type: "daily_subtopics", count: 5 }) },
+    { name: "Speaking Star", description: "Complete 50 voice practice sessions", emoji: "🎤", category: "SPEAKING", xpReward: 400, coinsReward: 200, condition: JSON.stringify({ type: "voice_sessions", count: 50 }) },
+    { name: "Halfway Hero", description: "Complete 37 of 75 days", emoji: "🏃", category: "MILESTONE", xpReward: 1000, coinsReward: 500, condition: JSON.stringify({ type: "day_complete", dayNumber: 37 }) },
+    { name: "Course Champion", description: "Complete all 75 days!", emoji: "🏆", category: "MILESTONE", xpReward: 5000, coinsReward: 2500, condition: JSON.stringify({ type: "day_complete", dayNumber: 75 }) },
+    { name: "Grammar Guru", description: "Score 90%+ in 10 grammar tests", emoji: "📖", category: "GRAMMAR", xpReward: 600, coinsReward: 300, condition: JSON.stringify({ type: "grammar_tests", count: 10, minScore: 90 }) },
+    { name: "Daily Devotee", description: "Log in for 30 consecutive days", emoji: "🌟", category: "STREAK", xpReward: 750, coinsReward: 375, condition: JSON.stringify({ type: "streak", days: 30 }) },
+  ];
+
+  for (const badge of BADGES) {
+    await prisma.badge.upsert({
+      where: { name: badge.name },
+      update: {},
+      create: badge,
+    });
+  }
+  console.log("🏆 Badges seeded");
+
+  const totalDays = await prisma.day.count();
+  const totalTopics = await prisma.topic.count();
+  const totalSubtopics = await prisma.subtopic.count();
+  const totalVocab = await prisma.dayVocabulary.count();
+  const totalQs = await prisma.practiceQuestion.count();
+
+  console.log("\n✨ Database seeded successfully!");
+  console.log(`📅 Days: ${totalDays}/75`);
+  console.log(`📚 Topics: ${totalTopics}`);
+  console.log(`📖 Subtopics: ${totalSubtopics}`);
+  console.log(`📝 Vocabulary words: ${totalVocab}`);
+  console.log(`❓ Practice questions: ${totalQs}`);
+}
+
+main()
+  .catch((e) => { console.error("❌ Seed failed:", e); process.exit(1); })
+  .finally(async () => { await prisma.$disconnect(); });

@@ -1,0 +1,560 @@
+// ============================================================
+// Prisma Schema - 75 Days Hard English Course
+// SQLite-compatible for local dev, migrate to PostgreSQL for prod
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ─── User & Auth ─────────────────────────────────────────────
+model User {
+  id            String   @id @default(cuid())
+  clerkId       String   @unique
+  email         String   @unique
+  username      String?  @unique
+  firstName     String?
+  lastName      String?
+  imageUrl      String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  currentDay    Int      @default(1)
+  totalXp       Int      @default(0)
+  totalCoins    Int      @default(0)
+  level         Int      @default(1)
+  streak        Int      @default(0)
+  longestStreak Int      @default(0)
+  lastActiveAt  DateTime @default(now())
+  theme         String   @default("DARK")
+  language      String   @default("en")
+  soundEnabled  Boolean  @default(true)
+
+  progress        DayProgress[]
+  scores          Score[]
+  userVocabulary  UserVocabulary[]
+  streakHistory   StreakHistory[]
+  badges          UserBadge[]
+  sessions        LearningSession[]
+  practiceAnswers PracticeAnswer[]
+  testAttempts    TestAttempt[]
+  speechAttempts  SpeechAttempt[]
+  notes           UserNote[]
+  bookmarks       UserBookmark[]
+
+  @@index([clerkId])
+  @@map("users")
+}
+
+// ─── Course Structure ─────────────────────────────────────────
+model Day {
+  id          String   @id @default(cuid())
+  dayNumber   Int      @unique
+  title       String
+  description String
+  emoji       String   @default("📚")
+  isRevision  Boolean  @default(false)
+  isMockTest  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  topics     Topic[]
+  progress   DayProgress[]
+  vocabulary DayVocabulary[]
+
+  @@index([dayNumber])
+  @@map("days")
+}
+
+model Topic {
+  id          String   @id @default(cuid())
+  dayId       String
+  title       String
+  description String
+  orderIndex  Int
+  emoji       String   @default("📖")
+  color       String   @default("#6272f1")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  day       Day        @relation(fields: [dayId], references: [id], onDelete: Cascade)
+  subtopics Subtopic[]
+
+  @@index([dayId])
+  @@map("topics")
+}
+
+model Subtopic {
+  id            String   @id @default(cuid())
+  topicId       String
+  title         String
+  description   String
+  orderIndex    Int
+  emoji         String   @default("✏️")
+  estimatedMins Int      @default(15)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  topic      Topic               @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  content    SubtopicContent?
+  practiceQs PracticeQuestion[]
+  testQs     TestQuestion[]
+  vocabulary SubtopicVocabulary[]
+  verbs      SubtopicVerb[]
+  progress   SubtopicProgress[]
+
+  @@index([topicId])
+  @@map("subtopics")
+}
+
+// Lesson content - JSON fields store rich content
+model SubtopicContent {
+  id                 String   @id @default(cuid())
+  subtopicId         String   @unique
+  whyLearnThis       String   @default("{}")
+  conceptExplanation String   @default("{}")
+  simpleExplanation  String   @default("{}")
+  hindiExplanation   String   @default("{}")
+  rules              String   @default("[]")
+  exceptions         String   @default("[]")
+  sentencePatterns   String   @default("[]")
+  commonMistakes     String   @default("[]")
+  advancedMistakes   String   @default("[]")
+  speakingTips       String   @default("[]")
+  pronunciationGuide String   @default("{}")
+  memoryTricks       String   @default("[]")
+  professionalUsage  String   @default("[]")
+  dailyUsage         String   @default("[]")
+  officeUsage        String   @default("[]")
+  interviewUsage     String   @default("[]")
+  emailUsage         String   @default("[]")
+  businessUsage      String   @default("[]")
+  story              String   @default("{}")
+  essay              String   @default("{}")
+  dialogue           String   @default("{}")
+  conversation       String   @default("{}")
+  summary            String   @default("{}")
+  imageUrls          String   @default("[]")
+  videoUrls          String   @default("[]")
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  subtopic Subtopic @relation(fields: [subtopicId], references: [id], onDelete: Cascade)
+
+  @@map("subtopic_contents")
+}
+
+// ─── Vocabulary ───────────────────────────────────────────────
+model DayVocabulary {
+  id           String   @id @default(cuid())
+  dayId        String
+  word         String
+  meaning      String
+  hindiMeaning String
+  ipa          String?
+  partOfSpeech String   @default("noun")
+  difficulty   String   @default("BEGINNER")
+  example1     String
+  example2     String
+  example3     String?
+  officeExample String?
+  dailyExample String?
+  synonyms     String   @default("[]")
+  antonyms     String   @default("[]")
+  audioUrl     String?
+  createdAt    DateTime @default(now())
+
+  day Day @relation(fields: [dayId], references: [id], onDelete: Cascade)
+
+  @@index([dayId])
+  @@index([word])
+  @@map("day_vocabulary")
+}
+
+model SubtopicVocabulary {
+  id            String   @id @default(cuid())
+  subtopicId    String
+  word          String
+  meaning       String
+  hindiMeaning  String
+  ipa           String?
+  partOfSpeech  String   @default("noun")
+  sentence1     String
+  sentence2     String
+  sentence3     String
+  sentence4     String?
+  sentence5     String?
+  formalUsage   String?
+  informalUsage String?
+  businessUsage String?
+  synonyms      String   @default("[]")
+  antonyms      String   @default("[]")
+  collocations  String   @default("[]")
+  audioUrl      String?
+  difficulty    String   @default("BEGINNER")
+  createdAt     DateTime @default(now())
+
+  subtopic Subtopic @relation(fields: [subtopicId], references: [id], onDelete: Cascade)
+
+  @@index([subtopicId])
+  @@map("subtopic_vocabulary")
+}
+
+model SubtopicVerb {
+  id             String   @id @default(cuid())
+  subtopicId     String
+  baseForm       String
+  v1             String
+  v2             String
+  v3             String
+  v4             String?
+  v5             String?
+  meaning        String
+  hindiMeaning   String
+  usage          String
+  presentExample String
+  pastExample    String
+  futureExample  String
+  perfectExample String
+  commonMistakes String?
+  audioUrl       String?
+  createdAt      DateTime @default(now())
+
+  subtopic Subtopic @relation(fields: [subtopicId], references: [id], onDelete: Cascade)
+
+  @@index([subtopicId])
+  @@map("subtopic_verbs")
+}
+
+model UserVocabulary {
+  id           String   @id @default(cuid())
+  userId       String
+  word         String
+  mastered     Boolean  @default(false)
+  reviewCount  Int      @default(0)
+  nextReviewAt DateTime @default(now())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, word])
+  @@index([userId])
+  @@map("user_vocabulary")
+}
+
+// ─── Questions ────────────────────────────────────────────────
+model PracticeQuestion {
+  id               String   @id @default(cuid())
+  subtopicId       String
+  questionText     String
+  questionType     String   @default("FILL_BLANK")
+  difficulty       String   @default("BEGINNER")
+  orderIndex       Int      @default(0)
+  correctAnswer    String
+  explanation      String
+  hindiExplanation String?
+  optionA          String?
+  optionB          String?
+  optionC          String?
+  optionD          String?
+  wordHints        String   @default("[]")
+  tags             String   @default("[]")
+  points           Int      @default(10)
+  createdAt        DateTime @default(now())
+
+  subtopic Subtopic         @relation(fields: [subtopicId], references: [id], onDelete: Cascade)
+  answers  PracticeAnswer[]
+
+  @@index([subtopicId])
+  @@map("practice_questions")
+}
+
+model PracticeAnswer {
+  id               String   @id @default(cuid())
+  userId           String
+  questionId       String
+  userAnswer       String
+  isCorrect        Boolean
+  pointsEarned     Int      @default(0)
+  timeTaken        Int?
+  inputMethod      String   @default("TYPED")
+  speechTranscript String?
+  speechConfidence Float?
+  createdAt        DateTime @default(now())
+
+  user     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  question PracticeQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([questionId])
+  @@map("practice_answers")
+}
+
+model TestQuestion {
+  id               String   @id @default(cuid())
+  subtopicId       String
+  questionText     String
+  questionType     String   @default("MCQ")
+  difficulty       String   @default("INTERMEDIATE")
+  orderIndex       Int      @default(0)
+  correctAnswer    String
+  explanation      String
+  hindiExplanation String?
+  optionA          String?
+  optionB          String?
+  optionC          String?
+  optionD          String?
+  timeLimit        Int      @default(60)
+  points           Int      @default(20)
+  tags             String   @default("[]")
+  createdAt        DateTime @default(now())
+
+  subtopic    Subtopic            @relation(fields: [subtopicId], references: [id], onDelete: Cascade)
+  testAnswers TestAttemptAnswer[]
+
+  @@index([subtopicId])
+  @@map("test_questions")
+}
+
+// ─── Progress ─────────────────────────────────────────────────
+model DayProgress {
+  id              String   @id @default(cuid())
+  userId          String
+  dayId           String
+  status          String   @default("NOT_STARTED")
+  startedAt       DateTime?
+  completedAt     DateTime?
+  practiceScore   Int      @default(0)
+  testScore       Int      @default(0)
+  totalXpEarned   Int      @default(0)
+  topicsCompleted Int      @default(0)
+  topicsTotal     Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user             User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  day              Day                @relation(fields: [dayId], references: [id], onDelete: Cascade)
+  subtopicProgress SubtopicProgress[]
+
+  @@unique([userId, dayId])
+  @@index([userId])
+  @@map("day_progress")
+}
+
+model SubtopicProgress {
+  id                String   @id @default(cuid())
+  userId            String
+  subtopicId        String
+  dayProgressId     String
+  status            String   @default("NOT_STARTED")
+  startedAt         DateTime?
+  completedAt       DateTime?
+  practiceAttempted Int      @default(0)
+  practiceCorrect   Int      @default(0)
+  practiceScore     Int      @default(0)
+  testAttempted     Int      @default(0)
+  testCorrect       Int      @default(0)
+  testScore         Int      @default(0)
+  xpEarned          Int      @default(0)
+  timeSpentMins     Int      @default(0)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  subtopic    Subtopic    @relation(fields: [subtopicId], references: [id], onDelete: Cascade)
+  dayProgress DayProgress @relation(fields: [dayProgressId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, subtopicId])
+  @@index([userId])
+  @@map("subtopic_progress")
+}
+
+model TestAttempt {
+  id             String   @id @default(cuid())
+  userId         String
+  subtopicId     String?
+  dayId          String?
+  testType       String   @default("SUBTOPIC")
+  totalQuestions Int
+  correctAnswers Int
+  wrongAnswers   Int
+  skippedAnswers Int
+  score          Int
+  maxScore       Int
+  percentage     Float
+  grade          String?
+  timeTaken      Int
+  startedAt      DateTime @default(now())
+  completedAt    DateTime?
+  xpEarned       Int      @default(0)
+  createdAt      DateTime @default(now())
+
+  user    User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  answers TestAttemptAnswer[]
+
+  @@index([userId])
+  @@map("test_attempts")
+}
+
+model TestAttemptAnswer {
+  id               String   @id @default(cuid())
+  attemptId        String
+  questionId       String
+  userAnswer       String
+  isCorrect        Boolean
+  pointsEarned     Int      @default(0)
+  timeTaken        Int?
+  inputMethod      String   @default("TYPED")
+  speechTranscript String?
+  createdAt        DateTime @default(now())
+
+  attempt  TestAttempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  question TestQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@index([attemptId])
+  @@map("test_attempt_answers")
+}
+
+model Score {
+  id         String   @id @default(cuid())
+  userId     String
+  activity   String
+  points     Int
+  xp         Int      @default(0)
+  coins      Int      @default(0)
+  dayId      String?
+  subtopicId String?
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("scores")
+}
+
+// ─── Gamification ─────────────────────────────────────────────
+model Badge {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String
+  emoji       String
+  imageUrl    String?
+  category    String   @default("ACHIEVEMENT")
+  xpReward    Int      @default(100)
+  coinsReward Int      @default(50)
+  condition   String   @default("{}")
+  createdAt   DateTime @default(now())
+
+  userBadges UserBadge[]
+
+  @@map("badges")
+}
+
+model UserBadge {
+  id       String   @id @default(cuid())
+  userId   String
+  badgeId  String
+  earnedAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badge Badge @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, badgeId])
+  @@index([userId])
+  @@map("user_badges")
+}
+
+model StreakHistory {
+  id        String   @id @default(cuid())
+  userId    String
+  date      DateTime
+  completed Boolean  @default(true)
+  xpEarned  Int      @default(0)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@index([userId])
+  @@map("streak_history")
+}
+
+// ─── Speech & Sessions ────────────────────────────────────────
+model SpeechAttempt {
+  id                 String   @id @default(cuid())
+  userId             String
+  subtopicId         String?
+  questionId         String?
+  targetText         String
+  transcript         String
+  confidence         Float
+  accuracy           Float
+  wordsCorrect       Int      @default(0)
+  wordsTotal         Int      @default(0)
+  pronunciationScore Float    @default(0)
+  fluencyScore       Float    @default(0)
+  feedback           String?
+  corrections        String   @default("[]")
+  audioUrl           String?
+  durationSeconds    Int?
+  createdAt          DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("speech_attempts")
+}
+
+model LearningSession {
+  id             String   @id @default(cuid())
+  userId         String
+  dayId          String?
+  subtopicId     String?
+  startedAt      DateTime @default(now())
+  endedAt        DateTime?
+  durationMins   Int?
+  xpEarned       Int      @default(0)
+  activitiesDone Int      @default(0)
+  deviceType     String   @default("web")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("learning_sessions")
+}
+
+model UserNote {
+  id         String   @id @default(cuid())
+  userId     String
+  subtopicId String?
+  dayId      String?
+  title      String?
+  content    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("user_notes")
+}
+
+model UserBookmark {
+  id         String   @id @default(cuid())
+  userId     String
+  subtopicId String?
+  dayId      String?
+  type       String   @default("subtopic")
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, subtopicId])
+  @@index([userId])
+  @@map("user_bookmarks")
+}

@@ -1,0 +1,198 @@
+sab cheez aacha se padh loo pls and haar ek cheez ko aacha se padh lena bhai pls 
+
+
+
+
+and fix all the errors pls pls and debug all the errors and fix it pls 
+
+
+
+
+
+
+
+and maine niche mai bhout sare website ka reference diya hai and and .txt files mai bhe bhout sare website ka reference hai for the ui and ux and design and css pls imporve karo yaar and fix all the errors 
+
+
+
+
+
+and mera website aacha se work nhi kar raha hai bhout sare pages show nhi kar rahe hai and show kar rahe hai to usme jo section and detaling hai wo show nhi kar raha hai 
+
+
+
+
+and mera mobile and and website dono se kuch bhe kabhi bhe crash nhi karna chiaye  
+
+
+
+
+
+
+mera ek cheez tum nhi kar rahe mera ek bhe requirement abhi tak pura nhi hua hai 
+
+
+
+
+main jo hai wo mera website hee hai and website se hee pura data le lena mobile app ke liye i hope u understand my point and same data mobile app and website mai show hona chiaye mujhe to haar ek cheez sync chiaye haar ek chota se chota cheez 
+
+
+
+ye offline bhe run hona chiaye and mobile app bhe chiaye mujhe iska same to same and sab cheez sync hona chiaye mobile app and webapp dono 
+
+
+and signin and signup ka option hona chiaye taki ek account sync hoo sake and uska pura data bhe sync rahe mai baad mai api key de dunga clerk ka 
+
+
+without sign in koi bhe day open nhi hona chiaye 
+
+
+
+
+
+
+sab cheez ko aacha se design karna pls 
+
+
+
+
+
+and haar ek or function add kar dena haar ek day mai ki mai speak karke bhe ans de saku aise to type karke dena parta hai to do option hona chiaye ki mai type karke bhe de saku and speak karke q ki mujhe fluent English bolna hai to uske liye jo jo requirement hai tum sab complete karo pls and ye same to same type jesa hee kaam karege dono cheez rahna chiaye jab mera maan ho mai type karke ans duu and jab maan ho to speak karke pls 
+
+
+
+
+and sab cheez proper files and folder ke sath hona chaiye means haar ek cheez ke liye mujhe alag se files and folders chiaye and haar ek files mai mujhe haar ek line ke baad mujhe comments add karke dena pls and /
+
+
+sabse important baat maine jitna bhe .txt file diya hai sabko ek dum ek ek line karke padh lena and implement karna pls it is a order and request okay 
+
+
+
+
+
+
+
+ek figma designer jesa soch samaj kar user friendly banao bhai 
+and haar ek cheez ke liye figma desiner jesa sochna pls 
+
+
+
+
+mai jitna bhe .txt file de raha hu usko aacha se padh lena pls pls pls pls pls
+
+
+
+use big and vishual fonts and texts and use colors according karna and sabko fonts and texts aacha se visbile hona chiaey pls 
+
+sab cheez aacha se padh lena pls pls
+
+
+
+
+
+
+
+
+
+
+jitna bhe libraies and frameworks and repo and tools install karna hoga kar lena and jitna jada tech and technologies ka use kar sakte ho karo mera website mai pls 
+
+
+
+
+
+
+
+
+
+
+folders and files structure bhe ready kar lena pls and bhout hee soch samaj kar files and folders structure ready karna
+
+
+
+
+
+
+https://youtube.com/playlist?list=PLAX41TUzaphDa3LtzzRZYWS5_MPUF0nz5&si=6I_nWMQw2rRxdKC6
+
+yahi hai course ke playlist ka link jisse tumko reference lena hai only reference are u getting my point
+
+
+isko aacha se anazlize kar lena pls 
+
+
+
+
+
+
+
+
+
+
+
+and jitna bhe maine website ka reference diya hai sabka use karo pls pls
+
+https://getdesign.md/
+
+https://getdesign.md/apple/design-md
+
+https://getdesign.md/vercel/design-md
+
+https://getdesign.md/claude/design-md
+
+https://getdesign.md/linear.app/design-md
+
+https://getdesign.md/airbnb/design-md
+
+https://getdesign.md/stripe/design-md
+
+https://gsap.com/
+
+https://threejs.org/
+
+https://animejs.com/
+
+https://docs.lottiefiles.com/en/format
+
+http://velocityjs.org/
+
+https://www.tasteskill.dev/
+
+https://angular.dev/
+
+https://ui.shadcn.com/
+
+
+clerk , GitHub , apple many more premium websites se inspiration lena pls 
+
+
+
+
+
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_b3JnYW5pYy1sb25naG9ybi0yNi5jbGVyay5hY2NvdW50cy5kZXYk
+CLERK_SECRET_KEY=`SLACK_TEST_API_KEY`jjhiceZ6sVuk1GXWkY
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+also create the database pls 
