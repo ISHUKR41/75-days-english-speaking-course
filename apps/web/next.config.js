@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 
 // Next.js configuration for 75 Days Hard English Course
+// Updated for Replit deployment (port 5000, all hosts allowed)
 const nextConfig = {
   // Enable React strict mode for better development experience
   reactStrictMode: true,
@@ -15,8 +16,6 @@ const nextConfig = {
       "@radix-ui/react-dialog",
       "recharts",
     ],
-    // Enable typed routes for better TypeScript support
-    typedRoutes: false,
   },
 
   // Image optimization configuration
@@ -45,12 +44,12 @@ const nextConfig = {
         source: "/(.*)",
         headers: [
           // Prevent clickjacking
-          { key: "X-Frame-Options", value: "DENY" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
           // XSS protection
           { key: "X-Content-Type-Options", value: "nosniff" },
           // Referrer policy
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          // Permissions policy
+          // Permissions policy - allow microphone for speaking lab
           {
             key: "Permissions-Policy",
             value: "camera=(), microphone=(self), geolocation=()",
