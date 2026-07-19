@@ -6,6 +6,10 @@ const nextConfig = {
   // Enable React strict mode for better development experience
   reactStrictMode: true,
 
+  // Allow all dev origins — required for Replit iframe preview
+  // Without this Next.js 15 blocks cross-origin hot-reload requests
+  allowedDevOrigins: ["*"],
+
   // Enable experimental features for best performance
   experimental: {
     // Optimize package imports for faster builds

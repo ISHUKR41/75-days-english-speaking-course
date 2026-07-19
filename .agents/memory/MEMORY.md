@@ -1,0 +1,3 @@
+- [Auth passthrough & Clerk setup](clerk-setup.md) — dev passthrough via safe-auth.ts; deprecated env vars removed; sign-in/sign-up use fallbackRedirectUrl
+- [Content architecture](content-architecture.md) — vocab/questions from static TS files, not DB; DB tracks progress/XP only; lesson content in lesson-content.tsx inline generators
+- [Hydration rules](hydration-rules.md) — never use Math.random() in SSR components; use deterministic formulas instead

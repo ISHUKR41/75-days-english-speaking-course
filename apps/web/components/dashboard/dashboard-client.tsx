@@ -205,25 +205,65 @@ export function DashboardClient({
       {/* ── Welcome Header ── */}
       <motion.div
         variants={itemVariants}
-        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+        className="relative overflow-hidden rounded-2xl border border-border bg-card p-6"
+        style={{
+          background: "linear-gradient(135deg, hsl(var(--primary)/0.06), transparent)",
+        }}
       >
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">
-            Welcome back! 👋
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            You&apos;re on{" "}
-            <span className="font-semibold text-primary">Day {stats.currentDay}</span>{" "}
-            of your 75-day journey. Keep going!
-          </p>
-        </div>
-
-        {/* Current streak display */}
-        <div className="flex items-center gap-2 rounded-2xl border border-orange-500/30 bg-orange-500/10 px-4 py-3">
-          <Flame className="h-6 w-6 text-orange-500 animate-flicker" aria-hidden="true" />
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <p className="text-2xl font-bold text-foreground">{stats.streak}</p>
-            <p className="text-xs text-muted-foreground">Day Streak</p>
+            {/* Greeting with user name */}
+            <h1 className="text-2xl md:text-3xl font-black text-foreground">
+              {realUser?.firstName
+                ? `Welcome back, ${realUser.firstName}! 👋`
+                : "Welcome back! 👋"}
+            </h1>
+            <p className="text-muted-foreground mt-1.5">
+              You&apos;re on{" "}
+              <span className="font-bold text-primary">Day {stats.currentDay}</span>{" "}
+              of your{" "}
+              <span className="font-semibold text-foreground">75-day journey</span>.{" "}
+              {stats.streak >= 7
+                ? "🔥 Amazing streak — keep it going!"
+                : stats.completedDays > 0
+                ? "Great progress — don't stop now!"
+                : "Your journey starts here. Let's go!"}
+            </p>
+
+            {/* Mini progress bar */}
+            <div className="mt-3 flex items-center gap-3">
+              <div className="flex-1 max-w-xs h-1.5 rounded-full bg-muted overflow-hidden">
+                <motion.div
+                  className="h-full rounded-full bg-gradient-to-r from-primary to-purple-500"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${Math.round((stats.completedDays / 75) * 100)}%` }}
+                  transition={{ duration: 1.5, ease: "easeOut", delay: 0.3 }}
+                />
+              </div>
+              <span className="text-xs font-semibold text-primary whitespace-nowrap">
+                {Math.round((stats.completedDays / 75) * 100)}% Complete
+              </span>
+            </div>
+          </div>
+
+          {/* Stats pills */}
+          <div className="flex gap-3 flex-wrap sm:flex-nowrap">
+            {/* Streak */}
+            <div className="flex items-center gap-2 rounded-2xl border border-orange-500/30 bg-orange-500/10 px-4 py-3">
+              <Flame className="h-6 w-6 text-orange-500 animate-flicker" aria-hidden="true" />
+              <div>
+                <p className="text-2xl font-black text-foreground leading-none">{stats.streak}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">Day Streak</p>
+              </div>
+            </div>
+            {/* Level */}
+            <div className="flex items-center gap-2 rounded-2xl border border-primary/30 bg-primary/10 px-4 py-3">
+              <Star className="h-6 w-6 text-primary" aria-hidden="true" />
+              <div>
+                <p className="text-2xl font-black text-foreground leading-none">{stats.level}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">Level</p>
+              </div>
+            </div>
           </div>
         </div>
       </motion.div>
@@ -553,7 +593,7 @@ function generatePlaceholderDays() {
     emoji: EMOJIS[i] || "📚",
     isRevision: title.includes("Revision"),
     isMockTest: title.includes("Mock Test"),
-    _count: { topics: Math.floor(Math.random() * 5) + 2 },
+    _count: { topics: ((i * 7 + 3) % 4) + 2 }, // Deterministic: 2-5 topics
   }));
 }
 

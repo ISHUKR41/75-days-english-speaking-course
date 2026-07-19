@@ -50,11 +50,12 @@ export function DayCard({
   // Color for this specific day
   const dayColor = getDayColor(dayNumber);
 
-  // Generate progress percentage for completed days
+  // Generate deterministic progress percentage for current day
+  // Using dayNumber for stable server/client rendering (no Math.random())
   const progressPercent = isCompleted
     ? 100
     : isCurrent
-    ? Math.floor(Math.random() * 60) + 20 // Mock progress
+    ? ((dayNumber * 17 + 23) % 45) + 20 // Deterministic: 20-65% range
     : 0;
 
   // Icon based on day type and status

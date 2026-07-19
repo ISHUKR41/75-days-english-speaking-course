@@ -5,7 +5,7 @@
 // Both TYPED and SPOKEN answer modes
 // ============================================================
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -18,6 +18,7 @@ import type { TopicConfig, SubtopicConfig } from "@/data/course-content/days-con
 import { LessonContent } from "@/components/learning/lesson-content";
 import { PracticeSection } from "@/components/practice/practice-section";
 import { VocabularySection } from "@/components/vocabulary/vocabulary-section";
+import { TestSection } from "@/components/practice/test-section";
 
 interface SubtopicLessonProps {
   dayNumber: number;
@@ -51,12 +52,39 @@ export function SubtopicLesson({
   const [totalAnswered, setTotalAnswered] = useState(0);
   const [xpEarned, setXpEarned] = useState(0);
 
+  // Save progress to the API and award XP
+  const saveProgress = useCallback(
+    async (type: "practice" | "test", score: number, xp: number) => {
+      try {
+        await fetch("/api/progress/save", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            dayNumber,
+            subtopicId: subtopic.id,
+            type,
+            score,
+            xpEarned: xp,
+            correct: Math.round((score / 100) * 10),
+            total: 10,
+          }),
+        });
+      } catch (e) {
+        // Non-blocking: progress save errors don't disrupt the lesson
+        console.warn("Progress save failed:", e);
+      }
+    },
+    [dayNumber, subtopic.id]
+  );
+
   // Handle section completion
   const handleSectionComplete = useCallback(
     (section: LessonSection, score?: number) => {
       if (section === "practice" && score !== undefined) {
         setPracticeScore(score);
-        setXpEarned((prev) => prev + Math.floor(score * 0.5));
+        const xp = Math.floor(score * 0.5); // Up to 50 XP for practice
+        setXpEarned((prev) => prev + xp);
+        saveProgress("practice", score, xp);
         playSound("correct");
       }
       if (section === "test") {
@@ -64,7 +92,7 @@ export function SubtopicLesson({
         playSound("perfect");
       }
     },
-    []
+    [saveProgress]
   );
 
   // Navigation URLs
@@ -224,23 +252,19 @@ export function SubtopicLesson({
           )}
 
           {activeSection === "test" && (
-            <div className="space-y-4">
-              <div className="card-base rounded-2xl text-center p-8">
-                <Trophy className="h-12 w-12 text-gold-400 mx-auto mb-4" />
-                <h2 className="text-2xl font-bold mb-2">Subtopic Test</h2>
-                <p className="text-muted-foreground mb-6">
-                  Test your knowledge of {subtopic.title} with 50 questions.
-                  These are harder than practice questions.
-                </p>
-                <button
-                  className="btn-primary mx-auto px-8 py-3"
-                  onClick={() => handleSectionComplete("test")}
-                >
-                  <Play className="h-5 w-5" />
-                  Start Test — 50 Questions
-                </button>
-              </div>
-            </div>
+            <TestSection
+              dayNumber={dayNumber}
+              subtopicId={subtopic.id}
+              subtopicTitle={subtopic.title}
+              topicColor={topic.color}
+              userId={userId}
+              onComplete={(score, xp) => {
+                setXpEarned(prev => prev + xp);
+                // Save test progress to DB (non-blocking)
+                saveProgress("test", score, xp);
+                handleSectionComplete("test", score);
+              }}
+            />
           )}
         </motion.div>
       </AnimatePresence>

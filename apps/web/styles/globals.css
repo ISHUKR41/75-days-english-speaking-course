@@ -359,13 +359,61 @@
   }
 
   /* ── Input Field ── */
-  .input-field {
+  .input-field,
+  .input {
     @apply flex h-11 w-full rounded-xl border border-input bg-background px-4 py-2
            text-sm ring-offset-background
            placeholder:text-muted-foreground
            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
            disabled:cursor-not-allowed disabled:opacity-50
            transition-colors duration-200;
+  }
+
+  /* ── Shine / Shimmer effect on hover ── */
+  .card-shine {
+    @apply relative overflow-hidden;
+  }
+  .card-shine::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -75%;
+    width: 50%;
+    height: 200%;
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(255,255,255,0.07) 50%,
+      transparent 100%
+    );
+    transform: skewX(-20deg);
+    transition: left 0.5s ease;
+    pointer-events: none;
+  }
+  .card-shine:hover::after {
+    left: 125%;
+  }
+
+  /* ── Gradient border animated ── */
+  .border-gradient {
+    @apply relative rounded-2xl;
+    background: linear-gradient(hsl(var(--card)), hsl(var(--card))) padding-box,
+                linear-gradient(135deg, #6272f1, #8b5cf6, #ec4899) border-box;
+    border: 1.5px solid transparent;
+  }
+
+  /* ── Text gradient variants ── */
+  .gradient-text-blue {
+    @apply bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent;
+  }
+  .gradient-text-purple {
+    @apply bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent;
+  }
+  .gradient-text-gold {
+    @apply bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent;
+  }
+  .gradient-text-emerald {
+    @apply bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent;
   }
 
   /* ── XP Bar ── */
