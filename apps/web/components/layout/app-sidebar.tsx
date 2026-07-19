@@ -1,14 +1,18 @@
 "use client";
 // ============================================================
 // App Sidebar - Main navigation sidebar for authenticated users
-// Features: day list, progress tracker, user info, settings
+// Uses real user data from API via useUserStats hook
+// Features: day navigation, progress tracker, user info
+// Premium design inspired by Linear and Vercel
 // ============================================================
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
+// Next.js navigation
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
+// Animation library for smooth transitions
 import { motion, AnimatePresence } from "framer-motion";
+// Icons
 import {
   BookOpen,
   ChevronDown,
@@ -18,138 +22,128 @@ import {
   Mic,
   PenLine,
   Settings,
-  Star,
   Trophy,
   TrendingUp,
-  User,
   Volume2,
   Zap,
-  Calendar,
   Target,
   BookMarked,
   GraduationCap,
   RefreshCcw,
-  CheckCircle2,
   Lock,
+  CheckCircle2,
+  User,
+  Sparkles,
+  Star,
+  ChevronLeft,
 } from "lucide-react";
+// Utility for conditional class names
 import { cn } from "@/lib/utils";
-import { getDayColor } from "@/lib/utils";
+// Sidebar context from shadcn
 import { useSidebar } from "@/components/ui/sidebar";
+// Real user stats hook
+import { useUserStats } from "@/hooks/use-user-stats";
 
-// ─── Navigation sections ──────────────────────────────────────
+// ─── Navigation items ──────────────────────────────────────────
+// Main navigation links shown in the sidebar
 const MAIN_NAV = [
-  {
-    icon: LayoutDashboard,
-    label: "Dashboard",
-    href: "/dashboard",
-    color: "text-blue-400",
-  },
-  {
-    icon: TrendingUp,
-    label: "My Progress",
-    href: "/progress",
-    color: "text-emerald-400",
-  },
-  {
-    icon: BookMarked,
-    label: "Vocabulary",
-    href: "/vocabulary",
-    color: "text-purple-400",
-  },
-  {
-    icon: Mic,
-    label: "Speaking Lab",
-    href: "/speaking",
-    color: "text-pink-400",
-  },
-  {
-    icon: PenLine,
-    label: "Writing Lab",
-    href: "/writing",
-    color: "text-amber-400",
-  },
-  {
-    icon: RefreshCcw,
-    label: "Revision",
-    href: "/revision",
-    color: "text-cyan-400",
-  },
-  {
-    icon: Trophy,
-    label: "Leaderboard",
-    href: "/leaderboard",
-    color: "text-gold-400",
-  },
-  {
-    icon: Target,
-    label: "Mock Tests",
-    href: "/mock-test",
-    color: "text-rose-400",
-  },
+  { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard", color: "text-blue-400" },
+  { icon: TrendingUp, label: "My Progress", href: "/progress", color: "text-emerald-400" },
+  { icon: BookMarked, label: "Vocabulary", href: "/vocabulary", color: "text-purple-400" },
+  { icon: Mic, label: "Speaking Lab", href: "/speaking", color: "text-pink-400" },
+  { icon: PenLine, label: "Writing Lab", href: "/writing", color: "text-amber-400" },
+  { icon: RefreshCcw, label: "Revision", href: "/revision", color: "text-cyan-400" },
+  { icon: Trophy, label: "Leaderboard", href: "/leaderboard", color: "text-yellow-400" },
+  { icon: Target, label: "Mock Tests", href: "/mock-test", color: "text-rose-400" },
 ];
 
-// ─── Day list for quick navigation ────────────────────────────
-// Generate all 75 days with their topics
-const DAYS_PREVIEW = [
-  { day: 1, title: "Basic of English" },
-  { day: 2, title: "Self Introduction" },
-  { day: 3, title: "Imperative Sentence" },
-  { day: 4, title: "Be Verb" },
-  { day: 5, title: "Demonstrative Pronoun" },
-  { day: 6, title: "Has / Have" },
-  { day: 7, title: "Had" },
-  { day: 8, title: "Will Have" },
-  { day: 9, title: "Use of There" },
-  { day: 10, title: "Revision + Practice" },
+// ─── All 75 days preview list ──────────────────────────────────
+// First 10 days shown directly, rest locked until progress
+const ALL_DAYS = [
+  { day: 1, title: "Basic of English", emoji: "📖" },
+  { day: 2, title: "Self Introduction", emoji: "👋" },
+  { day: 3, title: "Imperative Sentence", emoji: "⚡" },
+  { day: 4, title: "Be Verb", emoji: "🔵" },
+  { day: 5, title: "Demonstrative Pronoun", emoji: "👆" },
+  { day: 6, title: "Has / Have", emoji: "✅" },
+  { day: 7, title: "Had", emoji: "⏮️" },
+  { day: 8, title: "Will Have", emoji: "⏭️" },
+  { day: 9, title: "Use of There", emoji: "📍" },
+  { day: 10, title: "Revision + Practice", emoji: "🔄" },
+  { day: 11, title: "Use of Want", emoji: "💭" },
+  { day: 12, title: "Use of Wanted", emoji: "💫" },
+  { day: 13, title: "Use of Let", emoji: "🤝" },
+  { day: 14, title: "Use of Let's", emoji: "🚀" },
+  { day: 15, title: "Would Like To", emoji: "🙏" },
+  { day: 16, title: "Can", emoji: "💪" },
+  { day: 17, title: "Should", emoji: "⚖️" },
+  { day: 18, title: "May", emoji: "🌸" },
+  { day: 19, title: "Must", emoji: "⚠️" },
+  { day: 20, title: "Revision + Speaking", emoji: "🗣️" },
+  { day: 21, title: "Used To", emoji: "⏰" },
+  { day: 22, title: "Could", emoji: "🌟" },
+  { day: 23, title: "Should Have", emoji: "💡" },
+  { day: 24, title: "Must Have", emoji: "🔑" },
+  { day: 25, title: "Could Have", emoji: "🌈" },
+  { day: 26, title: "Would Have", emoji: "✨" },
+  { day: 27, title: "May Have", emoji: "🎯" },
+  { day: 28, title: "Might Have", emoji: "🌙" },
+  { day: 29, title: "Will / Shall", emoji: "📅" },
+  { day: 30, title: "Would + Ought To", emoji: "🎓" },
 ];
 
+// ─── Sidebar component ─────────────────────────────────────────
 export function AppSidebar() {
+  // Get current URL path for highlighting active links
   const pathname = usePathname();
-  const { user } = useUser();
+  // Sidebar open/close state from context
   const { open, setOpen } = useSidebar();
-
-  // Track which sections are expanded
+  // Real user stats from API
+  const { stats, loading } = useUserStats();
+  // Track whether the days list is expanded
   const [daysExpanded, setDaysExpanded] = useState(false);
 
-  // Mock user stats (will come from API)
-  const userStats = {
-    currentDay: 2,
-    streak: 7,
-    totalXp: 2450,
-    level: 5,
-    completedDays: 1,
-  };
+  // Display name for the user
+  const displayName =
+    stats.firstName
+      ? `${stats.firstName}${stats.lastName ? ` ${stats.lastName}` : ""}`
+      : "Student";
+
+  // Filter days to show accessible ones first
+  const visibleDays = daysExpanded ? ALL_DAYS : ALL_DAYS.slice(0, 10);
 
   return (
     <aside
       className={cn(
-        // Base styles
-        "relative flex flex-col h-screen border-r border-border bg-sidebar",
-        "transition-all duration-300 ease-in-out",
-        // Width based on open state
-        open ? "w-72" : "w-[72px]",
-        // Fixed on desktop, overlay on mobile
+        // Base layout styles
+        "relative flex flex-col h-screen border-r border-border/60",
+        "bg-sidebar transition-all duration-300 ease-in-out",
+        // Width changes based on open/closed state
+        open ? "w-[280px]" : "w-[68px]",
+        // Fixed position on mobile, relative on desktop
         "fixed lg:relative z-30 lg:z-auto",
-        // Hide on mobile when closed
+        // Hide on mobile when collapsed
         !open && "hidden lg:flex"
       )}
       aria-label="Main navigation"
     >
-      {/* ── Logo & brand ── */}
-      <div className="flex h-16 items-center border-b border-border px-4">
+      {/* ── Header: Logo + App Name ── */}
+      <div className="flex h-14 items-center border-b border-border/60 px-3">
+        {/* Logo icon — always visible */}
         <Link
           href="/dashboard"
           className="flex items-center gap-3 min-w-0 no-tap-highlight"
         >
-          {/* Logo icon - always visible */}
+          {/* Brand icon */}
           <div
-            className="flex h-9 w-9 shrink-0 items-center justify-center 
-                       rounded-xl bg-primary shadow-glow-brand"
+            className="flex h-9 w-9 shrink-0 items-center justify-center
+                       rounded-xl bg-gradient-to-br from-brand-500 to-purple-600
+                       shadow-glow-brand"
           >
             <GraduationCap className="h-5 w-5 text-white" aria-hidden="true" />
           </div>
 
-          {/* App name - only visible when expanded */}
+          {/* App name — visible only when expanded */}
           <AnimatePresence>
             {open && (
               <motion.div
@@ -159,80 +153,110 @@ export function AppSidebar() {
                 transition={{ duration: 0.2 }}
                 className="min-w-0"
               >
-                <p className="font-bold text-sm text-foreground leading-tight">
+                <p className="font-bold text-sm text-foreground leading-tight truncate">
                   75 Days English
                 </p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-[10px] text-muted-foreground leading-tight">
                   Hard English Course
                 </p>
               </motion.div>
             )}
           </AnimatePresence>
         </Link>
+
+        {/* Collapse/expand toggle button */}
+        <AnimatePresence>
+          {open && (
+            <motion.button
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setOpen(false)}
+              className="ml-auto flex h-7 w-7 shrink-0 items-center justify-center
+                         rounded-lg text-muted-foreground hover:bg-accent
+                         hover:text-foreground transition-colors"
+              aria-label="Collapse sidebar"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </motion.button>
+          )}
+        </AnimatePresence>
+
+        {/* Expand button when collapsed */}
+        {!open && (
+          <button
+            onClick={() => setOpen(true)}
+            className="ml-auto hidden lg:flex h-7 w-7 items-center justify-center
+                       rounded-lg text-muted-foreground hover:bg-accent
+                       hover:text-foreground transition-colors"
+            aria-label="Expand sidebar"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        )}
       </div>
 
-      {/* ── User stats bar ── */}
+      {/* ── User stats bar (only when expanded) ── */}
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="mx-3 mt-3 rounded-xl border border-border/50 bg-card p-3"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+            className="mx-3 mt-3 overflow-hidden"
           >
-            {/* Current day */}
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs text-muted-foreground">Current Day</span>
-              <span className="badge-primary text-xs font-bold">
-                Day {userStats.currentDay} / 75
-              </span>
-            </div>
-
-            {/* Progress bar */}
-            <div className="progress-bar mb-3">
-              <motion.div
-                className="progress-fill"
-                initial={{ width: 0 }}
-                animate={{
-                  width: `${(userStats.completedDays / 75) * 100}%`,
-                }}
-                transition={{ duration: 1, ease: "easeOut" }}
-              />
-            </div>
-
-            {/* Quick stats */}
-            <div className="grid grid-cols-3 gap-2">
-              {/* Streak */}
-              <div className="text-center">
-                <div className="flex items-center justify-center gap-1">
-                  <Flame className="h-3.5 w-3.5 streak-fire" />
-                  <span className="text-sm font-bold text-foreground">
-                    {userStats.streak}
-                  </span>
-                </div>
-                <p className="text-xs text-muted-foreground">Streak</p>
+            <div className="rounded-xl border border-border/50 bg-card/60 p-3">
+              {/* Day progress header */}
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">
+                  Current Day
+                </span>
+                <span className="text-xs font-bold text-primary">
+                  {loading ? "..." : `Day ${stats.currentDay} / 75`}
+                </span>
               </div>
 
-              {/* XP */}
-              <div className="text-center">
-                <div className="flex items-center justify-center gap-1">
-                  <Zap className="h-3.5 w-3.5 text-gold-400" />
-                  <span className="text-sm font-bold text-foreground">
-                    {userStats.totalXp}
-                  </span>
-                </div>
-                <p className="text-xs text-muted-foreground">XP</p>
+              {/* Overall course progress bar */}
+              <div className="h-1.5 w-full rounded-full bg-border overflow-hidden mb-3">
+                <motion.div
+                  className="h-full rounded-full bg-gradient-to-r from-brand-500 to-purple-500"
+                  initial={{ width: 0 }}
+                  animate={{
+                    width: loading ? "0%" : `${((stats.currentDay - 1) / 75) * 100}%`,
+                  }}
+                  transition={{ duration: 1, ease: "easeOut" }}
+                />
               </div>
 
-              {/* Level */}
-              <div className="text-center">
-                <div className="flex items-center justify-center gap-1">
-                  <Star className="h-3.5 w-3.5 text-blue-400" />
-                  <span className="text-sm font-bold text-foreground">
-                    {userStats.level}
+              {/* Stat row: Streak, XP, Level */}
+              <div className="grid grid-cols-3 gap-2">
+                {/* Streak */}
+                <div className="flex flex-col items-center gap-0.5">
+                  <Flame className="h-3.5 w-3.5 text-orange-500" aria-hidden="true" />
+                  <span className="text-xs font-bold text-foreground">
+                    {loading ? "-" : stats.streak}
                   </span>
+                  <span className="text-[9px] text-muted-foreground">Streak</span>
                 </div>
-                <p className="text-xs text-muted-foreground">Level</p>
+
+                {/* XP */}
+                <div className="flex flex-col items-center gap-0.5">
+                  <Zap className="h-3.5 w-3.5 text-yellow-500" aria-hidden="true" />
+                  <span className="text-xs font-bold text-foreground">
+                    {loading ? "-" : stats.totalXp.toLocaleString()}
+                  </span>
+                  <span className="text-[9px] text-muted-foreground">XP</span>
+                </div>
+
+                {/* Level */}
+                <div className="flex flex-col items-center gap-0.5">
+                  <Star className="h-3.5 w-3.5 text-purple-400" aria-hidden="true" />
+                  <span className="text-xs font-bold text-foreground">
+                    {loading ? "-" : stats.level}
+                  </span>
+                  <span className="text-[9px] text-muted-foreground">Level</span>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -240,171 +264,181 @@ export function AppSidebar() {
       </AnimatePresence>
 
       {/* ── Main navigation ── */}
-      <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1 scrollbar-hide">
-        {/* Main nav items */}
+      <nav
+        className="flex-1 overflow-y-auto px-2 py-3 space-y-0.5 scrollbar-hide"
+        aria-label="Main navigation links"
+      >
+        {/* Navigation items */}
         {MAIN_NAV.map((item) => {
-          const isActive = pathname === item.href;
+          // Check if this link is currently active
+          const isActive = pathname === item.href || pathname?.startsWith(item.href + "/");
 
           return (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium",
-                "transition-all duration-200 group",
+                // Base nav item styles
+                "group flex items-center gap-3 rounded-lg px-3 py-2.5",
+                "text-sm font-medium transition-all duration-150",
+                // Active styles
                 isActive
                   ? "bg-primary/10 text-primary"
                   : "text-muted-foreground hover:bg-accent hover:text-foreground"
               )}
+              aria-current={isActive ? "page" : undefined}
               title={!open ? item.label : undefined}
             >
-              {/* Icon */}
+              {/* Icon — always visible */}
               <item.icon
                 className={cn(
-                  "h-5 w-5 shrink-0 transition-colors",
+                  "h-4.5 w-4.5 shrink-0 transition-colors",
                   isActive ? "text-primary" : item.color
                 )}
                 aria-hidden="true"
               />
 
-              {/* Label - only visible when expanded */}
+              {/* Label — only visible when expanded */}
               <AnimatePresence>
                 {open && (
                   <motion.span
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="flex-1 truncate"
+                    initial={{ opacity: 0, x: -5 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -5 }}
+                    transition={{ duration: 0.15 }}
+                    className="truncate"
                   >
                     {item.label}
                   </motion.span>
                 )}
               </AnimatePresence>
 
-              {/* Active indicator dot */}
-              {isActive && !open && (
-                <div className="absolute right-0 h-6 w-1 rounded-l-full bg-primary" />
+              {/* Active indicator dot when collapsed */}
+              {!open && isActive && (
+                <div className="absolute right-1 h-1.5 w-1.5 rounded-full bg-primary" />
               )}
             </Link>
           );
         })}
 
         {/* ── Days section ── */}
-        <AnimatePresence>
-          {open && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="pt-3"
+        {open && (
+          <div className="mt-4">
+            {/* Section header */}
+            <button
+              onClick={() => setDaysExpanded(!daysExpanded)}
+              className="flex w-full items-center justify-between px-3 py-2
+                         text-[10px] font-semibold uppercase tracking-wider
+                         text-muted-foreground hover:text-foreground transition-colors"
+              aria-expanded={daysExpanded}
             >
-              {/* Section header */}
-              <button
-                onClick={() => setDaysExpanded(!daysExpanded)}
-                className="flex w-full items-center justify-between px-3 py-2 
-                           text-xs font-semibold uppercase tracking-wider 
-                           text-muted-foreground hover:text-foreground transition-colors"
+              <span>Course Days</span>
+              <motion.div
+                animate={{ rotate: daysExpanded ? 180 : 0 }}
+                transition={{ duration: 0.2 }}
               >
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-3.5 w-3.5" />
-                  Course Days
-                </div>
-                <ChevronDown
-                  className={cn(
-                    "h-3.5 w-3.5 transition-transform duration-200",
-                    daysExpanded && "rotate-180"
-                  )}
-                />
-              </button>
+                <ChevronDown className="h-3 w-3" aria-hidden="true" />
+              </motion.div>
+            </button>
 
-              {/* Expanded day list */}
-              <AnimatePresence>
-                {daysExpanded && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="overflow-hidden mt-1 space-y-0.5"
-                  >
-                    {DAYS_PREVIEW.map((day) => {
-                      const isCompleted = day.day < userStats.currentDay;
-                      const isCurrent = day.day === userStats.currentDay;
-                      const isLocked = day.day > userStats.currentDay;
-                      const color = getDayColor(day.day);
+            {/* Day list */}
+            <AnimatePresence>
+              <div className="space-y-0.5">
+                {visibleDays.map((dayItem) => {
+                  // Determine access level based on user's current day
+                  const isCompleted = dayItem.day < stats.currentDay;
+                  const isCurrent = dayItem.day === stats.currentDay;
+                  const isLocked = dayItem.day > stats.currentDay;
+                  const isDayActive = pathname === `/day/${dayItem.day}`;
 
-                      return (
-                        <Link
-                          key={day.day}
-                          href={
-                            isLocked ? "#" : `/day/${day.day}`
-                          }
-                          className={cn(
-                            "flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs",
-                            "transition-colors duration-150",
-                            isCurrent
-                              ? "bg-primary/10 text-primary font-semibold"
-                              : isCompleted
-                              ? "text-muted-foreground hover:bg-accent hover:text-foreground"
-                              : "text-muted-foreground/40 cursor-not-allowed"
-                          )}
-                          aria-disabled={isLocked}
-                        >
-                          {/* Day number badge */}
-                          <div
-                            className="flex h-5 w-5 shrink-0 items-center justify-center 
-                                       rounded-full text-[10px] font-bold text-white"
-                            style={{
-                              backgroundColor: isLocked ? "transparent" : color,
-                              border: isLocked
-                                ? "1px solid hsl(var(--border))"
-                                : "none",
-                            }}
-                          >
-                            {isCompleted ? (
-                              <CheckCircle2 className="h-3.5 w-3.5" />
-                            ) : isLocked ? (
-                              <Lock className="h-2.5 w-2.5 text-muted-foreground/40" />
-                            ) : (
-                              day.day
-                            )}
-                          </div>
-
-                          {/* Day title */}
-                          <span className="truncate">{day.title}</span>
-                        </Link>
-                      );
-                    })}
-
-                    {/* See all days link */}
+                  return (
                     <Link
-                      href="/dashboard"
-                      className="flex items-center gap-2 px-3 py-2 text-xs
-                                 text-primary hover:underline font-medium"
+                      key={dayItem.day}
+                      href={isLocked ? "#" : `/day/${dayItem.day}`}
+                      className={cn(
+                        "flex items-center gap-2 rounded-lg px-3 py-1.5",
+                        "text-xs transition-all duration-150",
+                        isLocked
+                          ? "cursor-not-allowed text-muted-foreground/40"
+                          : isDayActive
+                          ? "bg-primary/10 text-primary font-medium"
+                          : isCurrent
+                          ? "text-foreground font-medium hover:bg-accent"
+                          : isCompleted
+                          ? "text-muted-foreground hover:bg-accent/50"
+                          : "text-muted-foreground/60 hover:bg-accent/30"
+                      )}
+                      aria-label={`Day ${dayItem.day}: ${dayItem.title}${isLocked ? " (locked)" : ""}`}
+                      onClick={isLocked ? (e) => e.preventDefault() : undefined}
                     >
-                      <ChevronRight className="h-3.5 w-3.5" />
-                      See all 75 days
+                      {/* Day status icon */}
+                      {isCompleted ? (
+                        <CheckCircle2 className="h-3 w-3 shrink-0 text-emerald-500" />
+                      ) : isCurrent ? (
+                        <Sparkles className="h-3 w-3 shrink-0 text-primary animate-pulse" />
+                      ) : isLocked ? (
+                        <Lock className="h-3 w-3 shrink-0 text-muted-foreground/30" />
+                      ) : (
+                        <BookOpen className="h-3 w-3 shrink-0 text-muted-foreground/50" />
+                      )}
+
+                      {/* Day info */}
+                      <span className="truncate">
+                        <span className="font-medium">D{dayItem.day}</span>
+                        {" · "}
+                        {dayItem.title}
+                      </span>
+
+                      {/* Current day indicator */}
+                      {isCurrent && (
+                        <span className="ml-auto shrink-0 text-[9px] font-bold
+                                        text-primary bg-primary/10 px-1 rounded">
+                          NOW
+                        </span>
+                      )}
                     </Link>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                  );
+                })}
+
+                {/* Show more/less toggle */}
+                <button
+                  onClick={() => setDaysExpanded(!daysExpanded)}
+                  className="flex w-full items-center justify-center gap-1.5
+                             rounded-lg px-3 py-1.5 text-xs text-muted-foreground
+                             hover:bg-accent/50 transition-colors mt-1"
+                >
+                  {daysExpanded ? (
+                    <>
+                      <ChevronDown className="h-3 w-3 rotate-180" />
+                      Show less
+                    </>
+                  ) : (
+                    <>
+                      <ChevronDown className="h-3 w-3" />
+                      View all 75 days
+                    </>
+                  )}
+                </button>
+              </div>
+            </AnimatePresence>
+          </div>
+        )}
       </nav>
 
-      {/* ── Bottom user section ── */}
-      <div className="border-t border-border p-3">
+      {/* ── Bottom: User info + Settings ── */}
+      <div className="border-t border-border/60 p-3">
         {/* Settings link */}
         <Link
           href="/settings"
           className={cn(
-            "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium",
-            "text-muted-foreground hover:bg-accent hover:text-foreground transition-colors mb-2",
+            "flex items-center gap-3 rounded-lg px-3 py-2.5 mb-2",
+            "text-sm font-medium text-muted-foreground",
+            "hover:bg-accent hover:text-foreground transition-colors",
             pathname === "/settings" && "bg-primary/10 text-primary"
           )}
+          title={!open ? "Settings" : undefined}
         >
-          <Settings className="h-5 w-5 shrink-0" aria-hidden="true" />
+          <Settings className="h-4.5 w-4.5 shrink-0" aria-hidden="true" />
           <AnimatePresence>
             {open && (
               <motion.span
@@ -418,22 +452,35 @@ export function AppSidebar() {
           </AnimatePresence>
         </Link>
 
-        {/* User profile */}
+        {/* User info */}
         <Link
           href="/profile"
-          className="flex items-center gap-3 rounded-xl px-3 py-2.5
-                     hover:bg-accent transition-colors group"
+          className="flex items-center gap-3 rounded-xl p-2 hover:bg-accent
+                     transition-colors cursor-pointer"
+          title={!open ? displayName : undefined}
         >
           {/* Avatar */}
           <div
-            className="flex h-9 w-9 shrink-0 items-center justify-center 
-                       rounded-full bg-gradient-to-br from-primary to-purple-500
-                       text-white text-sm font-bold"
+            className="h-8 w-8 shrink-0 rounded-full bg-gradient-to-br
+                       from-brand-400 to-purple-500 flex items-center justify-center
+                       text-white text-xs font-bold ring-2 ring-border overflow-hidden"
           >
-            {user?.firstName?.charAt(0) || "U"}
+            {stats.imageUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={stats.imageUrl}
+                alt={displayName}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              // Show initials if no avatar
+              <span>
+                {stats.firstName ? stats.firstName[0].toUpperCase() : "S"}
+              </span>
+            )}
           </div>
 
-          {/* Name and email */}
+          {/* Name + level — only visible when expanded */}
           <AnimatePresence>
             {open && (
               <motion.div
@@ -442,34 +489,31 @@ export function AppSidebar() {
                 exit={{ opacity: 0 }}
                 className="min-w-0 flex-1"
               >
-                <p className="text-sm font-medium text-foreground truncate">
-                  {user?.fullName || "Student"}
+                <p className="text-sm font-semibold text-foreground truncate">
+                  {loading ? "Loading..." : displayName}
                 </p>
-                <p className="text-xs text-muted-foreground truncate">
-                  {user?.primaryEmailAddress?.emailAddress || ""}
+                <p className="text-[10px] text-muted-foreground">
+                  Level {loading ? "-" : stats.level} ·{" "}
+                  {loading ? "-" : stats.totalXp.toLocaleString()} XP
                 </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Sound toggle — only visible when expanded */}
+          <AnimatePresence>
+            {open && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <Volume2 className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
               </motion.div>
             )}
           </AnimatePresence>
         </Link>
       </div>
-
-      {/* ── Collapse toggle button ── */}
-      <button
-        onClick={() => setOpen(!open)}
-        className="absolute -right-3 top-20 z-10 flex h-6 w-6 items-center justify-center
-                   rounded-full border border-border bg-card shadow-card
-                   text-muted-foreground hover:text-foreground transition-colors
-                   hover:bg-accent"
-        aria-label={open ? "Collapse sidebar" : "Expand sidebar"}
-      >
-        <ChevronRight
-          className={cn(
-            "h-4 w-4 transition-transform duration-200",
-            open && "rotate-180"
-          )}
-        />
-      </button>
     </aside>
   );
 }

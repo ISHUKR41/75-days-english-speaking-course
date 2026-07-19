@@ -5,7 +5,7 @@
 // ============================================================
 
 import { notFound, redirect } from "next/navigation";
-import { auth } from "@clerk/nextjs/server";
+import { auth } from "@/lib/safe-auth";
 import { Metadata } from "next";
 import { SubtopicLesson } from "@/components/learning/subtopic-lesson";
 import { COURSE_DAYS_DATA } from "@/data/course-content/days-config";

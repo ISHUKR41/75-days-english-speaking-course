@@ -1,39 +1,65 @@
 // ============================================================
-// Middleware - Clerk v5 authentication for route protection
-// Protects all /dashboard, /day/*, /progress, /vocabulary etc.
-// Public routes: /, /sign-in, /sign-up, /api/clerk/webhook
+// Middleware - Smart Clerk v5 authentication
+// Conditionally applies Clerk auth based on whether the
+// secret key is properly configured.
+// When key is missing/placeholder → dev mode (all routes open)
+// When key is valid → protects all non-public routes
 // ============================================================
 
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-// Define which routes are public (no auth required)
-// These routes can be accessed without signing in
+// ─── Public routes (no auth required) ────────────────────────
+// These routes are accessible without signing in
 const isPublicRoute = createRouteMatcher([
-  "/",                          // Landing page - visible to everyone
-  "/sign-in(.*)",               // Sign in pages (Clerk handles sub-routes)
-  "/sign-up(.*)",               // Sign up pages (Clerk handles sub-routes)
-  "/api/clerk/webhook(.*)",     // Clerk webhook endpoint (no auth needed)
-  "/api/health(.*)",            // Health check endpoint (for monitoring)
+  "/",                          // Landing page
+  "/sign-in(.*)",               // Clerk sign-in (handles sub-routes)
+  "/sign-up(.*)",               // Clerk sign-up (handles sub-routes)
+  "/api/clerk/webhook(.*)",     // Clerk webhook (no auth needed)
+  "/api/health(.*)",            // Health check endpoint
 ]);
 
-// Apply Clerk middleware - protects all non-public routes
-// Uses Clerk v5 compatible syntax
-export default clerkMiddleware((auth, request) => {
-  // Only protect routes that are NOT in the public list
+// ─── Check if Clerk is properly configured ───────────────────
+// Returns true only when a real (non-placeholder) secret key exists
+const CLERK_SECRET = process.env.CLERK_SECRET_KEY ?? "";
+const IS_CLERK_CONFIGURED =
+  (CLERK_SECRET.startsWith("sk_test_") || CLERK_SECRET.startsWith("sk_live_")) &&
+  CLERK_SECRET.length > 40 &&        // Real keys are long (80+ chars)
+  !CLERK_SECRET.includes("placeholder") && // Not our placeholder
+  !CLERK_SECRET.includes("xxxxxxxxxxx");   // Not our placeholder
+
+// ─── Development passthrough middleware ───────────────────────
+// Used when Clerk is not configured — allows all routes without auth
+// This lets developers preview the app before adding the Clerk key
+function devMiddleware(_request: NextRequest): NextResponse {
+  // Allow ALL requests through — no auth required in dev mode
+  return NextResponse.next();
+}
+
+// ─── Clerk middleware ─────────────────────────────────────────
+// Protects all non-public routes when Clerk is properly configured
+const clerkAuth = clerkMiddleware((auth, request) => {
+  // If this is NOT a public route, require authentication
   if (!isPublicRoute(request)) {
-    // auth.protect() redirects to /sign-in if user is not authenticated
-    // This is the correct Clerk v5 middleware syntax
+    // auth.protect() redirects to /sign-in if not authenticated
+    // Using type cast because the TypeScript types differ by Clerk version
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (auth as any).protect();
   }
 });
 
-// Middleware config - match all routes except Next.js internals and static files
+// ─── Export the correct middleware ───────────────────────────
+// Use Clerk when configured, otherwise use dev passthrough
+export default IS_CLERK_CONFIGURED ? clerkAuth : devMiddleware;
+
+// ─── Middleware config ────────────────────────────────────────
+// Defines which routes the middleware runs on
 export const config = {
   matcher: [
     // Skip Next.js internals and all static files (images, fonts, etc.)
     "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    // Always run for API routes so they are also protected
+    // Always run middleware on API routes
     "/(api|trpc)(.*)",
   ],
 };

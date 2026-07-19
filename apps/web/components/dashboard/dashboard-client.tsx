@@ -148,8 +148,31 @@ export function DashboardClient({
     "all" | "in-progress" | "completed" | "locked"
   >("all");
 
-  // Use real data if available, otherwise mock data
-  const stats = MOCK_USER_STATS;
+  // Use real data from database — fall back to mock only when null
+  // initialUser is the Prisma User model from the server component
+  const realUser = initialUser as {
+    currentDay?: number; totalXp?: number; level?: number;
+    streak?: number; longestStreak?: number; totalCoins?: number;
+    progress?: Array<{ status?: string }>;
+    badges?: Array<unknown>;
+  } | null;
+
+  const stats = {
+    currentDay: realUser?.currentDay ?? MOCK_USER_STATS.currentDay,
+    completedDays: realUser?.currentDay ? realUser.currentDay - 1 : MOCK_USER_STATS.completedDays,
+    streak: realUser?.streak ?? MOCK_USER_STATS.streak,
+    totalXp: realUser?.totalXp ?? MOCK_USER_STATS.totalXp,
+    level: realUser?.level ?? MOCK_USER_STATS.level,
+    levelProgress: realUser ? ((realUser.totalXp ?? 0) % 1000) / 10 : MOCK_USER_STATS.levelProgress,
+    todayXp: MOCK_USER_STATS.todayXp,
+    weekXp: MOCK_USER_STATS.weekXp,
+    accuracy: MOCK_USER_STATS.accuracy,
+    wordsLearned: MOCK_USER_STATS.wordsLearned,
+    questionsAnswered: MOCK_USER_STATS.questionsAnswered,
+    practiceMinutes: MOCK_USER_STATS.practiceMinutes,
+    badges: realUser?.badges?.length ?? MOCK_USER_STATS.badges,
+    rank: MOCK_USER_STATS.rank,
+  };
 
   // Filter days based on active tab
   const filteredDays = initialDays.filter((day) => {

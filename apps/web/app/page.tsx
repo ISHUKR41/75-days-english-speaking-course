@@ -4,7 +4,7 @@
 // ============================================================
 
 import { redirect } from "next/navigation";
-import { auth } from "@clerk/nextjs/server";
+import { safeAuth } from "@/lib/safe-auth";
 import { LandingHero } from "@/components/landing/landing-hero";
 import { LandingFeatures } from "@/components/landing/landing-features";
 import { LandingCurriculum } from "@/components/landing/landing-curriculum";
@@ -16,8 +16,8 @@ import { LandingFooter } from "@/components/landing/landing-footer";
 // This page is shown to users who are NOT logged in
 // Logged-in users are redirected to the dashboard
 export default async function HomePage() {
-  // Check if user is already authenticated
-  const { userId } = await auth();
+  // Check if user is already authenticated (safe wrapper handles invalid Clerk keys)
+  const { userId } = await safeAuth();
 
   // Redirect authenticated users to dashboard
   if (userId) {

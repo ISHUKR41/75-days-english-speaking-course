@@ -6,8 +6,8 @@
 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { UserButton } from "@clerk/nextjs";
 import { motion, AnimatePresence } from "framer-motion";
+import { useUserStats } from "@/hooks/use-user-stats";
 import {
   Bell,
   Flame,
@@ -77,9 +77,10 @@ export function AppHeader() {
   // Count unread notifications
   const unreadCount = MOCK_NOTIFICATIONS.filter((n) => !n.read).length;
 
-  // Mock user XP (will come from store/API)
-  const userXp = 2450;
-  const userStreak = 7;
+  // Real user stats from API (replaces previous mock values)
+  const { stats: userStats } = useUserStats();
+  const userXp = userStats.totalXp;
+  const userStreak = userStats.streak;
 
   return (
     <header
@@ -235,16 +236,24 @@ export function AppHeader() {
         {/* Theme toggle */}
         <ThemeToggle />
 
-        {/* User menu (Clerk) */}
-        <UserButton
-          afterSignOutUrl="/"
-          appearance={{
-            elements: {
-              avatarBox: "h-9 w-9 rounded-xl",
-              userButtonTrigger: "rounded-xl focus:shadow-none",
-            },
-          }}
-        />
+        {/* User avatar — links to profile page */}
+        {/* When Clerk is configured this would be the Clerk UserButton */}
+        <a
+          href="/profile"
+          className="flex h-9 w-9 shrink-0 items-center justify-center
+                     rounded-xl bg-gradient-to-br from-brand-400 to-purple-500
+                     text-white text-sm font-bold ring-2 ring-border/60
+                     hover:ring-border transition-all overflow-hidden"
+          aria-label="Profile"
+          title={userStats.firstName ?? "Profile"}
+        >
+          {userStats.imageUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={userStats.imageUrl} alt="avatar" className="w-full h-full object-cover" />
+          ) : (
+            <span>{userStats.firstName ? userStats.firstName[0].toUpperCase() : "S"}</span>
+          )}
+        </a>
       </div>
 
       {/* ── Search overlay ── */}

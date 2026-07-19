@@ -4,7 +4,7 @@
 // Protected: redirect to sign-in if not authenticated
 // ============================================================
 
-import { auth } from "@clerk/nextjs/server";
+import { auth } from "@/lib/safe-auth";
 import { redirect, notFound } from "next/navigation";
 import { Metadata } from "next";
 import { db } from "@/lib/db";
@@ -89,7 +89,7 @@ async function getDayData(dayNum: number, clerkId: string) {
     }
   }
 
-  return { day, user, hasAccess, dayProgress, completedSubtopicIds: [...completedSubtopicIds] };
+  return { day, user, hasAccess, dayProgress, completedSubtopicIds: Array.from(completedSubtopicIds) };
 }
 
 // ─── Page Component ───────────────────────────────────────────────────────────

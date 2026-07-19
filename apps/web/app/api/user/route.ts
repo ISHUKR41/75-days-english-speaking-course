@@ -1,39 +1,74 @@
 // ============================================================
-// GET+POST /api/user - Get/create user in DB from Clerk data
+// User API - GET and POST/UPSERT user in database
+// Uses safe-auth for Clerk compatibility in dev mode
+// GET: Returns current user data
+// POST: Creates or updates user from Clerk webhook data
 // ============================================================
 
-import { NextRequest, NextResponse } from "next/server";
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
+import { auth, safeCurrentUser } from "@/lib/safe-auth";
 import { db } from "@/lib/db";
 
-// GET /api/user - get current user from DB
+// ─── GET /api/user ─────────────────────────────────────────────
+// Returns the current authenticated user's data from our DB
 export async function GET() {
   try {
-    const { userId: clerkId } = await auth();
-    if (!clerkId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    // Get the authenticated user ID (safe - works with/without Clerk)
+    const { userId } = await auth();
+
+    // If not authenticated, return null user
+    if (!userId) {
+      return NextResponse.json({ user: null });
     }
 
+    // Find user in our database by their Clerk ID
     const user = await db.user.findUnique({
-      where: { clerkId },
-      include: {
+      where: { clerkId: userId },
+      select: {
+        // Only select fields we need to send to the client
+        id: true,
+        clerkId: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        imageUrl: true,
+        username: true,
+        currentDay: true,
+        totalXp: true,
+        totalCoins: true,
+        level: true,
+        streak: true,
+        longestStreak: true,
+        lastActiveAt: true,
+        theme: true,
+        language: true,
+        soundEnabled: true,
+        createdAt: true,
+        // Count of badges earned
         _count: {
           select: {
-            progress: true,
             badges: true,
-            scores: true,
+            progress: true,
           },
         },
       },
     });
 
+    // Return null if user not found in DB yet
     if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      return NextResponse.json({ user: null });
     }
 
-    return NextResponse.json({ data: user });
+    // Return user data with computed accuracy field
+    return NextResponse.json({
+      user: {
+        ...user,
+        accuracy: 0, // Computed from practice answers - placeholder
+      },
+    });
   } catch (error) {
-    console.error("[API GET /user] Error:", error);
+    // Log error but return safe response
+    console.error("[GET /api/user] Error:", error);
     return NextResponse.json(
       { error: "Failed to fetch user" },
       { status: 500 }
@@ -41,64 +76,75 @@ export async function GET() {
   }
 }
 
-// POST /api/user - create or update user from Clerk data
-export async function POST(req: NextRequest) {
+// ─── POST /api/user ────────────────────────────────────────────
+// Creates or updates user in our database
+// Called from Clerk webhook or after user signs in
+export async function POST(request: Request) {
   try {
+    // Parse request body
+    const body = await request.json().catch(() => ({}));
+
+    // Get the authenticated user
     const { userId: clerkId } = await auth();
+
+    // userId must match authenticated user for security
     if (!clerkId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get data from body or Clerk
-    let body: Record<string, string> = {};
-    try {
-      body = await req.json();
-    } catch {
-      // No body is fine, we'll use Clerk data
-    }
+    // Try to get user data from Clerk (safe wrapper)
+    const clerkUser = await safeCurrentUser();
 
-    // Fetch from Clerk if not provided
-    const clerkUser = await currentUser();
-    if (!clerkUser) {
-      return NextResponse.json(
-        { error: "Clerk user not found" },
-        { status: 404 }
-      );
-    }
-
+    // Build user data from body or Clerk data
     const email =
       body.email ||
-      clerkUser.emailAddresses[0]?.emailAddress ||
+      (clerkUser as any)?.emailAddresses?.[0]?.emailAddress ||
       `${clerkId}@unknown.com`;
-    const firstName = body.firstName || clerkUser.firstName || "";
-    const lastName = body.lastName || clerkUser.lastName || "";
-    const imageUrl = body.imageUrl || clerkUser.imageUrl || "";
+    const firstName = body.firstName || (clerkUser as any)?.firstName || "";
+    const lastName = body.lastName || (clerkUser as any)?.lastName || "";
+    const imageUrl = body.imageUrl || (clerkUser as any)?.imageUrl || "";
+    // Generate username from clerkId if not provided
     const username =
-      body.username || clerkUser.username || `user_${clerkId.slice(-8)}`;
+      body.username ||
+      (clerkUser as any)?.username ||
+      `user_${clerkId.slice(-8)}`;
 
+    // Upsert user in database (create if not exists, update if exists)
     const user = await db.user.upsert({
       where: { clerkId },
       update: {
+        // Only update these fields - preserve game progress
         email,
         firstName,
         lastName,
         imageUrl,
         username,
-        updatedAt: new Date(),
+        // Update last active time
+        lastActiveAt: new Date(),
       },
       create: {
+        // Create new user with all required fields
         clerkId,
         email,
         firstName,
         lastName,
         imageUrl,
         username,
+        // Start at Day 1 with 0 progress
+        currentDay: 1,
+        totalXp: 0,
+        totalCoins: 0,
+        level: 1,
+        streak: 0,
+        longestStreak: 0,
       },
     });
 
-    return NextResponse.json({ data: user });
+    // Return the upserted user
+    return NextResponse.json({ user, created: !user });
   } catch (error) {
-    console.error("[API POST /user] Error:", error);
+    // Log error but return safe response
+    console.error("[POST /api/user] Error:", error);
     return NextResponse.json(
       { error: "Failed to create/update user" },
       { status: 500 }

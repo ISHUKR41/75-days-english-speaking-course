@@ -4,7 +4,7 @@
 // ============================================================
 
 import { redirect } from "next/navigation";
-import { auth } from "@clerk/nextjs/server";
+import { safeAuth, IS_CLERK_CONFIGURED } from "@/lib/safe-auth";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { AppHeader } from "@/components/layout/app-header";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -15,11 +15,12 @@ export default async function MainLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Check authentication status
-  const { userId } = await auth();
+  // Check authentication status (safe wrapper handles invalid Clerk keys)
+  const { userId } = await safeAuth();
 
-  // Redirect to sign-in if not authenticated
-  if (!userId) {
+  // Redirect to sign-in if not authenticated AND Clerk is actually configured
+  // In dev mode without Clerk, we allow access so the UI can be previewed
+  if (!userId && IS_CLERK_CONFIGURED) {
     redirect("/sign-in");
   }
 

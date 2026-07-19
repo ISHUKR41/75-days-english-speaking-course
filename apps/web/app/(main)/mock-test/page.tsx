@@ -3,7 +3,7 @@
 // ============================================================
 
 import { Metadata } from "next";
-import { auth } from "@clerk/nextjs/server";
+import { auth } from "@/lib/safe-auth";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { MockTestClient } from "@/components/mock-test/mock-test-client";

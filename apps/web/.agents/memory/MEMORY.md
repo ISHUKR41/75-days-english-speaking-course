@@ -1,0 +1,2 @@
+- [Clerk Dev Mode Auth](clerk-dev-mode.md) — app uses safe-auth wrapper; dev mode returns dev_user_75days_english userId when Clerk key is placeholder/invalid.
+- [Port and Workflow](port-workflow.md) — app runs on port 5000 via workflow "Start application"; DATABASE_URL must be prefixed.

@@ -3,7 +3,7 @@
 // ============================================================
 
 import { Metadata } from "next";
-import { auth } from "@clerk/nextjs/server";
+import { auth } from "@/lib/safe-auth";
 import { redirect } from "next/navigation";
 import { ProgressPageClient } from "@/components/progress/progress-page-client";
 

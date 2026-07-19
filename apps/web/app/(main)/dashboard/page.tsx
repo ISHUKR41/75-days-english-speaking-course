@@ -3,7 +3,7 @@
 // Shows: current day, progress, stats, quick actions
 // ============================================================
 
-import { auth } from "@clerk/nextjs/server";
+import { auth } from "@/lib/safe-auth";
 import { Metadata } from "next";
 import { DashboardClient } from "@/components/dashboard/dashboard-client";
 import { db } from "@/lib/db";
