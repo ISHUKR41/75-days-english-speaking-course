@@ -72,17 +72,14 @@ export const metadata: Metadata = {
     images: ["/og-image.png"],
   },
 
-  // Favicon and icons
+  // Favicon and icons — using SVG icons (no PNG required)
   icons: {
     icon: [
-      { url: "/icons/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/icons/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icons/icon-96x96.svg", sizes: "96x96", type: "image/svg+xml" },
+      { url: "/icons/icon-192x192.svg", sizes: "192x192", type: "image/svg+xml" },
     ],
     apple: [
-      { url: "/icons/apple-touch-icon.png", sizes: "180x180" },
-    ],
-    other: [
-      { rel: "mask-icon", url: "/icons/safari-pinned-tab.svg", color: "#6272f1" },
+      { url: "/icons/icon-192x192.svg", sizes: "192x192", type: "image/svg+xml" },
     ],
   },
 

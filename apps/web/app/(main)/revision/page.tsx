@@ -1,3 +1,23 @@
-import { Metadata } from "next"; import { auth } from "@/lib/safe-auth"; import { redirect } from "next/navigation";
-export const metadata: Metadata = { title: "Revision" };
-export default async function RevisionPage() { const { userId } = await auth(); if (!userId) redirect("/sign-in"); return <div className="max-w-4xl mx-auto"><h1 className="text-2xl font-bold mb-6">🔄 Revision</h1><p className="text-muted-foreground">Review and revise what you have learned so far.</p></div>; }
+// ============================================================
+// Revision Page
+// Smart revision system: Flashcards, Quick Quiz, Grammar Rules
+// Builds long-term retention through spaced repetition
+// ============================================================
+
+import { Metadata } from "next";
+import { auth } from "@/lib/safe-auth";
+import { redirect } from "next/navigation";
+import { RevisionClient } from "@/components/revision/revision-client";
+
+export const metadata: Metadata = {
+  title: "Revision — 75 Days Hard English",
+  description:
+    "Review and reinforce everything you have learned — flashcards, quick quiz, and grammar rules reference.",
+};
+
+export default async function RevisionPage() {
+  const { userId } = await auth();
+  if (!userId) redirect("/sign-in");
+
+  return <RevisionClient userId={userId} />;
+}

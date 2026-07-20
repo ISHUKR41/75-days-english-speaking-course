@@ -1,3 +1,4 @@
 - [Auth passthrough & Clerk setup](clerk-setup.md) — dev passthrough via safe-auth.ts; deprecated env vars removed; sign-in/sign-up use fallbackRedirectUrl
 - [Content architecture](content-architecture.md) — vocab/questions from static TS files, not DB; DB tracks progress/XP only; lesson content in lesson-content.tsx inline generators
 - [Hydration rules](hydration-rules.md) — never use Math.random() in SSR components; use deterministic formulas instead
+- [Day page architecture](day-page-architecture.md) — day page must use static config IDs (not DB cuid IDs) for topic/subtopic links; DB only for progress; Score model has points/xp not score/maxScore

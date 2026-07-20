@@ -55,8 +55,12 @@ export function useSpeechRecognition(
   const [error, setError] = useState<string | null>(null);
 
   const recognitionRef = useRef<any>(null);
-  const SpeechRecognitionClass = getSpeechRecognition();
-  const isSupported = !!SpeechRecognitionClass;
+  // ── isSupported must start as false on server to avoid hydration mismatch ──
+  const [isSupported, setIsSupported] = useState(false);
+
+  useEffect(() => {
+    setIsSupported(!!getSpeechRecognition());
+  }, []);
 
   // Initialize recognition instance
   useEffect(() => {
