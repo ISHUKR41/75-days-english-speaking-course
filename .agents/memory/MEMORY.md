@@ -2,3 +2,5 @@
 - [Content architecture](content-architecture.md) — vocab/questions from static TS files, not DB; DB tracks progress/XP only; lesson content in lesson-content.tsx inline generators
 - [Hydration rules](hydration-rules.md) — never use Math.random() in SSR components; use deterministic formulas instead
 - [Day page architecture](day-page-architecture.md) — day page must use static config IDs (not DB cuid IDs) for topic/subtopic links; DB only for progress; Score model has points/xp not score/maxScore
+- [Profile page](profile-architecture.md) — replaced Clerk's <UserProfile/> with custom ProfileClient; fetches from DB; works with dev passthrough; components/profile/profile-client.tsx
+- [Question generator](question-generator.md) — data/questions/question-generator.ts generates 3 questions/vocab word (translation, fill-blank, MCQ); practice-section.tsx uses it as fallback for all 75 days

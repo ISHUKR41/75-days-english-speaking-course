@@ -66,7 +66,11 @@ export function useSpeechRecognition(
   useEffect(() => {
     if (!isSupported) return;
 
-    const recognition = new SpeechRecognitionClass();
+    // Get the SpeechRecognition class from the browser (client-side only)
+    const RecognitionClass = getSpeechRecognition();
+    if (!RecognitionClass) return;
+
+    const recognition = new RecognitionClass();
     recognition.lang = language;
     recognition.continuous = continuous;
     recognition.interimResults = interimResults;
@@ -118,7 +122,7 @@ export function useSpeechRecognition(
     return () => {
       recognition.abort();
     };
-  }, [language, continuous, interimResults, maxAlternatives, isSupported, SpeechRecognitionClass]);
+  }, [language, continuous, interimResults, maxAlternatives, isSupported]);
 
   const startListening = useCallback(() => {
     if (!isSupported || !recognitionRef.current) {

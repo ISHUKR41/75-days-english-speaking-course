@@ -20,6 +20,11 @@ import { ALL_DAY1_EXTENDED_QUESTIONS } from "@/data/questions/day-1-extended-que
 import { ALL_DAY_2_QUESTIONS } from "@/data/questions/day-2-questions";
 // Import the PracticeQ type for type compatibility
 import type { PracticeQ } from "@/data/questions/day-1-questions";
+// Import vocabulary data for question generation
+import { ALL_DAY_1_VOCABULARY } from "@/data/vocabulary/day-1-vocabulary";
+import { ALL_DAY_2_VOCABULARY } from "@/data/vocabulary/day-2-vocabulary";
+// Import question generator (creates 3 questions per vocabulary word)
+import { generateQuestionsFromVocab } from "@/data/questions/question-generator";
 
 // ─── Types ───────────────────────────────────────────────────
 // Question interface used by the practice UI
@@ -75,8 +80,25 @@ function mapPracticeQToQuestion(pq: PracticeQ): Question {
   };
 }
 
+// ─── Helper: Generate vocab-based questions as rich fallback ──
+// Generates 3 questions per vocabulary word (600 per day)
+function getVocabGeneratedQuestions(dayNumber: number, subtopicId: string): Question[] {
+  const vocab = dayNumber === 2 ? ALL_DAY_2_VOCABULARY : ALL_DAY_1_VOCABULARY;
+  // Use a slice of vocabulary relevant to this subtopic's index
+  const subtopicNum = parseInt(subtopicId.split("-s").pop() || "1", 10);
+  const wordsPerSubtopic = 15; // 15 words × 3 questions = 45 questions per subtopic
+  const startIdx = ((subtopicNum - 1) * wordsPerSubtopic) % vocab.length;
+  const slicedVocab = vocab.slice(startIdx, startIdx + wordsPerSubtopic);
+  // If slice is too short, wrap around
+  const finalVocab = slicedVocab.length >= 10
+    ? slicedVocab
+    : [...slicedVocab, ...vocab.slice(0, wordsPerSubtopic - slicedVocab.length)];
+  const generated = generateQuestionsFromVocab(finalVocab, subtopicId, dayNumber, subtopicNum);
+  return generated.map(pq => mapPracticeQToQuestion(pq as any));
+}
+
 // ─── Helper: Load questions for a specific day and subtopic ──
-// Combines base questions + extended questions, filtered by subtopicId
+// Combines base questions + extended questions + vocab-generated questions
 function loadQuestionsForSubtopic(dayNumber: number, subtopicId: string): Question[] {
   // For Day 1, combine both question banks
   if (dayNumber === 1) {
@@ -84,22 +106,31 @@ function loadQuestionsForSubtopic(dayNumber: number, subtopicId: string): Questi
     const baseQs = ALL_DAY_1_QUESTIONS.filter(q => q.subtopicId === subtopicId);
     // Get extended questions for this subtopic
     const extQs = ALL_DAY1_EXTENDED_QUESTIONS.filter(q => q.subtopicId === subtopicId);
-    // Combine and convert to Question format
-    const combined = [...baseQs, ...extQs].map(mapPracticeQToQuestion);
-    // If we have questions for this subtopic, return them
+    // Combine handwritten questions
+    const handwritten = [...baseQs, ...extQs].map(mapPracticeQToQuestion);
+    // Always add vocab-generated questions for variety (45 more)
+    const generated = getVocabGeneratedQuestions(1, subtopicId);
+    const combined = [...handwritten, ...generated];
     if (combined.length > 0) return combined;
-    // Otherwise, return ALL questions for Day 1 (fallback)
-    return [...ALL_DAY_1_QUESTIONS, ...ALL_DAY1_EXTENDED_QUESTIONS].map(mapPracticeQToQuestion);
+    // Full fallback: all Day 1 questions + vocab generated
+    return [
+      ...ALL_DAY_1_QUESTIONS.map(mapPracticeQToQuestion),
+      ...getVocabGeneratedQuestions(1, subtopicId),
+    ];
   }
-  // For Day 2, use the Day 2 question bank
+  // For Day 2, use the Day 2 question bank + vocab generated
   if (dayNumber === 2) {
     const d2Qs = ALL_DAY_2_QUESTIONS.filter(q => q.subtopicId === subtopicId);
-    if (d2Qs.length > 0) return d2Qs.map(mapPracticeQToQuestion);
-    // Fallback: return all Day 2 questions
-    return ALL_DAY_2_QUESTIONS.map(mapPracticeQToQuestion);
+    const generated = getVocabGeneratedQuestions(2, subtopicId);
+    const handwritten = d2Qs.map(mapPracticeQToQuestion);
+    const combined = [...handwritten, ...generated];
+    if (combined.length > 0) return combined;
+    return [...ALL_DAY_2_QUESTIONS.map(mapPracticeQToQuestion), ...generated];
   }
-  // For other days (3-75), return fallback from Day 1 to avoid empty practice
-  // TODO: Add Day 3-75 question loaders as content is developed
+  // For all other days (3-75): generate 45 questions from Day 1 vocab
+  // (will be replaced when day-specific content is added)
+  const fallbackGenerated = getVocabGeneratedQuestions(1, subtopicId);
+  if (fallbackGenerated.length > 0) return fallbackGenerated;
   return ALL_DAY_1_QUESTIONS.map(mapPracticeQToQuestion);
 }
 
