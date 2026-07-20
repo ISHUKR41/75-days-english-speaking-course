@@ -7,8 +7,14 @@ const nextConfig = {
   reactStrictMode: true,
 
   // Allow all dev origins — required for Replit iframe preview
-  // Without this Next.js 15 blocks cross-origin hot-reload requests
-  allowedDevOrigins: ["*"],
+  // Replit uses *.replit.dev and *.pike.replit.dev for proxied previews
+  allowedDevOrigins: [
+    "*.replit.dev",
+    "*.pike.replit.dev",
+    "*.repl.co",
+    "*.janeway.replit.dev",
+    "localhost",
+  ],
 
   // Enable experimental features for best performance
   experimental: {

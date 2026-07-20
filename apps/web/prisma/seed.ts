@@ -3,6 +3,7 @@
 // Run: npx tsx prisma/seed.ts
 // ============================================================
 import { PrismaClient } from "@prisma/client";
+import { ALL_DAY_1_VOCABULARY } from "../data/vocabulary/day-1-vocabulary";
 
 // Create a fresh Prisma client for seeding
 const prisma = new PrismaClient();
@@ -170,50 +171,23 @@ const DAY_TOPICS: Record<number, Array<{
   ],
 };
 
-// Day 1 vocabulary (40 words, full detail)
-const DAY1_VOCAB = [
-  { word: "Ability", meaning: "The skill or power to do something", hindiMeaning: "योग्यता, क्षमता", ipa: "/əˈbɪlɪti/", partOfSpeech: "noun", difficulty: "BEGINNER", example1: "She has the ability to speak three languages.", example2: "My ability to draw improved after practice.", example3: "Everyone has the ability to learn English.", synonyms: JSON.stringify(["skill","talent","capability"]), antonyms: JSON.stringify(["inability","weakness"]) },
-  { word: "Accomplish", meaning: "To successfully complete or achieve something", hindiMeaning: "पूरा करना, हासिल करना", ipa: "/əˈkʌmplɪʃ/", partOfSpeech: "verb", difficulty: "BEGINNER", example1: "She accomplished all her goals.", example2: "We accomplish great things together.", example3: "He accomplished the task in two hours.", synonyms: JSON.stringify(["achieve","complete","fulfill"]), antonyms: JSON.stringify(["fail","abandon"]) },
-  { word: "Accurate", meaning: "Correct, exact, and without mistakes", hindiMeaning: "सटीक, बिल्कुल सही", ipa: "/ˈækjərɪt/", partOfSpeech: "adjective", difficulty: "BEGINNER", example1: "Make sure your answer is accurate.", example2: "The forecast was not very accurate.", example3: "She gave an accurate description.", synonyms: JSON.stringify(["correct","precise","exact"]), antonyms: JSON.stringify(["inaccurate","wrong"]) },
-  { word: "Acknowledge", meaning: "To accept or admit something is true", hindiMeaning: "स्वीकार करना, मानना", ipa: "/əkˈnɒlɪdʒ/", partOfSpeech: "verb", difficulty: "INTERMEDIATE", example1: "Please acknowledge receipt of this email.", example2: "He acknowledged his mistake.", example3: "It is important to acknowledge others' work.", synonyms: JSON.stringify(["recognize","admit","confirm"]), antonyms: JSON.stringify(["deny","ignore"]) },
-  { word: "Adapt", meaning: "To change or adjust to fit a new situation", hindiMeaning: "अनुकूल होना, बदलना", ipa: "/əˈdæpt/", partOfSpeech: "verb", difficulty: "INTERMEDIATE", example1: "You need to adapt to changes.", example2: "Animals adapt to their environment.", example3: "She quickly adapted to the new city.", synonyms: JSON.stringify(["adjust","modify","conform"]), antonyms: JSON.stringify(["resist","refuse"]) },
-  { word: "Admire", meaning: "To regard with respect and approval", hindiMeaning: "तारीफ करना, प्रशंसा करना", ipa: "/ədˈmaɪər/", partOfSpeech: "verb", difficulty: "BEGINNER", example1: "I admire her courage.", example2: "Everyone admires his dedication.", example3: "She admired the beautiful painting.", synonyms: JSON.stringify(["respect","appreciate","praise"]), antonyms: JSON.stringify(["criticize","disrespect"]) },
-  { word: "Advance", meaning: "To move forward or make progress", hindiMeaning: "आगे बढ़ना, प्रगति करना", ipa: "/ədˈvɑːns/", partOfSpeech: "verb", difficulty: "BEGINNER", example1: "Technology continues to advance.", example2: "She advanced her career.", example3: "He made a great advance in English.", synonyms: JSON.stringify(["progress","develop","improve"]), antonyms: JSON.stringify(["retreat","decline"]) },
-  { word: "Advice", meaning: "Suggestions about what to do", hindiMeaning: "सलाह, परामर्श", ipa: "/ədˈvaɪs/", partOfSpeech: "noun", difficulty: "BEGINNER", example1: "My teacher gave me good advice.", example2: "Follow the doctor's advice.", example3: "She gives helpful advice to friends.", synonyms: JSON.stringify(["guidance","suggestion","recommendation"]), antonyms: JSON.stringify([]) },
-  { word: "Affect", meaning: "To have an impact on something or someone", hindiMeaning: "प्रभावित करना, असर डालना", ipa: "/əˈfɛkt/", partOfSpeech: "verb", difficulty: "BEGINNER", example1: "Weather can affect our mood.", example2: "Lack of sleep affects concentration.", example3: "The new policy will affect all employees.", synonyms: JSON.stringify(["influence","impact","change"]), antonyms: JSON.stringify([]) },
-  { word: "Ambitious", meaning: "Having a strong desire to achieve success", hindiMeaning: "महत्वाकांक्षी", ipa: "/æmˈbɪʃəs/", partOfSpeech: "adjective", difficulty: "INTERMEDIATE", example1: "She is very ambitious and works hard.", example2: "Ambitious people never give up.", example3: "He has ambitious plans.", synonyms: JSON.stringify(["driven","determined","goal-oriented"]), antonyms: JSON.stringify(["lazy","unambitious"]) },
-  { word: "Announce", meaning: "To make something known publicly", hindiMeaning: "घोषणा करना", ipa: "/əˈnaʊns/", partOfSpeech: "verb", difficulty: "BEGINNER", example1: "The teacher announced the test date.", example2: "They will announce results tomorrow.", example3: "The CEO announced a new policy.", synonyms: JSON.stringify(["declare","proclaim","notify"]), antonyms: JSON.stringify(["hide","conceal"]) },
-  { word: "Appreciate", meaning: "To value something or be grateful for it", hindiMeaning: "सराहना करना, कदर करना", ipa: "/əˈpriːʃɪeɪt/", partOfSpeech: "verb", difficulty: "BEGINNER", example1: "I really appreciate your help.", example2: "She appreciates hard work.", example3: "We appreciate your time.", synonyms: JSON.stringify(["value","be grateful","respect"]), antonyms: JSON.stringify(["disrespect","ignore"]) },
-  { word: "Argue", meaning: "To disagree strongly and give reasons", hindiMeaning: "बहस करना, तर्क देना", ipa: "/ˈɑːɡjuː/", partOfSpeech: "verb", difficulty: "BEGINNER", example1: "They often argue about small things.", example2: "She argued the decision was wrong.", example3: "Please do not argue with the teacher.", synonyms: JSON.stringify(["debate","dispute","quarrel"]), antonyms: JSON.stringify(["agree","compromise"]) },
-  { word: "Arrange", meaning: "To put things in order or make plans", hindiMeaning: "व्यवस्था करना", ipa: "/əˈreɪndʒ/", partOfSpeech: "verb", difficulty: "BEGINNER", example1: "Please arrange the chairs.", example2: "She arranged the flowers beautifully.", example3: "I will arrange a taxi for you.", synonyms: JSON.stringify(["organize","plan","set up"]), antonyms: JSON.stringify(["disorganize"]) },
-  { word: "Assist", meaning: "To help someone with a task", hindiMeaning: "मदद करना, सहायता करना", ipa: "/əˈsɪst/", partOfSpeech: "verb", difficulty: "BEGINNER", example1: "Can you assist me with this form?", example2: "The team assisted in completing the project.", example3: "She assisted the new employee.", synonyms: JSON.stringify(["help","support","aid"]), antonyms: JSON.stringify(["hinder","obstruct"]) },
-  { word: "Attitude", meaning: "The way you think and feel about something", hindiMeaning: "रवैया, दृष्टिकोण", ipa: "/ˈætɪtjuːd/", partOfSpeech: "noun", difficulty: "BEGINNER", example1: "She has a positive attitude toward learning.", example2: "Your attitude determines your success.", example3: "He changed his attitude after the feedback.", synonyms: JSON.stringify(["mindset","outlook","perspective"]), antonyms: JSON.stringify([]) },
-  { word: "Balance", meaning: "A state of equal weight or stability", hindiMeaning: "संतुलन", ipa: "/ˈbæləns/", partOfSpeech: "noun", difficulty: "BEGINNER", example1: "Maintain a balance between work and rest.", example2: "She kept her balance on the bridge.", example3: "A good diet helps balance health.", synonyms: JSON.stringify(["stability","harmony","equilibrium"]), antonyms: JSON.stringify(["imbalance","instability"]) },
-  { word: "Believe", meaning: "To think something is true or real", hindiMeaning: "विश्वास करना, मानना", ipa: "/bɪˈliːv/", partOfSpeech: "verb", difficulty: "BEGINNER", example1: "I believe you can do it.", example2: "Do you believe in hard work?", example3: "She believes in herself.", synonyms: JSON.stringify(["trust","think","have faith"]), antonyms: JSON.stringify(["doubt","disbelieve"]) },
-  { word: "Benefit", meaning: "An advantage or something helpful", hindiMeaning: "फायदा, लाभ", ipa: "/ˈbɛnɪfɪt/", partOfSpeech: "noun", difficulty: "BEGINNER", example1: "Exercise has many health benefits.", example2: "This course will benefit your career.", example3: "The benefit of reading is better vocabulary.", synonyms: JSON.stringify(["advantage","gain","profit"]), antonyms: JSON.stringify(["disadvantage","harm"]) },
-  { word: "Bold", meaning: "Brave, confident, and willing to take risks", hindiMeaning: "साहसी, निडर", ipa: "/bəʊld/", partOfSpeech: "adjective", difficulty: "BEGINNER", example1: "She made a bold decision.", example2: "Be bold and speak up in meetings.", example3: "He gave a bold answer.", synonyms: JSON.stringify(["brave","daring","confident"]), antonyms: JSON.stringify(["timid","shy","fearful"]) },
-  { word: "Capable", meaning: "Having the ability to do something", hindiMeaning: "सक्षम, काबिल", ipa: "/ˈkeɪpəbl/", partOfSpeech: "adjective", difficulty: "BEGINNER", example1: "She is capable of any challenge.", example2: "Are you capable of finishing today?", example3: "He is a very capable engineer.", synonyms: JSON.stringify(["able","skilled","competent"]), antonyms: JSON.stringify(["incapable","unable"]) },
-  { word: "Challenge", meaning: "A difficult task that tests your skills", hindiMeaning: "चुनौती", ipa: "/ˈtʃælɪndʒ/", partOfSpeech: "noun", difficulty: "BEGINNER", example1: "Learning English is a challenge but worth it.", example2: "I love to challenge myself.", example3: "She accepted the challenge with confidence.", synonyms: JSON.stringify(["difficulty","obstacle","test"]), antonyms: JSON.stringify(["ease","simplicity"]) },
-  { word: "Clear", meaning: "Easy to understand; not confusing", hindiMeaning: "स्पष्ट, साफ", ipa: "/klɪər/", partOfSpeech: "adjective", difficulty: "BEGINNER", example1: "Please speak in a clear voice.", example2: "Make sure instructions are clear.", example3: "The water was crystal clear.", synonyms: JSON.stringify(["obvious","plain","transparent"]), antonyms: JSON.stringify(["unclear","vague","confusing"]) },
-  { word: "Communicate", meaning: "To share information or ideas with others", hindiMeaning: "बात करना, संवाद करना", ipa: "/kəˈmjuːnɪkeɪt/", partOfSpeech: "verb", difficulty: "BEGINNER", example1: "It is important to communicate clearly.", example2: "She communicated her ideas very well.", example3: "Good leaders communicate effectively.", synonyms: JSON.stringify(["express","convey","speak"]), antonyms: JSON.stringify(["hide","withhold"]) },
-  { word: "Confident", meaning: "Feeling sure about yourself and your abilities", hindiMeaning: "आत्मविश्वासी", ipa: "/ˈkɒnfɪdənt/", partOfSpeech: "adjective", difficulty: "BEGINNER", example1: "Be confident when you speak English.", example2: "She walked in confidently.", example3: "A confident answer impresses interviewers.", synonyms: JSON.stringify(["self-assured","bold","certain"]), antonyms: JSON.stringify(["insecure","shy","nervous"]) },
-  { word: "Consistent", meaning: "Always doing things the same way; reliable", hindiMeaning: "निरंतर, लगातार", ipa: "/kənˈsɪstənt/", partOfSpeech: "adjective", difficulty: "INTERMEDIATE", example1: "Be consistent in your daily practice.", example2: "Consistent effort leads to success.", example3: "She is consistent in her work quality.", synonyms: JSON.stringify(["steady","regular","persistent"]), antonyms: JSON.stringify(["inconsistent","irregular"]) },
-  { word: "Creative", meaning: "Having the ability to make new ideas or things", hindiMeaning: "रचनात्मक", ipa: "/kriˈeɪtɪv/", partOfSpeech: "adjective", difficulty: "BEGINNER", example1: "She is a very creative designer.", example2: "Creative thinking solves problems.", example3: "He used a creative approach.", synonyms: JSON.stringify(["innovative","imaginative","original"]), antonyms: JSON.stringify(["uncreative","unimaginative"]) },
-  { word: "Curious", meaning: "Eager to know or learn something", hindiMeaning: "जिज्ञासु, उत्सुक", ipa: "/ˈkjʊərɪəs/", partOfSpeech: "adjective", difficulty: "BEGINNER", example1: "Children are naturally curious.", example2: "I was curious about the result.", example3: "Stay curious and keep learning.", synonyms: JSON.stringify(["inquisitive","eager","interested"]), antonyms: JSON.stringify(["uninterested","indifferent"]) },
-  { word: "Deadline", meaning: "The latest time by which something must be done", hindiMeaning: "समय-सीमा, अंतिम तारीख", ipa: "/ˈdɛdlaɪn/", partOfSpeech: "noun", difficulty: "BEGINNER", example1: "The deadline for this project is Friday.", example2: "Never miss a deadline at work.", example3: "She finished the report before the deadline.", synonyms: JSON.stringify(["due date","time limit","cutoff"]), antonyms: JSON.stringify([]) },
-  { word: "Dedicated", meaning: "Committed and giving a lot of effort to something", hindiMeaning: "समर्पित, लगन वाला", ipa: "/ˈdɛdɪkeɪtɪd/", partOfSpeech: "adjective", difficulty: "INTERMEDIATE", example1: "She is dedicated to learning English.", example2: "A dedicated student always succeeds.", example3: "He is dedicated to his work.", synonyms: JSON.stringify(["committed","devoted","hardworking"]), antonyms: JSON.stringify(["lazy","uncommitted"]) },
-  { word: "Describe", meaning: "To give details about something or someone", hindiMeaning: "वर्णन करना, बताना", ipa: "/dɪˈskraɪb/", partOfSpeech: "verb", difficulty: "BEGINNER", example1: "Please describe your work experience.", example2: "Can you describe what happened?", example3: "She described the scene beautifully.", synonyms: JSON.stringify(["explain","depict","portray"]), antonyms: JSON.stringify([]) },
-  { word: "Determined", meaning: "Having a strong decision to achieve something", hindiMeaning: "दृढ़ निश्चयी", ipa: "/dɪˈtɜːmɪnd/", partOfSpeech: "adjective", difficulty: "INTERMEDIATE", example1: "She is determined to pass this exam.", example2: "He was determined to succeed.", example3: "A determined person never gives up.", synonyms: JSON.stringify(["resolute","persistent","committed"]), antonyms: JSON.stringify(["undecided","hesitant"]) },
-  { word: "Develop", meaning: "To grow, improve, or make something bigger", hindiMeaning: "विकसित करना, बढ़ाना", ipa: "/dɪˈvɛləp/", partOfSpeech: "verb", difficulty: "BEGINNER", example1: "She developed her English skills.", example2: "Develop good habits from day one.", example3: "The company developed a new product.", synonyms: JSON.stringify(["improve","grow","build"]), antonyms: JSON.stringify(["neglect","decline"]) },
-  { word: "Discuss", meaning: "To talk about a topic with others", hindiMeaning: "चर्चा करना, बात करना", ipa: "/dɪˈskʌs/", partOfSpeech: "verb", difficulty: "BEGINNER", example1: "Let us discuss this problem.", example2: "We discussed the project plan.", example3: "She discussed her ideas in the meeting.", synonyms: JSON.stringify(["talk about","debate","converse"]), antonyms: JSON.stringify([]) },
-  { word: "Diligent", meaning: "Working hard and carefully", hindiMeaning: "मेहनती, परिश्रमी", ipa: "/ˈdɪlɪdʒənt/", partOfSpeech: "adjective", difficulty: "INTERMEDIATE", example1: "A diligent student always gets good grades.", example2: "She is diligent in her work.", example3: "Be diligent and success will follow.", synonyms: JSON.stringify(["hardworking","careful","thorough"]), antonyms: JSON.stringify(["lazy","careless"]) },
-  { word: "Effective", meaning: "Successful in producing a desired result", hindiMeaning: "प्रभावी, कारगर", ipa: "/ɪˈfɛktɪv/", partOfSpeech: "adjective", difficulty: "INTERMEDIATE", example1: "This is an effective study method.", example2: "She gave an effective presentation.", example3: "Effective communication is key in office.", synonyms: JSON.stringify(["successful","efficient","productive"]), antonyms: JSON.stringify(["ineffective","useless"]) },
-  { word: "Effort", meaning: "The energy and work put into something", hindiMeaning: "प्रयास, कोशिश", ipa: "/ˈɛfət/", partOfSpeech: "noun", difficulty: "BEGINNER", example1: "Put in your best effort.", example2: "Learning English requires consistent effort.", example3: "Her effort paid off in the end.", synonyms: JSON.stringify(["work","attempt","try"]), antonyms: JSON.stringify(["laziness","negligence"]) },
-  { word: "Encourage", meaning: "To give someone confidence or hope", hindiMeaning: "प्रोत्साहित करना, हौसला देना", ipa: "/ɪnˈkʌrɪdʒ/", partOfSpeech: "verb", difficulty: "BEGINNER", example1: "Teachers encourage students to speak.", example2: "She encouraged him not to give up.", example3: "His support encouraged me greatly.", synonyms: JSON.stringify(["motivate","inspire","support"]), antonyms: JSON.stringify(["discourage","demotivate"]) },
-  { word: "Essential", meaning: "Absolutely necessary and very important", hindiMeaning: "आवश्यक, जरूरी", ipa: "/ɪˈsɛnʃəl/", partOfSpeech: "adjective", difficulty: "INTERMEDIATE", example1: "Water is essential for life.", example2: "Good grammar is essential for writing.", example3: "It is essential to practice speaking daily.", synonyms: JSON.stringify(["necessary","vital","crucial"]), antonyms: JSON.stringify(["unnecessary","optional"]) },
-  { word: "Excellent", meaning: "Extremely good; of the highest quality", hindiMeaning: "उत्कृष्ट, बेहतरीन", ipa: "/ˈɛksələnt/", partOfSpeech: "adjective", difficulty: "BEGINNER", example1: "She gave an excellent performance.", example2: "He has an excellent command of English.", example3: "This is an excellent opportunity.", synonyms: JSON.stringify(["outstanding","superb","brilliant"]), antonyms: JSON.stringify(["poor","bad","terrible"]) },
-  { word: "Experience", meaning: "Knowledge or skill from doing something", hindiMeaning: "अनुभव", ipa: "/ɪkˈspɪərɪəns/", partOfSpeech: "noun", difficulty: "BEGINNER", example1: "She has five years of work experience.", example2: "Experience is the best teacher.", example3: "He gained experience through practice.", synonyms: JSON.stringify(["knowledge","practice","expertise"]), antonyms: JSON.stringify(["inexperience"]) },
-];
+// Day 1 vocabulary — mapped from full 200-word static file
+const DAY1_VOCAB = ALL_DAY_1_VOCABULARY.map((v) => ({
+  word: v.word,
+  meaning: v.meaning,
+  hindiMeaning: v.hindiMeaning,
+  ipa: v.ipa ?? null,
+  partOfSpeech: v.partOfSpeech,
+  difficulty: (v.difficulty as string).toUpperCase(),
+  example1: v.example1,
+  example2: v.example2,
+  example3: v.example3 ?? null,
+  officeExample: v.officeExample ?? null,
+  dailyExample: v.dailyExample ?? null,
+  synonyms: JSON.stringify(v.synonyms ?? []),
+  antonyms: JSON.stringify(v.antonyms ?? []),
+}));
+
 
 // Practice questions for Day 1 subtopics
 const DAY1_PRACTICE_QUESTIONS = [
@@ -411,6 +385,9 @@ async function main() {
   const totalVocab = await prisma.dayVocabulary.count();
   const totalQs = await prisma.practiceQuestion.count();
 
+  // Create the dev passthrough user
+  await createDevUser();
+
   console.log("\n✨ Database seeded successfully!");
   console.log(`📅 Days: ${totalDays}/75`);
   console.log(`📚 Topics: ${totalTopics}`);
@@ -422,3 +399,27 @@ async function main() {
 main()
   .catch((e) => { console.error("❌ Seed failed:", e); process.exit(1); })
   .finally(async () => { await prisma.$disconnect(); });
+
+// ─── Create dev user (for dev passthrough mode) ───────────────
+async function createDevUser() {
+  const devClerkId = "dev_user_75days_english";
+  await prisma.user.upsert({
+    where: { clerkId: devClerkId },
+    update: { lastActiveAt: new Date(), currentDay: 10, totalXp: 350, level: 2, streak: 3 },
+    create: {
+      clerkId: devClerkId,
+      email: "dev@75daysenglish.com",
+      username: "devstudent",
+      firstName: "Dev",
+      lastName: "Student",
+      currentDay: 10,
+      totalXp: 350,
+      totalCoins: 0,
+      level: 2,
+      streak: 3,
+      longestStreak: 3,
+      theme: "DARK",
+    },
+  });
+  console.log("👤 Dev user created/updated");
+}

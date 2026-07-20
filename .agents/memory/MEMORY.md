@@ -7,3 +7,4 @@
 - [Settings SSR fix](settings-ssr.md) — SettingsClient must use dynamic(..., { ssr: false }); Zustand+next-themes are client-only so any SSR causes hydration errors
 - [Score model fields](score-model.md) — Score uses activity/points/xp/coins/dayId/subtopicId; NOT scoreType/score/maxScore/percentage/correct/total
 - [SubtopicProgress dayProgressId](subtopic-progress.md) — SubtopicProgress.create requires dayProgressId; upsert DayProgress first to get the ID
+- [Seed vocab import](seed-vocab-import.md) — seed.ts imports ALL_DAY_1_VOCABULARY from static file; maps difficulty to uppercase, synonyms/antonyms to JSON.stringify; dev user seeded with currentDay:10

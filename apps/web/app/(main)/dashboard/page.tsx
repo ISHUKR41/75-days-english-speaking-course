@@ -14,12 +14,28 @@ export const metadata: Metadata = {
   description: "Your English learning dashboard - track progress, continue learning",
 };
 
-// Fetch user data on the server
+// Fetch user data on the server — auto-creates user if first visit
 async function getDashboardData(userId: string) {
   try {
-    // Get or create user in our database
-    const user = await db.user.findUnique({
+    // Auto-upsert user so they always exist in DB
+    // This handles: first-time visitors, dev passthrough, and new sign-ups
+    const isDevUser = userId === "dev_user_75days_english";
+    const user = await db.user.upsert({
       where: { clerkId: userId },
+      update: { lastActiveAt: new Date() },
+      create: {
+        clerkId: userId,
+        email: isDevUser ? "dev@75daysenglish.com" : `${userId.slice(-8)}@75days.app`,
+        username: isDevUser ? "devstudent" : `student_${userId.slice(-6)}`,
+        firstName: isDevUser ? "Dev" : "Student",
+        lastName: isDevUser ? "User" : "",
+        currentDay: 1,
+        totalXp: 0,
+        totalCoins: 0,
+        level: 1,
+        streak: 0,
+        longestStreak: 0,
+      },
       include: {
         // Get recent progress
         progress: {
@@ -71,6 +87,7 @@ async function getDashboardData(userId: string) {
     return { user, days, leaderboard };
   } catch (error) {
     console.error("Dashboard data fetch error:", error);
+    // Return safe fallback — dashboard will show with placeholder data
     return { user: null, days: [], leaderboard: [] };
   }
 }
