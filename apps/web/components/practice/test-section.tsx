@@ -393,7 +393,7 @@ export function TestSection({
   // ═══════════════════════════════════════════════════════════════
   // TEST SCREEN
   // ═══════════════════════════════════════════════════════════════
-  const isMCQ = currentQ?.questionType === "mcq" || currentQ?.questionType === "MCQ";
+  const isMCQ = (currentQ?.questionType as string) === "mcq" || (currentQ?.questionType as string) === "MCQ";
   const options = isMCQ
     ? [currentQ?.optionA, currentQ?.optionB, currentQ?.optionC, currentQ?.optionD].filter(Boolean) as string[]
     : [];

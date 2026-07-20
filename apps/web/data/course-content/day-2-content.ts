@@ -6,16 +6,19 @@
 //         educational background, professional intro, and more
 // ============================================================
 
+import { type LessonContent } from "./day-1-content";
+
 // ─── Helper: Get Day 2 lesson content by subtopic ID ─────────
 // Returns null if no content found for that subtopicId
 export function getDay2LessonContent(subtopicId: string): LessonContent | null {
-  return DAY_2_LESSON_CONTENT[subtopicId] ?? null;
+  return (DAY_2_LESSON_CONTENT[subtopicId] ?? null) as LessonContent | null;
 }
 
 // ─── Day 2 lesson content map ─────────────────────────────────
 // Key = subtopic ID from days-config.ts
 // Value = full LessonContent object
-const DAY_2_LESSON_CONTENT: Record<string, LessonContent> = {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const DAY_2_LESSON_CONTENT: Record<string, any> = {
 
   // ══════════════════════════════════════════════════════════════
   // Topic 1: The Art of First Impressions

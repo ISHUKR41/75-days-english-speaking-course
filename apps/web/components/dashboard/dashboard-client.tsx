@@ -58,63 +58,47 @@ interface DashboardClientProps {
   }>;
 }
 
-// ─── Mock data (will be replaced by real API data) ───────────
-const MOCK_USER_STATS = {
-  currentDay: 2,
-  completedDays: 1,
-  streak: 7,
-  totalXp: 2450,
-  level: 5,
-  levelProgress: 65,
-  todayXp: 120,
-  weekXp: 840,
-  accuracy: 87,
-  wordsLearned: 246,
-  questionsAnswered: 234,
-  practiceMinutes: 48,
-  badges: 3,
-  rank: 42,
-};
-
-// Quick action cards shown at the top of dashboard
-const QUICK_ACTIONS = [
-  {
-    icon: Play,
-    label: "Continue Day 2",
-    description: "Self Introduction",
-    href: "/day/2",
-    color: "from-brand-500 to-purple-500",
-    glow: "shadow-glow-brand",
-    badge: "Current",
-  },
-  {
-    icon: BookMarked,
-    label: "Today's Vocabulary",
-    description: "200 new words",
-    href: "/day/2/vocabulary",
-    color: "from-amber-500 to-orange-500",
-    glow: "shadow-glow-gold",
-    badge: "200 words",
-  },
-  {
-    icon: Mic,
-    label: "Speaking Practice",
-    description: "Practice out loud",
-    href: "/speaking",
-    color: "from-pink-500 to-rose-500",
-    glow: "shadow-glow-rose",
-    badge: "NEW",
-  },
-  {
-    icon: Target,
-    label: "Quick Test",
-    description: "Test your knowledge",
-    href: "/mock-test",
-    color: "from-emerald-500 to-cyan-500",
-    glow: "shadow-glow-emerald",
-    badge: "50 Qs",
-  },
-];
+// Build dynamic quick actions based on user's current day
+function buildQuickActions(currentDay: number) {
+  return [
+    {
+      icon: Play,
+      label: `Continue Day ${currentDay}`,
+      description: currentDay === 1 ? "Basic of English" : currentDay === 2 ? "Self Introduction" : `Day ${currentDay} Lesson`,
+      href: `/day/${currentDay}`,
+      color: "from-brand-500 to-purple-500",
+      glow: "shadow-glow-brand",
+      badge: "Current",
+    },
+    {
+      icon: BookMarked,
+      label: "Vocabulary Bank",
+      description: "Browse all words",
+      href: "/vocabulary",
+      color: "from-amber-500 to-orange-500",
+      glow: "shadow-glow-gold",
+      badge: "200+ words",
+    },
+    {
+      icon: Mic,
+      label: "Speaking Practice",
+      description: "Practice out loud",
+      href: "/speaking",
+      color: "from-pink-500 to-rose-500",
+      glow: "shadow-glow-rose",
+      badge: "NEW",
+    },
+    {
+      icon: Target,
+      label: "Quick Test",
+      description: "Test your knowledge",
+      href: "/mock-test",
+      color: "from-emerald-500 to-cyan-500",
+      glow: "shadow-glow-emerald",
+      badge: "50 Qs",
+    },
+  ];
+}
 
 // Animation variants for staggered entrance
 const containerVariants = {
@@ -151,6 +135,7 @@ export function DashboardClient({
   // Use real data from database — fall back to mock only when null
   // initialUser is the Prisma User model from the server component
   const realUser = initialUser as {
+    firstName?: string; lastName?: string;
     currentDay?: number; totalXp?: number; level?: number;
     streak?: number; longestStreak?: number; totalCoins?: number;
     progress?: Array<{ status?: string }>;
@@ -158,21 +143,24 @@ export function DashboardClient({
   } | null;
 
   const stats = {
-    currentDay: realUser?.currentDay ?? MOCK_USER_STATS.currentDay,
-    completedDays: realUser?.currentDay ? realUser.currentDay - 1 : MOCK_USER_STATS.completedDays,
-    streak: realUser?.streak ?? MOCK_USER_STATS.streak,
-    totalXp: realUser?.totalXp ?? MOCK_USER_STATS.totalXp,
-    level: realUser?.level ?? MOCK_USER_STATS.level,
-    levelProgress: realUser ? ((realUser.totalXp ?? 0) % 1000) / 10 : MOCK_USER_STATS.levelProgress,
-    todayXp: MOCK_USER_STATS.todayXp,
-    weekXp: MOCK_USER_STATS.weekXp,
-    accuracy: MOCK_USER_STATS.accuracy,
-    wordsLearned: MOCK_USER_STATS.wordsLearned,
-    questionsAnswered: MOCK_USER_STATS.questionsAnswered,
-    practiceMinutes: MOCK_USER_STATS.practiceMinutes,
-    badges: realUser?.badges?.length ?? MOCK_USER_STATS.badges,
-    rank: MOCK_USER_STATS.rank,
+    currentDay: realUser?.currentDay ?? 1,
+    completedDays: realUser?.currentDay ? Math.max(0, realUser.currentDay - 1) : 0,
+    streak: realUser?.streak ?? 0,
+    totalXp: realUser?.totalXp ?? 0,
+    level: realUser?.level ?? 1,
+    levelProgress: realUser ? ((realUser.totalXp ?? 0) % 1000) / 10 : 0,
+    todayXp: 0,
+    weekXp: 0,
+    accuracy: 0,
+    wordsLearned: 0,
+    questionsAnswered: 0,
+    practiceMinutes: 0,
+    badges: realUser?.badges?.length ?? 0,
+    rank: 0,
   };
+
+  // Build dynamic quick actions based on current day
+  const QUICK_ACTIONS = buildQuickActions(stats.currentDay);
 
   // Filter days based on active tab
   const filteredDays = initialDays.filter((day) => {

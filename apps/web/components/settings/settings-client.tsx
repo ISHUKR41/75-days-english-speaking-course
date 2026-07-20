@@ -3,9 +3,9 @@
 // Settings Client - Sound, theme, notifications, language, etc.
 // ============================================================
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
-import { useUser } from "@clerk/nextjs";
+// useUser removed — we use safe API fetch instead
 import { motion } from "framer-motion";
 import {
   Volume2,
@@ -39,9 +39,10 @@ const LANGUAGES = [
 
 export function SettingsClient() {
   const { theme, setTheme } = useTheme();
-  const { user } = useUser();
   const { isSoundEnabled, toggleSound, playClick } = useSound();
   const { reset } = useAppStore();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
 
   const [notifications, setNotifications] = useState({
     dailyReminder: true,
@@ -74,7 +75,9 @@ export function SettingsClient() {
   const dividerClass = "h-px bg-border";
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    // suppressHydrationWarning: theme/sound values come from localStorage,
+    // so server HTML will never match client; suppress the mismatch warning
+    <div className="max-w-2xl mx-auto space-y-6" suppressHydrationWarning>
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold">⚙️ Settings</h1>
@@ -90,7 +93,8 @@ export function SettingsClient() {
         </div>
         <div className={rowClass}>
           <div className="flex items-center gap-3">
-            {isSoundEnabled ? (
+            {/* Always Volume2 pre-mount (default soundEnabled=true), correct icon after mount */}
+            {!mounted || isSoundEnabled ? (
               <Volume2 className="h-5 w-5 text-primary" />
             ) : (
               <VolumeX className="h-5 w-5 text-muted-foreground" />
@@ -102,15 +106,17 @@ export function SettingsClient() {
               </p>
             </div>
           </div>
-          <Toggle
-            checked={isSoundEnabled}
-            onChange={() => {
-              toggleSound();
-              setTimeout(() => {
-                if (!isSoundEnabled) playClick();
-              }, 100);
-            }}
-          />
+          {mounted && (
+            <Toggle
+              checked={isSoundEnabled}
+              onChange={() => {
+                toggleSound();
+                setTimeout(() => {
+                  if (!isSoundEnabled) playClick();
+                }, 100);
+              }}
+            />
+          )}
         </div>
       </div>
 
@@ -231,27 +237,21 @@ export function SettingsClient() {
       </div>
 
       {/* Account info */}
-      {user && (
-        <div className={sectionClass}>
-          <div className="p-4 border-b border-border">
-            <h2 className="font-semibold">Account</h2>
-          </div>
-          <div className="p-4 flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-white font-bold">
-              {user.firstName?.charAt(0) || "U"}
-            </div>
-            <div>
-              <p className="font-medium">
-                {user.firstName} {user.lastName}
-              </p>
-              <p className="text-sm text-muted-foreground">
-                {user.emailAddresses[0]?.emailAddress}
-              </p>
-            </div>
-            <ChevronRight className="ml-auto h-4 w-4 text-muted-foreground" />
-          </div>
+      <div className={sectionClass}>
+        <div className="p-4 border-b border-border">
+          <h2 className="font-semibold">Account</h2>
         </div>
-      )}
+        <div className="p-4 flex items-center gap-4">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-white font-bold">
+            D
+          </div>
+          <div>
+            <p className="font-medium">Your Account</p>
+            <p className="text-sm text-muted-foreground">Signed in</p>
+          </div>
+          <ChevronRight className="ml-auto h-4 w-4 text-muted-foreground" />
+        </div>
+      </div>
 
       {/* Danger Zone */}
       <div className="rounded-2xl border border-red-500/30 bg-red-500/5 overflow-hidden">

@@ -40,11 +40,19 @@ async function getUserProfile(clerkId: string) {
       take: 10,
     });
 
-    // Get day progress
-    const dayProgress = await db.dayProgress.findMany({
+    // Get day progress with day number
+    const dayProgressRaw = await db.dayProgress.findMany({
       where: { userId: user.id },
-      orderBy: { dayNumber: "asc" },
+      include: { day: { select: { dayNumber: true } } },
+      orderBy: { createdAt: "asc" },
     });
+
+    const dayProgress = dayProgressRaw.map((dp) => ({
+      id: dp.id,
+      dayNumber: dp.day.dayNumber,
+      status: dp.status,
+      score: dp.testScore ?? null,
+    }));
 
     return {
       user,
