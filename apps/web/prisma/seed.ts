@@ -405,19 +405,19 @@ async function createDevUser() {
   const devClerkId = "dev_user_75days_english";
   await prisma.user.upsert({
     where: { clerkId: devClerkId },
-    update: { lastActiveAt: new Date(), currentDay: 10, totalXp: 350, level: 2, streak: 3 },
+    update: { lastActiveAt: new Date() },
     create: {
       clerkId: devClerkId,
       email: "dev@75daysenglish.com",
       username: "devstudent",
       firstName: "Dev",
       lastName: "Student",
-      currentDay: 10,
-      totalXp: 350,
+      currentDay: 1,
+      totalXp: 0,
       totalCoins: 0,
-      level: 2,
-      streak: 3,
-      longestStreak: 3,
+      level: 1,
+      streak: 0,
+      longestStreak: 0,
       theme: "DARK",
     },
   });

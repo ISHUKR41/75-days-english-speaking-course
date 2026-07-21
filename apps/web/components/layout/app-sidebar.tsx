@@ -490,11 +490,10 @@ export function AppSidebar() {
                 className="min-w-0 flex-1"
               >
                 <p className="text-sm font-semibold text-foreground truncate">
-                  {loading ? "Loading..." : displayName}
+                  {displayName}
                 </p>
                 <p className="text-[10px] text-muted-foreground">
-                  Level {loading ? "-" : stats.level} ·{" "}
-                  {loading ? "-" : stats.totalXp.toLocaleString()} XP
+                  Level {stats.level} · {stats.totalXp.toLocaleString()} XP
                 </p>
               </motion.div>
             )}

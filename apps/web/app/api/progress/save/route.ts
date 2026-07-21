@@ -11,7 +11,7 @@ import { db } from "@/lib/db";
 // ─── Request body schema ──────────────────────────────────────
 interface SaveProgressBody {
   dayNumber: number;         // Which day (1-75)
-  subtopicId: string;        // DB subtopic ID
+  subtopicId: string;        // Static config subtopic ID (e.g., "d1-t1-s1")
   type: "practice" | "test"; // Which section completed
   score: number;             // 0-100 accuracy
   xpEarned: number;          // XP to award
@@ -84,32 +84,27 @@ export async function POST(req: NextRequest) {
           ...(type === "practice" ? { practiceScore: score } : {}),
           ...(type === "test" ? { testScore: score } : {}),
           totalXpEarned: { increment: xpEarned },
-          ...(score >= 80 ? { status: "COMPLETED", completedAt: new Date() } : {}),
+          ...(type === "test" && score >= 80 ? { status: "COMPLETED", completedAt: new Date() } : {}),
         },
       });
       dayProgressId = dp.id;
     }
 
-    // ── Upsert subtopic progress ──────────────────────────────
-    // Find the subtopic by matching config ID pattern against DB
-    const subtopic = await db.subtopic.findFirst({
-      where: {
-        topic: { day: { dayNumber } },
-      },
-      select: { id: true },
-    });
-
-    if (subtopic && dayProgressId) {
+    // ── Upsert subtopic progress using STATIC config ID ───────
+    // The subtopicId from the request body is the static config ID
+    // (e.g., "d1-t1-s1"). We store it directly so the day page
+    // can match completed subtopics against the static config.
+    if (dayProgressId && subtopicId) {
       await db.subtopicProgress.upsert({
         where: {
           userId_subtopicId: {
             userId:     user.id,
-            subtopicId: subtopic.id,
+            subtopicId: subtopicId, // Use static config ID directly
           },
         },
         create: {
           userId:        user.id,
-          subtopicId:    subtopic.id,
+          subtopicId:    subtopicId,
           dayProgressId,
           status:        score >= 80 ? "COMPLETED" : "IN_PROGRESS",
           practiceScore: type === "practice" ? score : 0,
@@ -118,16 +113,22 @@ export async function POST(req: NextRequest) {
           completedAt:   score >= 80 ? new Date() : undefined,
         },
         update: {
-          status:        score >= 80 ? "COMPLETED" : "IN_PROGRESS",
+          ...(score >= 80 ? { status: "COMPLETED" } : {}),
           ...(type === "practice" ? { practiceScore: score } : {}),
           ...(type === "test"     ? { testScore:     score } : {}),
           xpEarned:     { increment: xpEarned },
-          completedAt:  score >= 80 ? new Date() : undefined,
+          ...(score >= 80 ? { completedAt: new Date() } : {}),
         },
       });
     }
 
     // ── Record score in Score table ───────────────────────────
+    // Find a DB subtopic for reference (best effort, non-blocking)
+    const dbSubtopic = await db.subtopic.findFirst({
+      where: { topic: { day: { dayNumber } } },
+      select: { id: true },
+    }).catch(() => null);
+
     await db.score.create({
       data: {
         userId:   user.id,
@@ -136,11 +137,12 @@ export async function POST(req: NextRequest) {
         xp:       xpEarned,
         coins:    Math.floor(xpEarned / 10),
         dayId:    day?.id,
-        subtopicId: subtopic?.id,
+        subtopicId: dbSubtopic?.id,
       },
     });
 
     // ── Check if user should advance to next day ──────────────
+    // Only advance when a TEST is passed (≥80%) for the current day
     if (type === "test" && score >= 80 && dayNumber >= user.currentDay) {
       await db.user.update({
         where: { id: user.id },

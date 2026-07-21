@@ -193,20 +193,32 @@ export function DashboardClient({
       {/* ── Welcome Header ── */}
       <motion.div
         variants={itemVariants}
-        className="relative overflow-hidden rounded-2xl border border-border bg-card p-6"
+        className="relative overflow-hidden rounded-2xl border border-primary/20 bg-card p-6 md:p-8"
         style={{
-          background: "linear-gradient(135deg, hsl(var(--primary)/0.06), transparent)",
+          background:
+            "linear-gradient(135deg, hsl(var(--primary)/0.12) 0%, hsl(var(--card)) 50%, hsl(238 60% 10% / 0.5) 100%)",
         }}
       >
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
+        {/* Decorative glows */}
+        <div className="pointer-events-none absolute -top-16 -right-16 h-48 w-48 rounded-full bg-primary/10 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-12 -left-8 h-40 w-40 rounded-full bg-purple-500/10 blur-3xl" />
+
+        <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex-1 min-w-0">
+            {/* Day badge */}
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 mb-3">
+              <Calendar className="h-3.5 w-3.5 text-primary" />
+              <span className="text-xs font-semibold text-primary">
+                Day {stats.currentDay} of 75
+              </span>
+            </div>
             {/* Greeting with user name */}
             <h1 className="text-2xl md:text-3xl font-black text-foreground">
               {realUser?.firstName
                 ? `Welcome back, ${realUser.firstName}! 👋`
                 : "Welcome back! 👋"}
             </h1>
-            <p className="text-muted-foreground mt-1.5">
+            <p className="text-muted-foreground mt-1.5 text-sm md:text-base">
               You&apos;re on{" "}
               <span className="font-bold text-primary">Day {stats.currentDay}</span>{" "}
               of your{" "}
@@ -219,34 +231,34 @@ export function DashboardClient({
             </p>
 
             {/* Mini progress bar */}
-            <div className="mt-3 flex items-center gap-3">
-              <div className="flex-1 max-w-xs h-1.5 rounded-full bg-muted overflow-hidden">
+            <div className="mt-4 flex items-center gap-3">
+              <div className="flex-1 max-w-sm h-2 rounded-full bg-muted/60 overflow-hidden">
                 <motion.div
-                  className="h-full rounded-full bg-gradient-to-r from-primary to-purple-500"
+                  className="h-full rounded-full bg-gradient-to-r from-primary via-violet-500 to-purple-500"
                   initial={{ width: 0 }}
-                  animate={{ width: `${Math.round((stats.completedDays / 75) * 100)}%` }}
+                  animate={{ width: `${Math.max(1, Math.round((stats.completedDays / 75) * 100))}%` }}
                   transition={{ duration: 1.5, ease: "easeOut", delay: 0.3 }}
                 />
               </div>
-              <span className="text-xs font-semibold text-primary whitespace-nowrap">
+              <span className="text-xs font-bold text-primary whitespace-nowrap">
                 {Math.round((stats.completedDays / 75) * 100)}% Complete
               </span>
             </div>
           </div>
 
           {/* Stats pills */}
-          <div className="flex gap-3 flex-wrap sm:flex-nowrap">
+          <div className="flex gap-3 flex-wrap sm:flex-nowrap shrink-0">
             {/* Streak */}
-            <div className="flex items-center gap-2 rounded-2xl border border-orange-500/30 bg-orange-500/10 px-4 py-3">
-              <Flame className="h-6 w-6 text-orange-500 animate-flicker" aria-hidden="true" />
+            <div className="flex items-center gap-2 rounded-2xl border border-orange-500/30 bg-orange-500/10 px-4 py-3 min-w-[90px]">
+              <Flame className="h-6 w-6 text-orange-500 animate-flicker shrink-0" aria-hidden="true" />
               <div>
                 <p className="text-2xl font-black text-foreground leading-none">{stats.streak}</p>
                 <p className="text-xs text-muted-foreground mt-0.5">Day Streak</p>
               </div>
             </div>
             {/* Level */}
-            <div className="flex items-center gap-2 rounded-2xl border border-primary/30 bg-primary/10 px-4 py-3">
-              <Star className="h-6 w-6 text-primary" aria-hidden="true" />
+            <div className="flex items-center gap-2 rounded-2xl border border-primary/30 bg-primary/10 px-4 py-3 min-w-[80px]">
+              <Star className="h-6 w-6 text-primary shrink-0" aria-hidden="true" />
               <div>
                 <p className="text-2xl font-black text-foreground leading-none">{stats.level}</p>
                 <p className="text-xs text-muted-foreground mt-0.5">Level</p>
