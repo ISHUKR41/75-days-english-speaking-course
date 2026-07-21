@@ -784,7 +784,7 @@ function generateDay1TopicContent(
         { situation: "Introducing yourself in writing", english: "My name is Kavya. I live in Bangalore. I am a graduate of Delhi University.", hindi: "अपना परिचय लिखते समय सही capitalization ज़रूरी है।" },
       ],
       officeUsage: [
-        { situation: "Writing reports", english: "The Project was completed on schedule under the leadership of Mr. Gupta.", correct: "The project was completed on schedule under the leadership of Mr. Gupta.", explanation: "'Project' should NOT be capitalized mid-sentence (it's not a proper noun here)." },
+        { situation: "Writing reports", english: "The project was completed on schedule under the leadership of Mr. Gupta.", hindi: "Mid-sentence में 'Project' capital नहीं होना चाहिए — यह proper noun नहीं है।" },
       ],
       interviewUsage: [
         { situation: "Written test in interview", english: "I completed my B.Tech from IIT Bombay in May 2020. I then joined Infosys as a Software Engineer.", hindi: "Interview के written test में capitalization देखी जाती है।" },

@@ -56,6 +56,11 @@ interface DashboardClientProps {
     level: number;
     streak: number;
   }>;
+  todayXp?: number;
+  weekXp?: number;
+  accuracy?: number;
+  questionsAnswered?: number;
+  wordsLearned?: number;
 }
 
 // Build dynamic quick actions based on user's current day
@@ -126,6 +131,11 @@ export function DashboardClient({
   initialUser,
   initialDays,
   initialLeaderboard,
+  todayXp: propTodayXp = 0,
+  weekXp: propWeekXp = 0,
+  accuracy: propAccuracy = 0,
+  questionsAnswered: propQuestionsAnswered = 0,
+  wordsLearned: propWordsLearned = 0,
 }: DashboardClientProps) {
   // Active tab for day list filter
   const [activeFilter, setActiveFilter] = useState<
@@ -149,14 +159,14 @@ export function DashboardClient({
     totalXp: realUser?.totalXp ?? 0,
     level: realUser?.level ?? 1,
     levelProgress: realUser ? ((realUser.totalXp ?? 0) % 1000) / 10 : 0,
-    todayXp: 0,
-    weekXp: 0,
-    accuracy: 0,
-    wordsLearned: 0,
-    questionsAnswered: 0,
-    practiceMinutes: 0,
+    todayXp: propTodayXp,
+    weekXp: propWeekXp,
+    accuracy: propAccuracy,
+    wordsLearned: propWordsLearned,
+    questionsAnswered: propQuestionsAnswered,
+    practiceMinutes: 0, // Not tracked yet
     badges: realUser?.badges?.length ?? 0,
-    rank: 0,
+    rank: 0, // Computed separately if needed
   };
 
   // Build dynamic quick actions based on current day
@@ -193,75 +203,126 @@ export function DashboardClient({
       {/* ── Welcome Header ── */}
       <motion.div
         variants={itemVariants}
-        className="relative overflow-hidden rounded-2xl border border-primary/20 bg-card p-6 md:p-8"
-        style={{
-          background:
-            "linear-gradient(135deg, hsl(var(--primary)/0.12) 0%, hsl(var(--card)) 50%, hsl(238 60% 10% / 0.5) 100%)",
-        }}
+        className="relative overflow-hidden rounded-3xl border border-primary/20"
       >
-        {/* Decorative glows */}
-        <div className="pointer-events-none absolute -top-16 -right-16 h-48 w-48 rounded-full bg-primary/10 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-12 -left-8 h-40 w-40 rounded-full bg-purple-500/10 blur-3xl" />
+        {/* Layered dark background */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(135deg, hsl(238 84% 6%) 0%, hsl(224 30% 8%) 55%, hsl(270 60% 7%) 100%)",
+          }}
+        />
 
-        <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div className="flex-1 min-w-0">
-            {/* Day badge */}
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 mb-3">
-              <Calendar className="h-3.5 w-3.5 text-primary" />
-              <span className="text-xs font-semibold text-primary">
-                Day {stats.currentDay} of 75
-              </span>
+        {/* Animated ambient orbs */}
+        <div className="pointer-events-none absolute -top-32 -right-32 h-80 w-80 rounded-full bg-primary/20 blur-[100px] animate-pulse" />
+        <div
+          className="pointer-events-none absolute -bottom-20 -left-20 h-60 w-60 rounded-full bg-purple-600/15 blur-[80px] animate-pulse"
+          style={{ animationDelay: "1.4s" }}
+        />
+        <div
+          className="pointer-events-none absolute top-1/2 left-1/2 h-48 w-48 -translate-x-1/2 -translate-y-1/2 rounded-full bg-indigo-500/10 blur-[70px] animate-pulse"
+          style={{ animationDelay: "0.7s" }}
+        />
+
+        {/* Grid dot pattern */}
+        <div className="absolute inset-0 opacity-[0.035] grid-dots" />
+
+        <div className="relative p-6 md:p-8 lg:p-10">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
+            <div className="flex-1 min-w-0">
+              {/* Day badge */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.2 }}
+                className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/15 px-3.5 py-1.5 mb-4 backdrop-blur-sm"
+              >
+                <Calendar className="h-3.5 w-3.5 text-primary" />
+                <span className="text-xs font-bold text-primary tracking-wide">
+                  DAY {stats.currentDay} OF 75
+                </span>
+              </motion.div>
+
+              {/* Greeting */}
+              <h1 className="text-3xl md:text-4xl font-black text-white tracking-tight">
+                {realUser?.firstName ? (
+                  <>Welcome back, <span className="gradient-text">{realUser.firstName}</span>! 👋</>
+                ) : (
+                  <>Welcome back! 👋</>
+                )}
+              </h1>
+              <p className="text-white/60 mt-2 text-sm md:text-base max-w-lg">
+                You&apos;re on{" "}
+                <span className="font-bold text-primary">Day {stats.currentDay}</span>{" "}
+                of your{" "}
+                <span className="font-semibold text-white/80">75-day journey</span>.{" "}
+                {stats.streak >= 7
+                  ? "🔥 Amazing streak — keep it going!"
+                  : stats.completedDays > 0
+                  ? "Great progress — don't stop now!"
+                  : "Your journey starts here. Let's go!"}
+              </p>
+
+              {/* Progress bar */}
+              <div className="mt-5 space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-white/40 font-medium">Overall Progress</span>
+                  <span className="text-xs font-bold text-primary">
+                    {Math.round((stats.completedDays / 75) * 100)}% Complete
+                  </span>
+                </div>
+                <div className="h-2.5 rounded-full bg-white/10 overflow-hidden">
+                  <motion.div
+                    className="h-full rounded-full bg-gradient-to-r from-primary via-violet-400 to-purple-400"
+                    initial={{ width: 0 }}
+                    animate={{
+                      width: `${Math.max(1.5, Math.round((stats.completedDays / 75) * 100))}%`,
+                    }}
+                    transition={{ duration: 1.8, ease: "easeOut", delay: 0.4 }}
+                    style={{ boxShadow: "0 0 12px hsl(var(--primary)/0.5)" }}
+                  />
+                </div>
+                <p className="text-xs text-white/35">
+                  {stats.completedDays} / 75 days completed
+                </p>
+              </div>
             </div>
-            {/* Greeting with user name */}
-            <h1 className="text-2xl md:text-3xl font-black text-foreground">
-              {realUser?.firstName
-                ? `Welcome back, ${realUser.firstName}! 👋`
-                : "Welcome back! 👋"}
-            </h1>
-            <p className="text-muted-foreground mt-1.5 text-sm md:text-base">
-              You&apos;re on{" "}
-              <span className="font-bold text-primary">Day {stats.currentDay}</span>{" "}
-              of your{" "}
-              <span className="font-semibold text-foreground">75-day journey</span>.{" "}
-              {stats.streak >= 7
-                ? "🔥 Amazing streak — keep it going!"
-                : stats.completedDays > 0
-                ? "Great progress — don't stop now!"
-                : "Your journey starts here. Let's go!"}
-            </p>
 
-            {/* Mini progress bar */}
-            <div className="mt-4 flex items-center gap-3">
-              <div className="flex-1 max-w-sm h-2 rounded-full bg-muted/60 overflow-hidden">
-                <motion.div
-                  className="h-full rounded-full bg-gradient-to-r from-primary via-violet-500 to-purple-500"
-                  initial={{ width: 0 }}
-                  animate={{ width: `${Math.max(1, Math.round((stats.completedDays / 75) * 100))}%` }}
-                  transition={{ duration: 1.5, ease: "easeOut", delay: 0.3 }}
+            {/* Stats pills */}
+            <div className="flex gap-3 shrink-0 flex-wrap sm:flex-nowrap">
+              {/* Streak */}
+              <div className="flex items-center gap-3 rounded-2xl border border-orange-500/30 bg-orange-500/10 px-5 py-4 backdrop-blur-sm min-w-[105px]">
+                <Flame
+                  className="h-7 w-7 text-orange-400 animate-flicker shrink-0"
+                  aria-hidden="true"
                 />
+                <div>
+                  <p className="text-3xl font-black text-white leading-none tabular-nums">
+                    {stats.streak}
+                  </p>
+                  <p className="text-xs text-white/50 mt-0.5 font-medium">Day Streak</p>
+                </div>
               </div>
-              <span className="text-xs font-bold text-primary whitespace-nowrap">
-                {Math.round((stats.completedDays / 75) * 100)}% Complete
-              </span>
-            </div>
-          </div>
-
-          {/* Stats pills */}
-          <div className="flex gap-3 flex-wrap sm:flex-nowrap shrink-0">
-            {/* Streak */}
-            <div className="flex items-center gap-2 rounded-2xl border border-orange-500/30 bg-orange-500/10 px-4 py-3 min-w-[90px]">
-              <Flame className="h-6 w-6 text-orange-500 animate-flicker shrink-0" aria-hidden="true" />
-              <div>
-                <p className="text-2xl font-black text-foreground leading-none">{stats.streak}</p>
-                <p className="text-xs text-muted-foreground mt-0.5">Day Streak</p>
+              {/* Level */}
+              <div className="flex items-center gap-3 rounded-2xl border border-primary/30 bg-primary/10 px-5 py-4 backdrop-blur-sm min-w-[95px]">
+                <Star className="h-7 w-7 text-primary shrink-0" aria-hidden="true" />
+                <div>
+                  <p className="text-3xl font-black text-white leading-none tabular-nums">
+                    {stats.level}
+                  </p>
+                  <p className="text-xs text-white/50 mt-0.5 font-medium">Level</p>
+                </div>
               </div>
-            </div>
-            {/* Level */}
-            <div className="flex items-center gap-2 rounded-2xl border border-primary/30 bg-primary/10 px-4 py-3 min-w-[80px]">
-              <Star className="h-6 w-6 text-primary shrink-0" aria-hidden="true" />
-              <div>
-                <p className="text-2xl font-black text-foreground leading-none">{stats.level}</p>
-                <p className="text-xs text-muted-foreground mt-0.5">Level</p>
+              {/* Total XP */}
+              <div className="flex items-center gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 px-5 py-4 backdrop-blur-sm min-w-[95px]">
+                <Zap className="h-7 w-7 text-amber-400 shrink-0" aria-hidden="true" />
+                <div>
+                  <p className="text-3xl font-black text-white leading-none tabular-nums">
+                    {stats.totalXp}
+                  </p>
+                  <p className="text-xs text-white/50 mt-0.5 font-medium">Total XP</p>
+                </div>
               </div>
             </div>
           </div>
@@ -270,58 +331,64 @@ export function DashboardClient({
 
       {/* ── Quick Actions ── */}
       <motion.div variants={itemVariants}>
-        <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+        <div className="flex items-center gap-2 mb-5">
           <Sparkles className="h-5 w-5 text-gold-400" />
-          Quick Actions
-        </h2>
+          <h2 className="text-lg font-bold">Quick Actions</h2>
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {QUICK_ACTIONS.map((action, i) => (
+          {QUICK_ACTIONS.map((action) => (
             <motion.div
               key={action.label}
-              whileHover={{ y: -4, scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              transition={{ duration: 0.2 }}
+              whileHover={{ y: -5, scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ duration: 0.18, ease: "easeOut" }}
+              className="card-shine"
             >
               <Link
                 href={action.href}
                 className={cn(
-                  "relative flex flex-col gap-3 rounded-2xl p-5 text-white overflow-hidden",
+                  "relative flex flex-col gap-4 rounded-2xl p-5 text-white overflow-hidden h-full",
                   `bg-gradient-to-br ${action.color}`,
                   action.glow
                 )}
               >
-                {/* Background pattern */}
+                {/* Radial shine overlay */}
                 <div
-                  className="absolute inset-0 opacity-10"
+                  className="absolute inset-0 opacity-15"
                   style={{
                     backgroundImage:
-                      "radial-gradient(circle at 100% 0%, white 0%, transparent 60%)",
+                      "radial-gradient(circle at 100% 0%, white 0%, transparent 55%)",
+                  }}
+                />
+                {/* Bottom left dark for depth */}
+                <div
+                  className="absolute inset-0 opacity-20"
+                  style={{
+                    backgroundImage:
+                      "radial-gradient(circle at 0% 100%, rgba(0,0,0,0.4) 0%, transparent 60%)",
                   }}
                 />
 
                 {/* Badge */}
-                <span
-                  className="absolute top-3 right-3 rounded-full bg-white/20 
-                             px-2 py-0.5 text-xs font-semibold backdrop-blur-sm"
-                >
+                <span className="absolute top-3.5 right-3.5 rounded-full bg-black/20 border border-white/20 px-2.5 py-0.5 text-xs font-bold backdrop-blur-sm">
                   {action.badge}
                 </span>
 
                 {/* Icon */}
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/20 border border-white/20 backdrop-blur-sm">
                   <action.icon className="h-5 w-5" aria-hidden="true" />
                 </div>
 
                 {/* Text */}
-                <div>
-                  <p className="font-semibold text-base">{action.label}</p>
-                  <p className="text-xs text-white/80 mt-0.5">
-                    {action.description}
-                  </p>
+                <div className="flex-1">
+                  <p className="font-bold text-base leading-tight">{action.label}</p>
+                  <p className="text-xs text-white/75 mt-1">{action.description}</p>
                 </div>
 
                 {/* Arrow */}
-                <ArrowRight className="absolute bottom-4 right-4 h-4 w-4 opacity-70" />
+                <div className="flex items-center justify-end">
+                  <ArrowRight className="h-4 w-4 opacity-70 group-hover:translate-x-1 transition-transform" />
+                </div>
               </Link>
             </motion.div>
           ))}

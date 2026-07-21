@@ -9,3 +9,5 @@
 - [SubtopicProgress dayProgressId](subtopic-progress.md) — SubtopicProgress.create requires dayProgressId; upsert DayProgress first to get the ID
 - [Seed vocab import](seed-vocab-import.md) — seed.ts imports ALL_DAY_1_VOCABULARY from static file; maps difficulty to uppercase, synonyms/antonyms to JSON.stringify; dev user seeded with currentDay:1 (NOT 10)
 - [Progress save route](progress-save-route.md) — api/progress/save uses static subtopicId from request body directly (NOT DB cuid lookup); this is essential so completedSubtopicIds match the static config IDs the day page checks against
+- [Vocabulary API filters](vocabulary-api-filters.md) — /api/vocabulary accepts difficulty/partOfSpeech filters for "all" case; also reads "pageSize" OR "limit" param; profile stats must use ?? not || for numeric fields that can be 0
+- [Mobile sidebar fix](mobile-sidebar-fix.md) — SidebarProvider defaultOpen=true blocks content on mobile; SidebarMobileCloser client component calls setOpen(false) if window.innerWidth < 1024 on mount

@@ -438,10 +438,12 @@ export function DayPageClient({
                             key={subtopic.id}
                             href={`/day/${dayNumber}/topic/${topic.id}/subtopic/${subtopic.id}`}
                             className={cn(
-                              "flex items-center gap-3 px-4 py-3.5",
+                              "group flex items-center gap-3 px-4 py-3.5",
                               "border-b border-border/40 last:border-0",
-                              "transition-colors duration-150 hover:bg-accent/40",
-                              isCurrent && "bg-primary/5"
+                              "transition-all duration-200",
+                              isCompleted && "hover:bg-emerald-500/5",
+                              isCurrent && "bg-primary/5 hover:bg-primary/8",
+                              !isCompleted && !isCurrent && "hover:bg-accent/50"
                             )}
                           >
                             {/* Status indicator */}
@@ -469,15 +471,20 @@ export function DayPageClient({
                                   className={cn(
                                     "text-sm font-semibold",
                                     isCompleted
-                                      ? "text-muted-foreground line-through"
+                                      ? "text-muted-foreground/70"
                                       : "text-foreground"
                                   )}
                                 >
                                   {subtopic.title}
                                 </p>
+                                {isCompleted && (
+                                  <span className="rounded-full bg-emerald-500/15 border border-emerald-500/25 px-2 py-0.5 text-xs font-bold text-emerald-500">
+                                    ✓ Done
+                                  </span>
+                                )}
                                 {isCurrent && (
-                                  <span className="rounded-full bg-primary/15 px-2 py-0.5 text-xs font-semibold text-primary">
-                                    Continue
+                                  <span className="rounded-full bg-primary/15 border border-primary/25 px-2 py-0.5 text-xs font-bold text-primary">
+                                    Continue →
                                   </span>
                                 )}
                               </div>

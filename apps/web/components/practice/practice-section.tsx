@@ -298,60 +298,113 @@ export function PracticeSection({ dayNumber, subtopicId, subtopicTitle, topicCol
   const options = isMCQ ? [currentQ.optionA, currentQ.optionB, currentQ.optionC, currentQ.optionD].filter(Boolean) : [];
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       {/* Header with score */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="badge-primary font-bold">{currentQIndex + 1} / {questions.length}</div>
-          <div className="flex items-center gap-1 text-emerald-500 text-sm font-semibold">
-            <CheckCircle2 className="h-4 w-4" />{correct}
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2.5">
+          {/* Question counter */}
+          <div className="flex items-center gap-1.5 rounded-full bg-primary/10 border border-primary/20 px-3 py-1.5">
+            <span className="text-xs font-black text-primary">{currentQIndex + 1}</span>
+            <span className="text-xs text-muted-foreground/60">/</span>
+            <span className="text-xs font-medium text-muted-foreground">{questions.length}</span>
           </div>
-          <div className="flex items-center gap-1 text-rose-500 text-sm font-semibold">
-            <X className="h-4 w-4" />{wrong}
+          {/* Correct */}
+          <div className="flex items-center gap-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5">
+            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
+            <span className="text-xs font-bold text-emerald-500">{correct}</span>
+          </div>
+          {/* Wrong */}
+          <div className="flex items-center gap-1.5 rounded-full bg-rose-500/10 border border-rose-500/20 px-3 py-1.5">
+            <X className="h-3.5 w-3.5 text-rose-500" />
+            <span className="text-xs font-bold text-rose-500">{wrong}</span>
           </div>
         </div>
-        <div className="flex items-center gap-1.5 rounded-full bg-gold-400/10 border border-gold-400/20 px-3 py-1.5">
-          <Zap className="h-4 w-4 text-gold-500" />
-          <span className="text-sm font-bold text-gold-500">{score} pts</span>
-        </div>
+        {/* Score */}
+        <motion.div
+          key={score}
+          initial={{ scale: 1.2 }}
+          animate={{ scale: 1 }}
+          className="flex items-center gap-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 px-3.5 py-1.5"
+        >
+          <Zap className="h-3.5 w-3.5 text-amber-500" />
+          <span className="text-sm font-black text-amber-500">{score} pts</span>
+        </motion.div>
       </div>
 
       {/* Progress bar */}
-      <div className="h-1.5 rounded-full bg-muted overflow-hidden">
-        <motion.div className="h-full bg-gradient-to-r from-primary to-purple-500"
-          animate={{ width: `${((currentQIndex) / questions.length) * 100}%` }} />
+      <div className="space-y-1">
+        <div className="h-2 rounded-full bg-muted/60 overflow-hidden">
+          <motion.div
+            className="h-full rounded-full bg-gradient-to-r from-primary via-violet-500 to-purple-500"
+            animate={{ width: `${((currentQIndex) / questions.length) * 100}%` }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            style={{ boxShadow: "0 0 8px hsl(var(--primary)/0.4)" }}
+          />
+        </div>
       </div>
 
       {/* Answer mode toggle */}
-      <div className="flex gap-2 p-1 rounded-xl bg-muted border border-border w-fit">
-        <button onClick={() => setAnswerMode("type")}
-          className={cn("flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium transition-all",
-            answerMode === "type" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}>
-          ⌨️ Type
+      <div className="flex gap-1.5 p-1 rounded-xl bg-muted/60 border border-border/60 w-fit">
+        <button
+          onClick={() => setAnswerMode("type")}
+          className={cn(
+            "flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-200",
+            answerMode === "type"
+              ? "bg-card text-foreground shadow-sm border border-border/50"
+              : "text-muted-foreground hover:text-foreground"
+          )}
+        >
+          <span>⌨️</span> Type
         </button>
-        <button onClick={() => setAnswerMode("speak")}
-          className={cn("flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium transition-all",
-            answerMode === "speak" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}>
-          🎤 Speak
+        <button
+          onClick={() => setAnswerMode("speak")}
+          className={cn(
+            "flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-200",
+            answerMode === "speak"
+              ? "bg-card text-foreground shadow-sm border border-border/50"
+              : "text-muted-foreground hover:text-foreground"
+          )}
+        >
+          <span>🎤</span> Speak
         </button>
       </div>
 
       {/* Question card */}
       <AnimatePresence mode="wait">
-        <motion.div key={currentQIndex} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
-          className={cn("rounded-2xl border-2 p-5 transition-colors",
-            questionState === "correct" && "border-emerald-500 bg-emerald-500/5",
-            questionState === "wrong" && "border-rose-500 bg-rose-500/5",
-            questionState === "revealed" && "border-amber-500 bg-amber-500/5",
+        <motion.div
+          key={currentQIndex}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -12 }}
+          transition={{ duration: 0.25 }}
+          className={cn(
+            "rounded-2xl border-2 p-5 transition-all duration-300",
+            questionState === "correct" && "border-emerald-500/60 bg-emerald-500/5",
+            questionState === "wrong" && "border-rose-500/60 bg-rose-500/5",
+            questionState === "revealed" && "border-amber-500/60 bg-amber-500/5",
             questionState === "unanswered" && "border-border bg-card"
-          )}>
-          {/* Difficulty badge */}
+          )}
+        >
+          {/* Difficulty badge + speak button */}
           <div className="flex items-center justify-between mb-4">
-            <span className={cn("badge text-xs", currentQ.difficulty === "BEGINNER" ? "badge-success" : currentQ.difficulty === "INTERMEDIATE" ? "badge-warning" : "badge-danger")}>
+            <span
+              className={cn(
+                "badge text-xs font-bold",
+                currentQ.difficulty === "BEGINNER"
+                  ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
+                  : currentQ.difficulty === "INTERMEDIATE"
+                  ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20"
+                  : "bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20"
+              )}
+            >
               {currentQ.difficulty}
             </span>
-            <button onClick={() => speakQuestion(currentQ.questionText)} className="btn-ghost p-1.5 rounded-lg">
-              <Volume2 className="h-4 w-4" />
+            <button
+              onClick={() => speakQuestion(currentQ.questionText)}
+              className="flex h-8 w-8 items-center justify-center rounded-lg hover:bg-accent transition-colors"
+              title="Listen to question"
+            >
+              <Volume2 className="h-4 w-4 text-muted-foreground" />
             </button>
           </div>
 
@@ -372,31 +425,48 @@ export function PracticeSection({ dayNumber, subtopicId, subtopicTitle, topicCol
 
           {/* MCQ Options */}
           {isMCQ && questionState === "unanswered" && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-4">
               {options.map((opt, i) => (
-                <button key={i} onClick={() => handleOptionSelect(opt!)}
-                  className={cn("rounded-xl border-2 p-3 text-left text-sm font-medium transition-all",
-                    "border-border hover:border-primary/50 hover:bg-primary/5")}>
-                  <span className="text-muted-foreground mr-2">{String.fromCharCode(65 + i)}.</span>{opt}
-                </button>
+                <motion.button
+                  key={i}
+                  onClick={() => handleOptionSelect(opt!)}
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="rounded-xl border-2 border-border/70 bg-muted/30 p-3.5 text-left text-sm font-medium transition-all hover:border-primary/50 hover:bg-primary/5 hover:shadow-sm"
+                >
+                  <span className="inline-flex items-center justify-center h-5 w-5 rounded-md bg-muted text-xs font-bold text-muted-foreground mr-2.5">
+                    {String.fromCharCode(65 + i)}
+                  </span>
+                  {opt}
+                </motion.button>
               ))}
             </div>
           )}
 
           {/* MCQ Results */}
           {isMCQ && questionState !== "unanswered" && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-4">
               {options.map((opt, i) => {
                 const isCorrectOpt = opt === currentQ.correctAnswer;
                 const isSelectedOpt = opt === selectedOption;
                 return (
-                  <div key={i} className={cn("rounded-xl border-2 p-3 text-sm font-medium",
-                    isCorrectOpt ? "border-emerald-500 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" :
-                    isSelectedOpt && !isCorrectOpt ? "border-rose-500 bg-rose-500/10 text-rose-600 dark:text-rose-400" :
-                    "border-border/50 text-muted-foreground opacity-60")}>
-                    <span className="mr-2">{String.fromCharCode(65 + i)}.</span>{opt}
-                    {isCorrectOpt && " ✅"}
-                    {isSelectedOpt && !isCorrectOpt && " ❌"}
+                  <div
+                    key={i}
+                    className={cn(
+                      "rounded-xl border-2 p-3.5 text-sm font-medium",
+                      isCorrectOpt
+                        ? "border-emerald-500 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                        : isSelectedOpt && !isCorrectOpt
+                        ? "border-rose-500 bg-rose-500/10 text-rose-600 dark:text-rose-400"
+                        : "border-border/40 text-muted-foreground/60 bg-muted/20"
+                    )}
+                  >
+                    <span className="inline-flex items-center justify-center h-5 w-5 rounded-md bg-muted/60 text-xs font-bold mr-2.5">
+                      {String.fromCharCode(65 + i)}
+                    </span>
+                    {opt}
+                    {isCorrectOpt && " ✓"}
+                    {isSelectedOpt && !isCorrectOpt && " ✗"}
                   </div>
                 );
               })}
@@ -405,14 +475,24 @@ export function PracticeSection({ dayNumber, subtopicId, subtopicTitle, topicCol
 
           {/* Type answer input */}
           {!isMCQ && answerMode === "type" && questionState === "unanswered" && (
-            <form onSubmit={handleTypeSubmit} className="flex gap-2">
-              <input ref={inputRef} type="text" value={typedAnswer}
+            <form onSubmit={handleTypeSubmit} className="flex gap-2.5">
+              <input
+                ref={inputRef}
+                type="text"
+                value={typedAnswer}
                 onChange={e => setTypedAnswer(e.target.value)}
                 placeholder="Type your answer in English..."
-                className="input-field flex-1 text-base" autoFocus />
-              <button type="submit" className="btn-primary px-4 py-2 shrink-0">
+                className="input-field flex-1 text-base h-12 rounded-xl"
+                autoFocus
+              />
+              <motion.button
+                type="submit"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="btn-primary px-5 h-12 rounded-xl shrink-0"
+              >
                 <Send className="h-4 w-4" />
-              </button>
+              </motion.button>
             </form>
           )}
 
@@ -420,31 +500,57 @@ export function PracticeSection({ dayNumber, subtopicId, subtopicTitle, topicCol
           {!isMCQ && answerMode === "speak" && questionState === "unanswered" && (
             <div className="space-y-3">
               {/* Speech recording area */}
-              <div className={cn("rounded-xl border-2 p-4 min-h-16 flex items-center justify-center transition-colors",
-                isListening ? "border-rose-500 bg-rose-500/5 animate-pulse" : "border-border")}>
+              <div
+                className={cn(
+                  "rounded-xl border-2 p-5 min-h-[72px] flex items-center justify-center transition-all duration-300",
+                  isListening
+                    ? "border-rose-500/60 bg-rose-500/5"
+                    : spokenAnswer
+                    ? "border-primary/30 bg-primary/5"
+                    : "border-border/50 bg-muted/20"
+                )}
+              >
                 {isListening ? (
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-4">
                     <div className="sound-wave">
                       {[1,2,3,4,5,6,7].map(n => <div key={n} className="sound-wave-bar" />)}
                     </div>
-                    <span className="text-sm text-rose-500 font-medium">Listening...</span>
+                    <span className="text-sm text-rose-500 font-semibold">Listening...</span>
                   </div>
                 ) : spokenAnswer ? (
-                  <p className="text-foreground font-medium text-center">{spokenAnswer}</p>
+                  <p className="text-foreground font-semibold text-center">{spokenAnswer}</p>
                 ) : (
-                  <p className="text-muted-foreground text-sm text-center">Click the mic and speak your answer in English</p>
+                  <div className="text-center">
+                    <Mic className="h-6 w-6 text-muted-foreground/40 mx-auto mb-1" />
+                    <p className="text-muted-foreground text-sm">Tap the mic and speak in English</p>
+                  </div>
                 )}
               </div>
-              <div className="flex gap-2">
-                <button onClick={toggleListening}
-                  className={cn("flex items-center gap-2 rounded-xl px-4 py-2.5 font-medium flex-1 justify-center transition-all",
-                    isListening ? "bg-rose-500 text-white hover:bg-rose-600" : "bg-primary text-white hover:bg-primary/90")}>
-                  {isListening ? <><MicOff className="h-5 w-5" /> Stop Recording</> : <><Mic className="h-5 w-5" /> Start Speaking</>}
-                </button>
+              <div className="flex gap-2.5">
+                <motion.button
+                  onClick={toggleListening}
+                  whileTap={{ scale: 0.96 }}
+                  className={cn(
+                    "flex items-center gap-2 rounded-xl px-5 py-3 font-semibold flex-1 justify-center transition-all duration-200",
+                    isListening
+                      ? "bg-rose-500 text-white hover:bg-rose-600 shadow-lg shadow-rose-500/25"
+                      : "bg-primary text-white hover:bg-primary/90 shadow-lg shadow-primary/25"
+                  )}
+                >
+                  {isListening ? (
+                    <><MicOff className="h-5 w-5" /> Stop</>
+                  ) : (
+                    <><Mic className="h-5 w-5" /> Start Speaking</>
+                  )}
+                </motion.button>
                 {spokenAnswer && (
-                  <button onClick={handleSpokenSubmit} className="btn-primary px-6">
-                    <Send className="h-4 w-4" /> Submit
-                  </button>
+                  <motion.button
+                    onClick={handleSpokenSubmit}
+                    whileTap={{ scale: 0.96 }}
+                    className="btn-primary px-6 rounded-xl"
+                  >
+                    <Send className="h-4 w-4" />
+                  </motion.button>
                 )}
               </div>
             </div>

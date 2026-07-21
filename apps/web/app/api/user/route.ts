@@ -59,11 +59,29 @@ export async function GET() {
       return NextResponse.json({ user: null });
     }
 
+    // Compute accuracy from the user's score records
+    let accuracy = 0;
+    try {
+      const scores = await db.score.findMany({
+        where: { userId: user.id },
+        select: { points: true, xp: true },
+        take: 100,
+        orderBy: { createdAt: "desc" },
+      });
+      if (scores.length > 0) {
+        // Average points across recent scores (points = 0-100 accuracy)
+        const totalPoints = scores.reduce((sum, s) => sum + (s.points ?? 0), 0);
+        accuracy = Math.round(totalPoints / scores.length);
+      }
+    } catch {
+      // Ignore — accuracy stays 0
+    }
+
     // Return user data with computed accuracy field
     return NextResponse.json({
       user: {
         ...user,
-        accuracy: 0, // Computed from practice answers - placeholder
+        accuracy,
       },
     });
   } catch (error) {

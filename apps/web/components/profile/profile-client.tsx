@@ -170,12 +170,12 @@ export function ProfileClient({ profileData }: ProfileClientProps) {
     .slice(0, 2);
 
   const stats = {
-    xp: user?.totalXp || 350,
-    level: user?.level || 2,
-    streak: user?.streak || 3,
-    longestStreak: user?.longestStreak || 3,
-    currentDay: user?.currentDay || 2,
-    coins: user?.totalCoins || 0,
+    xp: user?.totalXp ?? 0,
+    level: user?.level ?? 1,
+    streak: user?.streak ?? 0,
+    longestStreak: user?.longestStreak ?? 0,
+    currentDay: user?.currentDay ?? 1,
+    coins: user?.totalCoins ?? 0,
   };
 
   // Calculate which badges are earned

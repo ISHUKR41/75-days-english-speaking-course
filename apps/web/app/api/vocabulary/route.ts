@@ -22,7 +22,12 @@ export async function GET(req: NextRequest) {
     const dayNumber = searchParams.get("dayNumber");
     const subtopicId = searchParams.get("subtopicId");
     const search = searchParams.get("search");
-    const limit = parseInt(searchParams.get("limit") || "200");
+    const difficulty = searchParams.get("difficulty"); // BEGINNER, INTERMEDIATE, ADVANCED
+    const partOfSpeech = searchParams.get("partOfSpeech"); // noun, verb, etc.
+    // Accept both "limit" and "pageSize" params from clients
+    const limit = parseInt(
+      searchParams.get("limit") || searchParams.get("pageSize") || "200"
+    );
     const page = parseInt(searchParams.get("page") || "1");
     const skip = (page - 1) * limit;
 
@@ -88,17 +93,26 @@ export async function GET(req: NextRequest) {
     }
 
     // ─── All vocabulary (for vocabulary page) ────────────────────────────────
+    // Build compound where clause for all active filters
+    const allWhere: Record<string, unknown> = {};
+
+    if (search) {
+      allWhere.OR = [
+        { word: { contains: search } },
+        { meaning: { contains: search } },
+        { hindiMeaning: { contains: search } },
+      ];
+    }
+    if (difficulty) {
+      allWhere.difficulty = difficulty;
+    }
+    if (partOfSpeech) {
+      allWhere.partOfSpeech = partOfSpeech;
+    }
+
     const [words, total] = await Promise.all([
       db.dayVocabulary.findMany({
-        where: search
-          ? {
-              OR: [
-                { word: { contains: search } },
-                { meaning: { contains: search } },
-                { hindiMeaning: { contains: search } },
-              ],
-            }
-          : {},
+        where: allWhere,
         orderBy: [{ dayId: "asc" }, { word: "asc" }],
         take: limit,
         skip,
@@ -108,7 +122,7 @@ export async function GET(req: NextRequest) {
           },
         },
       }),
-      db.dayVocabulary.count(),
+      db.dayVocabulary.count({ where: allWhere }),
     ]);
 
     return NextResponse.json({

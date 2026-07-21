@@ -59,15 +59,27 @@ export function LeaderboardClient({
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      {/* Header */}
-      <div className="text-center">
-        <h1 className="text-2xl font-bold flex items-center justify-center gap-2">
-          <Trophy className="h-6 w-6 text-yellow-500" />
-          Leaderboard
-        </h1>
-        <p className="text-muted-foreground mt-1">
-          See how you rank among all learners
-        </p>
+      {/* Premium header */}
+      <div className="relative overflow-hidden rounded-3xl border border-amber-500/20">
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(135deg, hsl(40 80% 5%) 0%, hsl(224 30% 8%) 60%, hsl(35 70% 6%) 100%)",
+          }}
+        />
+        <div className="pointer-events-none absolute -top-16 -right-16 h-48 w-48 rounded-full bg-amber-500/20 blur-[60px]" />
+        <div className="pointer-events-none absolute -bottom-8 -left-8 h-36 w-36 rounded-full bg-orange-500/15 blur-[50px]" />
+        <div className="absolute inset-0 grid-dots opacity-[0.04]" />
+        <div className="relative p-6 md:p-8 text-center">
+          <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-500/20 border border-amber-500/30 mb-4">
+            <Trophy className="h-7 w-7 text-amber-400" />
+          </div>
+          <h1 className="text-2xl md:text-3xl font-black text-white">Leaderboard</h1>
+          <p className="text-white/60 mt-1.5">
+            See how you rank among all learners
+          </p>
+        </div>
       </div>
 
       {/* Current user rank card */}
@@ -75,23 +87,25 @@ export function LeaderboardClient({
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-2xl border border-primary/30 bg-primary/5 p-4 flex items-center gap-4"
+          className="relative overflow-hidden rounded-2xl border border-primary/30 bg-primary/5 p-5 flex items-center gap-4"
         >
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20 text-primary font-bold">
+          <div className="pointer-events-none absolute inset-0 opacity-[0.03] grid-dots" />
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/20 border border-primary/30 text-primary font-black text-lg">
             #{currentUserIndexInList + 1}
           </div>
-          <div className="flex-1">
-            <p className="font-semibold">Your Rank</p>
-            <p className="text-sm text-muted-foreground">
+          <div className="flex-1 min-w-0">
+            <p className="font-bold text-foreground">Your Rank</p>
+            <p className="text-sm text-muted-foreground truncate">
               {currentUserInList.firstName} {currentUserInList.lastName} •
               Level {currentUserInList.level}
             </p>
           </div>
-          <div className="text-right">
-            <p className="font-bold text-primary">
+          <div className="text-right shrink-0">
+            <p className="font-black text-primary text-lg">
               {getXpDisplay(currentUserInList).toLocaleString()} XP
             </p>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-muted-foreground flex items-center gap-1 justify-end">
+              <Flame className="h-3 w-3 text-orange-400" />
               {currentUserInList.streak} day streak
             </p>
           </div>

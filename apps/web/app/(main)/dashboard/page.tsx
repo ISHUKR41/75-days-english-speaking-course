@@ -84,7 +84,47 @@ async function getDashboardData(userId: string) {
       },
     });
 
-    return { user, days, leaderboard };
+    // Compute real stats from score records
+    const now = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const weekStart = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+    let todayXp = 0;
+    let weekXp = 0;
+    let accuracy = 0;
+    let questionsAnswered = 0;
+    let wordsLearned = 0;
+
+    try {
+      const recentScores = await db.score.findMany({
+        where: { userId: user.id },
+        select: { xp: true, points: true, createdAt: true },
+        orderBy: { createdAt: "desc" },
+        take: 200,
+      });
+
+      questionsAnswered = recentScores.length;
+
+      if (recentScores.length > 0) {
+        const totalPoints = recentScores.reduce((s, r) => s + (r.points ?? 0), 0);
+        accuracy = Math.round(totalPoints / recentScores.length);
+      }
+
+      todayXp = recentScores
+        .filter((s) => new Date(s.createdAt) >= todayStart)
+        .reduce((sum, s) => sum + (s.xp ?? 0), 0);
+
+      weekXp = recentScores
+        .filter((s) => new Date(s.createdAt) >= weekStart)
+        .reduce((sum, s) => sum + (s.xp ?? 0), 0);
+
+      // Estimate words learned based on completed days
+      wordsLearned = Math.min((user.currentDay - 1) * 200, 15000);
+    } catch {
+      // Ignore stat errors — fall back to zeros
+    }
+
+    return { user, days, leaderboard, todayXp, weekXp, accuracy, questionsAnswered, wordsLearned };
   } catch (error) {
     console.error("Dashboard data fetch error:", error);
     // Return safe fallback — dashboard will show with placeholder data
@@ -99,7 +139,8 @@ export default async function DashboardPage() {
   if (!userId) redirect("/sign-in");
 
   // Fetch all dashboard data
-  const { user, days, leaderboard } = await getDashboardData(userId);
+  const { user, days, leaderboard, todayXp, weekXp, accuracy, questionsAnswered, wordsLearned } =
+    await getDashboardData(userId);
 
   return (
     <DashboardClient
@@ -107,6 +148,11 @@ export default async function DashboardPage() {
       initialUser={user}
       initialDays={days}
       initialLeaderboard={leaderboard}
+      todayXp={todayXp}
+      weekXp={weekXp}
+      accuracy={accuracy}
+      questionsAnswered={questionsAnswered}
+      wordsLearned={wordsLearned}
     />
   );
 }

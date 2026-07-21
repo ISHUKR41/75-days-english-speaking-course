@@ -160,14 +160,14 @@ export function AppSidebar() {
     <aside
       className={cn(
         // Base layout styles
-        "relative flex flex-col h-screen border-r border-border/60",
+        "flex flex-col h-screen border-r border-border/60",
         "bg-sidebar transition-all duration-300 ease-in-out",
+        // Fixed on mobile (overlay), relative/sticky on desktop
+        "fixed lg:sticky lg:top-0 z-30 lg:z-10",
         // Width changes based on open/closed state
         open ? "w-[280px]" : "w-[68px]",
-        // Fixed position on mobile, relative on desktop
-        "fixed lg:relative z-30 lg:z-auto",
-        // Hide on mobile when collapsed
-        !open && "hidden lg:flex"
+        // On mobile: hide when closed, slide in when open
+        !open ? "hidden lg:flex" : "flex"
       )}
       aria-label="Main navigation"
     >

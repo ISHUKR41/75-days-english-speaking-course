@@ -19,6 +19,34 @@ and jitna bhe vocabulary tum mujhe doge wo haar ek din ke liye and haar ek topic
 
 
 
+
+
+
+
+
+
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_b3JnYW5pYy1sb25naG9ybi0yNi5jbGVyay5hY2NvdW50cy5kZXYk
+CLERK_SECRET_KEY=`SLACK_TEST_API_KEY`jjhiceZ6sVuk1GXWkY
+
+
+
+
+
+
+
+
+
+
+and or bhe jada engaging banao taki user or mera website ko or jada se jada use kare and bhout sare technologies and libraies ka use karo and bhout hee jada modern and animated and professional websites banao maine bhout sare website and npx karke commands diye hai uska bhe reference loo pls and itna mast and engaging banao ki user ko koi bhe problem nhi hooo and bhout hee jada engaging hona chiaye 
+and repo ka use karna hai to wo bhe kar lena pls 
+
+
+
+
+
+
+
+
 and haar ek or function add kar dena haar ek day mai ki mai speak karke bhe ans de saku aise to type karke dena parta hai to do option hona chiaye ki mai type karke bhe de saku and speak karke q ki mujhe fluent English bolna hai to uske liye jo jo requirement hai tum sab complete karo pls and ye same to same type jesa hee kaam karege dono cheez rahna chiaye jab mera maan ho mai type karke ans duu and jab maan ho to speak karke pls 
 
 
@@ -150,18 +178,18 @@ Har EK De ka topic to ready hai but sub topic ready nahin Hai Kisi bhi chij ka t
 
 
 
-And sabse important baat har ek din user jo hai at least kam se kam 200 new words sikhe kyunki daily communication mein use hota ho ya FIR companies mein use hota ho ya FIR aur agar kahin per bhi use hota Ho Jaise agar mujhe Bahar kahin Jana Ho Kisi aur country mein to vahan per agar koi chij use hota Ho like matlab daily 200 new words hone chahie and daily unique hona chahie new words 
+And sabse important baat har ek din user jo hai at least kam se kam 300 se 400 new words sikhe kyunki daily communication mein use hota ho ya FIR companies mein use hota ho ya FIR aur agar kahin per bhi use hota Ho Jaise agar mujhe Bahar kahin Jana Ho Kisi aur country mein to vahan per agar koi chij use hota Ho like matlab daily 200 new words hone chahie and daily unique hona chahie new words 
 
 
 
 
 
-And har ek word ka matlab tum English mein usko simply translate karke dena and uske sath kuchh example Dena usse related and ek kam se kam 3 se 5 sentence uske related ready karke dena 
+And har ek word ka matlab tum English mein usko simply translate karke dena and uske sath kuchh example Dena usse related and ek kam se kam 4 se 6 sentence uske related ready karke dena 
 
 
 
 
-Matlab aisa samjho ki Tum Jo words ready karoge to har ek din 200 new words rahana chahie and use words ka English English nahin hona chahie but simple English mein taki samajh mein a sake ki han iska matlab kya hai 
+Matlab aisa samjho ki Tum Jo words ready karoge to har ek din 300 se 400 new words rahana chahie and use words ka English English nahin hona chahie but simple English mein taki samajh mein a sake ki han iska matlab kya hai 
 
 
 
@@ -235,6 +263,12 @@ Agar Main practice questions mein bhi agar Main Sahi answer deta hun to Mera sco
 
 
 And graphs bhi hona chahie and agar Main daily Aakar practice kar raha hun daily agar Main matlab yahan per Aakar website open kar raha hun to uska bhi streak Banna chahie 
+
+
+
+
+
+
 
 
 
@@ -431,20 +465,20 @@ haar ek single ko or jada detail mai likho and or jada long likho and haar ek si
 
 
 
-Day 1 to day 2 tak sab cheez complete karo kuch bhe miss nhi hona chiaye 
+Day 1 to day 75 tak sab cheez complete karo kuch bhe miss nhi hona chiaye 
 
 
-Day 1 to day 2 tak sab cheez complete karo kuch bhe miss nhi hona chiaye
+Day 1 to day 75 tak sab cheez complete karo kuch bhe miss nhi hona chiaye
 
 jitna question and practice maine bola hai mujhe sab cheez ready chiaye 
 
-and maine jitna bhe bola hai Day 1 to day 2 to umse jo kuch bhe hona chiye sab mujhe complete karke dena kuch bhe miss nhi hona chiaye and mujhe mera website and project par show bhe hona chiaye 
+and maine jitna bhe bola hai Day 1 to day 75 to umse jo kuch bhe hona chiye sab mujhe complete karke dena kuch bhe miss nhi hona chiaye and mujhe mera website and project par show bhe hona chiaye 
 
 
 
 
 
-jab bhe koi new day and new topic start hoga like abhi day 1 to day 2 start hai to isme jo bhe topics and subtopics hai wo hum log q padh rahe hai usko aacha se explain kiya hua hona chiaye matlab tum koi bhe topic ko aise padha dena phela user ko haar ek cheez aacha se user ko tum padha dena jesa koi bhe topic jab start hota hai to sabse phela user ko uss topic ke bare mai bhout hee detail mai bataya jata hai ki hum iss topic ko q padh rahe hai and bhout sari other cheez to tum phela user ko sab cheez aacha se karba dena taki usko topic ko understand karne mai koi dikkat nhi hoo best best exapmles dena matlab dena and pictures ka bhe use karna and matlab tum sab cheez karna ki phela user ko topic pura samaj mai aa jaye usko koi problem nhi hoo and sab cheez fully responsive hona chiaye and modern bhe 
+jab bhe koi new day and new topic start hoga like abhi day 1 to day 75 start hai to isme jo bhe topics and subtopics hai wo hum log q padh rahe hai usko aacha se explain kiya hua hona chiaye matlab tum koi bhe topic ko aise padha dena phela user ko haar ek cheez aacha se user ko tum padha dena jesa koi bhe topic jab start hota hai to sabse phela user ko uss topic ke bare mai bhout hee detail mai bataya jata hai ki hum iss topic ko q padh rahe hai and bhout sari other cheez to tum phela user ko sab cheez aacha se karba dena taki usko topic ko understand karne mai koi dikkat nhi hoo best best exapmles dena matlab dena and pictures ka bhe use karna and matlab tum sab cheez karna ki phela user ko topic pura samaj mai aa jaye usko koi problem nhi hoo and sab cheez fully responsive hona chiaye and modern bhe 
 
 
 
@@ -466,6 +500,15 @@ or jada improve karte jao pls
 
 and or bhe jada engaging banao taki user or mera website ko or jada se jada use kare and bhout sare technologies and libraies ka use karo and bhout hee jada modern and animated and professional websites banao maine bhout sare website and npx karke commands diye hai uska bhe reference loo pls and itna mast and engaging banao ki user ko koi bhe problem nhi hooo and bhout hee jada engaging hona chiaye 
 and repo ka use karna hai to wo bhe kar lena pls 
+
+
+
+
+
+
+
+
+
 
 
 and haa ek or baat mera pass total 75 people ka team hai and haar ek team haar ek day par kaam kar rahi hai means day ke liye koi or person hai and day 2 ke liye koi or and osa hee day 75 ke liye koi or 
@@ -550,20 +593,20 @@ haar ek single ko or jada detail mai likho and or jada long likho and haar ek si
 
 
 
-Day 1 to day 2 tak sab cheez complete karo kuch bhe miss nhi hona chiaye 
+Day 1 to day 75 tak sab cheez complete karo kuch bhe miss nhi hona chiaye 
 
 
-Day 1 to day 2 tak sab cheez complete karo kuch bhe miss nhi hona chiaye
+Day 1 to day 75 tak sab cheez complete karo kuch bhe miss nhi hona chiaye
 
 jitna question and practice maine bola hai mujhe sab cheez ready chiaye 
 
-and maine jitna bhe bola hai Day 1 to day 2 to umse jo kuch bhe hona chiye sab mujhe complete karke dena kuch bhe miss nhi hona chiaye and mujhe mera website and project par show bhe hona chiaye 
+and maine jitna bhe bola hai Day 1 to day 75 to umse jo kuch bhe hona chiye sab mujhe complete karke dena kuch bhe miss nhi hona chiaye and mujhe mera website and project par show bhe hona chiaye 
 
 
 
 
 
-jab bhe koi new day and new topic start hoga like abhi day 1 to day 2 start hai to isme jo bhe topics and subtopics hai wo hum log q padh rahe hai usko aacha se explain kiya hua hona chiaye matlab tum koi bhe topic ko aise padha dena phela user ko haar ek cheez aacha se user ko tum padha dena jesa koi bhe topic jab start hota hai to sabse phela user ko uss topic ke bare mai bhout hee detail mai bataya jata hai ki hum iss topic ko q padh rahe hai and bhout sari other cheez to tum phela user ko sab cheez aacha se karba dena taki usko topic ko understand karne mai koi dikkat nhi hoo best best exapmles dena matlab dena and pictures ka bhe use karna and matlab tum sab cheez karna ki phela user ko topic pura samaj mai aa jaye usko koi problem nhi hoo and sab cheez fully responsive hona chiaye and modern bhe 
+jab bhe koi new day and new topic start hoga like abhi day 1 to day 75 start hai to isme jo bhe topics and subtopics hai wo hum log q padh rahe hai usko aacha se explain kiya hua hona chiaye matlab tum koi bhe topic ko aise padha dena phela user ko haar ek cheez aacha se user ko tum padha dena jesa koi bhe topic jab start hota hai to sabse phela user ko uss topic ke bare mai bhout hee detail mai bataya jata hai ki hum iss topic ko q padh rahe hai and bhout sari other cheez to tum phela user ko sab cheez aacha se karba dena taki usko topic ko understand karne mai koi dikkat nhi hoo best best exapmles dena matlab dena and pictures ka bhe use karna and matlab tum sab cheez karna ki phela user ko topic pura samaj mai aa jaye usko koi problem nhi hoo and sab cheez fully responsive hona chiaye and modern bhe 
 
 
 

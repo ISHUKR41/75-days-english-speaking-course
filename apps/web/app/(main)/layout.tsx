@@ -7,6 +7,8 @@ import { redirect } from "next/navigation";
 import { safeAuth, IS_CLERK_CONFIGURED } from "@/lib/safe-auth";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { AppHeader } from "@/components/layout/app-header";
+import { MobileSidebarBackdrop } from "@/components/layout/mobile-sidebar-backdrop";
+import { SidebarMobileCloser } from "@/components/layout/sidebar-mobile-closer";
 import { SidebarProvider } from "@/components/ui/sidebar";
 
 // Ensure user is authenticated for all pages inside (main)
@@ -40,6 +42,12 @@ export default async function MainLayout({
       <div className="flex min-h-screen w-full bg-background">
         {/* Left sidebar navigation */}
         <AppSidebar />
+
+        {/* Close sidebar on mobile immediately after mount */}
+        <SidebarMobileCloser />
+
+        {/* Mobile backdrop overlay — tapping outside closes sidebar */}
+        <MobileSidebarBackdrop />
 
         {/* Main content area */}
         <div className="flex flex-1 flex-col min-w-0">

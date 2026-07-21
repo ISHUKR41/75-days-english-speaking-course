@@ -50,6 +50,7 @@ const PARTS_OF_SPEECH = [
 
 export function VocabularyClient({ initialWords, days }: VocabularyClientProps) {
   const [words, setWords] = useState<VocabWord[]>(initialWords);
+  const [totalCount, setTotalCount] = useState(initialWords.length);
   const [search, setSearch] = useState("");
   const [difficulty, setDifficulty] = useState("ALL");
   const [partOfSpeech, setPartOfSpeech] = useState("ALL");
@@ -61,7 +62,7 @@ export function VocabularyClient({ initialWords, days }: VocabularyClientProps) 
   const [isLoading, setIsLoading] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
 
-  // Fetch words based on filters
+  // Fetch words based on filters (debounced 300ms)
   useEffect(() => {
     const timeout = setTimeout(async () => {
       setIsLoading(true);
@@ -71,12 +72,13 @@ export function VocabularyClient({ initialWords, days }: VocabularyClientProps) 
         if (difficulty !== "ALL") params.set("difficulty", difficulty);
         if (partOfSpeech !== "ALL") params.set("partOfSpeech", partOfSpeech);
         if (selectedDay !== "ALL") params.set("dayId", selectedDay);
-        params.set("pageSize", "200");
+        params.set("limit", "200");
 
         const res = await fetch(`/api/vocabulary?${params.toString()}`);
         if (res.ok) {
           const json = await res.json();
           setWords(json.data || []);
+          setTotalCount(json.meta?.total ?? (json.data?.length || 0));
           setFlashcardIndex(0);
         }
       } catch {
@@ -89,12 +91,8 @@ export function VocabularyClient({ initialWords, days }: VocabularyClientProps) 
     return () => clearTimeout(timeout);
   }, [search, difficulty, partOfSpeech, selectedDay]);
 
-  const filteredWords = useMemo(() => {
-    if (!search && difficulty === "ALL" && partOfSpeech === "ALL" && selectedDay === "ALL") {
-      return words;
-    }
-    return words;
-  }, [words, search, difficulty, partOfSpeech, selectedDay]);
+  // filteredWords is always the API-filtered result (server handles all filters)
+  const filteredWords = useMemo(() => words, [words]);
 
   const toggleMastered = (wordId: string) => {
     setMasteredWords((prev) => {
@@ -117,7 +115,7 @@ export function VocabularyClient({ initialWords, days }: VocabularyClientProps) 
             Vocabulary Bank
           </h1>
           <p className="text-muted-foreground mt-1">
-            {filteredWords.length.toLocaleString()} words •{" "}
+            {totalCount.toLocaleString()} words •{" "}
             {masteredWords.size} mastered
           </p>
         </div>

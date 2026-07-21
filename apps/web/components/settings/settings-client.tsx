@@ -24,7 +24,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useAppStore } from "@/store/use-app-store";
 import { useSound } from "@/hooks/use-sound";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 const LANGUAGES = [
   { code: "en", label: "English (Default)" },

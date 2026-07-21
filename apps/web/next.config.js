@@ -11,9 +11,11 @@ const nextConfig = {
   allowedDevOrigins: [
     "*.replit.dev",
     "*.pike.replit.dev",
-    "*.repl.co",
+    "*.sisko.replit.dev",
     "*.janeway.replit.dev",
+    "*.repl.co",
     "localhost",
+    "127.0.0.1",
   ],
 
   // Enable experimental features for best performance

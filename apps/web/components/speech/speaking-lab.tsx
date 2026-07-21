@@ -214,41 +214,46 @@ export function SpeakingLab({ userId }: SpeakingLabProps) {
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
-      {/* Header */}
-      <div className="text-center">
-        <h1 className="text-2xl font-bold flex items-center justify-center gap-2">
-          <Mic className="h-6 w-6 text-primary" />
-          Speaking Lab
-        </h1>
-        <p className="text-muted-foreground mt-1">
-          Practice your English speaking and pronunciation
-        </p>
-      </div>
-
-      {/* Session stats */}
-      <div className="grid grid-cols-3 gap-4">
-        {[
-          { label: "Attempts", value: attempts, icon: Target },
-          {
-            label: "Avg Score",
-            value: `${avgScore}%`,
-            icon: Zap,
-          },
-          {
-            label: "XP Earned",
-            value: Math.floor(sessionScore / 10),
-            icon: BookOpen,
-          },
-        ].map(({ label, value, icon: Icon }) => (
-          <div
-            key={label}
-            className="rounded-xl border border-border bg-card p-4 text-center"
-          >
-            <Icon className="h-5 w-5 text-primary mx-auto mb-1" />
-            <p className="text-xl font-bold">{value}</p>
-            <p className="text-xs text-muted-foreground">{label}</p>
+      {/* Premium header */}
+      <div className="relative overflow-hidden rounded-3xl border border-primary/20">
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(135deg, hsl(238 84% 6%) 0%, hsl(224 30% 8%) 60%, hsl(280 60% 7%) 100%)",
+          }}
+        />
+        <div className="pointer-events-none absolute -top-20 -right-20 h-56 w-56 rounded-full bg-primary/20 blur-[70px]" />
+        <div className="pointer-events-none absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-pink-500/15 blur-[50px]" />
+        <div className="absolute inset-0 grid-dots opacity-[0.04]" />
+        <div className="relative p-6 md:p-8">
+          <div className="flex flex-col sm:flex-row items-center gap-6">
+            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-primary/20 border border-primary/30 backdrop-blur-sm">
+              <Mic className="h-8 w-8 text-primary" />
+            </div>
+            <div className="text-center sm:text-left">
+              <h1 className="text-2xl md:text-3xl font-black text-white">Speaking Lab</h1>
+              <p className="text-white/60 mt-1">
+                Practice pronunciation, shadowing, and free talking
+              </p>
+            </div>
+            <div className="flex gap-3 sm:ml-auto flex-wrap justify-center">
+              {[
+                { label: "Attempts", value: attempts, icon: Target, color: "text-blue-400", bg: "bg-blue-500/10 border-blue-500/20" },
+                { label: "Avg Score", value: `${avgScore}%`, icon: Zap, color: "text-primary", bg: "bg-primary/10 border-primary/20" },
+                { label: "XP Earned", value: Math.floor(sessionScore / 10), icon: BookOpen, color: "text-amber-400", bg: "bg-amber-500/10 border-amber-500/20" },
+              ].map(stat => (
+                <div key={stat.label} className={cn("flex items-center gap-2 rounded-xl border px-3.5 py-2.5 backdrop-blur-sm", stat.bg)}>
+                  <stat.icon className={cn("h-4 w-4", stat.color)} />
+                  <div>
+                    <p className={cn("text-lg font-black leading-none", stat.color)}>{stat.value}</p>
+                    <p className="text-xs text-white/40 mt-0.5">{stat.label}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-        ))}
+        </div>
       </div>
 
       {/* Mode selector */}
