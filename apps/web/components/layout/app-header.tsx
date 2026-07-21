@@ -71,8 +71,18 @@ export function AppHeader() {
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Get current page title
-  const pageTitle = PAGE_TITLES[pathname] || "75 Days English";
+  // Get current page title — handle dynamic routes too
+  const getPageTitle = () => {
+    if (PAGE_TITLES[pathname]) return PAGE_TITLES[pathname];
+    // Day detail: /day/5/topic/.../subtopic/...
+    const subtopicMatch = pathname?.match(/^\/day\/(\d+)\/topic\/[^/]+\/subtopic\//);
+    if (subtopicMatch) return `Day ${subtopicMatch[1]} · Lesson`;
+    // Day page: /day/5
+    const dayMatch = pathname?.match(/^\/day\/(\d+)/);
+    if (dayMatch) return `Day ${dayMatch[1]} of 75`;
+    return "75 Days English";
+  };
+  const pageTitle = getPageTitle();
 
   // Count unread notifications
   const unreadCount = MOCK_NOTIFICATIONS.filter((n) => !n.read).length;

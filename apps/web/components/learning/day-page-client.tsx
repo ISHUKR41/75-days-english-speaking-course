@@ -281,7 +281,7 @@ export function DayPageClient({
           {[
             { icon: Play, label: "Start Learning", href: firstSubtopicUrl, color: "text-primary" },
             { icon: BookMarked, label: "Vocabulary", href: `/vocabulary?day=${dayNumber}`, color: "text-amber-500" },
-            { icon: Target, label: "Practice Test", href: `#test`, color: "text-rose-500" },
+            { icon: Target, label: "Mock Test", href: `/mock-test`, color: "text-rose-500" },
           ].map((action) => (
             <Link
               key={action.label}

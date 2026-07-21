@@ -18,6 +18,11 @@ import { ALL_DAY_1_QUESTIONS } from "@/data/questions/day-1-questions";
 import { ALL_DAY1_EXTENDED_QUESTIONS } from "@/data/questions/day-1-extended-questions";
 import { ALL_DAY_2_QUESTIONS } from "@/data/questions/day-2-questions";
 import type { PracticeQ } from "@/data/questions/day-1-questions";
+// Vocabulary for generating test questions for all days
+import { ALL_DAY_1_VOCABULARY } from "@/data/vocabulary/day-1-vocabulary";
+import { ALL_DAY_2_VOCABULARY } from "@/data/vocabulary/day-2-vocabulary";
+// Question generator — creates 3 questions per vocab word
+import { generateTestQuestionsFromVocab } from "@/data/questions/question-generator";
 
 // ─── Props ─────────────────────────────────────────────────────
 interface TestSectionProps {
@@ -36,23 +41,46 @@ type QState = "unanswered" | "correct" | "wrong";
 const SECONDS_PER_QUESTION = 30; // 30s per question
 const MAX_QUESTIONS = 50;        // Max questions to show
 
+// ─── Generate vocab-based test questions for any day ────────────
+function getVocabTestQuestions(dayNumber: number, subtopicId: string): PracticeQ[] {
+  // Pick the right vocab bank — use Day 2 for day 2, Day 1 for everything else
+  const vocab = dayNumber === 2 ? ALL_DAY_2_VOCABULARY : ALL_DAY_1_VOCABULARY;
+  // Slice a unique portion per subtopic so questions feel fresh
+  const subtopicNum = parseInt(subtopicId.split("-s").pop() || "1", 10);
+  const wordsPerSubtopic = 20; // 20 words × 3 question types = 60 questions
+  const startIdx = ((subtopicNum - 1) * wordsPerSubtopic) % vocab.length;
+  const slice = vocab.slice(startIdx, startIdx + wordsPerSubtopic);
+  const finalVocab = slice.length >= 10
+    ? slice
+    : [...slice, ...vocab.slice(0, wordsPerSubtopic - slice.length)];
+  return generateTestQuestionsFromVocab(finalVocab, subtopicId, dayNumber, subtopicNum);
+}
+
 // ─── Load test questions (same bank as practice) ────────────────
 function loadTestQuestions(dayNumber: number, subtopicId: string): PracticeQ[] {
   // Day 1 — merge base + extended, filter by subtopic then shuffle
   if (dayNumber === 1) {
     const all = [...ALL_DAY_1_QUESTIONS, ...ALL_DAY1_EXTENDED_QUESTIONS];
     const filtered = all.filter(q => q.subtopicId === subtopicId);
-    const pool = filtered.length >= 10 ? filtered : all; // Fallback to all
-    return shuffleArray(pool).slice(0, MAX_QUESTIONS);
+    const handwritten = filtered.length >= 10 ? filtered : all;
+    // Combine handwritten + vocab-generated for a richer test
+    const vocabQs = getVocabTestQuestions(1, subtopicId);
+    const combined = [...handwritten, ...vocabQs];
+    return shuffleArray(combined).slice(0, MAX_QUESTIONS);
   }
   // Day 2
   if (dayNumber === 2) {
     const filtered = ALL_DAY_2_QUESTIONS.filter(q => q.subtopicId === subtopicId);
-    const pool = filtered.length >= 10 ? filtered : ALL_DAY_2_QUESTIONS;
-    return shuffleArray(pool).slice(0, MAX_QUESTIONS);
+    const handwritten = filtered.length >= 10 ? filtered : ALL_DAY_2_QUESTIONS;
+    const vocabQs = getVocabTestQuestions(2, subtopicId);
+    const combined = [...handwritten, ...vocabQs];
+    return shuffleArray(combined).slice(0, MAX_QUESTIONS);
   }
-  // Days 3-75 — fallback to Day 1
-  return shuffleArray(ALL_DAY_1_QUESTIONS).slice(0, MAX_QUESTIONS);
+  // Days 3-75 — use vocab-generated questions (unique per subtopic)
+  const vocabQs = getVocabTestQuestions(dayNumber, subtopicId);
+  // Supplement with Day 1 handwritten questions for variety
+  const supplementQs = shuffleArray(ALL_DAY_1_QUESTIONS).slice(0, 20);
+  return shuffleArray([...vocabQs, ...supplementQs]).slice(0, MAX_QUESTIONS);
 }
 
 // ─── Fisher–Yates shuffle ───────────────────────────────────────
