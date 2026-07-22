@@ -519,55 +519,106 @@ const REMAINING_DAYS_META: Omit<DayConfig, "topics">[] = [
   { dayNumber: 75, title: "Complete Mock Test + Final Revision", description: "Final comprehensive exam covering all 75 days of learning", emoji: "✅", isRevision: true, isMockTest: true },
 ];
 
-// ─── Export complete course data ──────────────────────────────
+// ─── Helper: Build rich multi-topic structure for remaining days ─
+// Creates comprehensive topic/subtopic structure based on day meta
+function buildTopicsForDay(meta: Omit<DayConfig, "topics">): TopicConfig[] {
+  const d = meta.dayNumber;
+  const t = meta.title;
+  const e = meta.emoji;
 
-// Build remaining days with placeholder topics (actual content loaded from DB)
-const remainingDays: DayConfig[] = REMAINING_DAYS_META.map((meta) => ({
-  ...meta,
-  topics: [
+  // Revision/Mock Test days get a special 3-topic structure
+  if (meta.isRevision || meta.isMockTest) {
+    return [
+      {
+        id: `d${d}-t1`, title: `${t} - Overview`, description: `Review key concepts from previous lessons`,
+        emoji: "📋", color: "#6272f1", orderIndex: 1,
+        subtopics: [
+          { id: `d${d}-t1-s1`, title: `Key Concepts Review`, description: `Quick revision of all major grammar points`, emoji: "📖", estimatedMins: 20, orderIndex: 1 },
+          { id: `d${d}-t1-s2`, title: `Common Mistakes to Avoid`, description: `Most frequent errors and how to fix them`, emoji: "⚠️", estimatedMins: 20, orderIndex: 2 },
+          { id: `d${d}-t1-s3`, title: `Quick Reference Cheat Sheet`, description: `All rules in one easy reference`, emoji: "📝", estimatedMins: 15, orderIndex: 3 },
+        ],
+      },
+      {
+        id: `d${d}-t2`, title: `Speaking Practice`, description: `Intensive speaking drills with all learned patterns`,
+        emoji: "🎤", color: "#8b5cf6", orderIndex: 2,
+        subtopics: [
+          { id: `d${d}-t2-s1`, title: `Speaking Drills`, description: `Practice sentences aloud for fluency`, emoji: "🗣️", estimatedMins: 25, orderIndex: 1 },
+          { id: `d${d}-t2-s2`, title: `Real Conversation Practice`, description: `Simulate real-life English conversations`, emoji: "💬", estimatedMins: 25, orderIndex: 2 },
+          { id: `d${d}-t2-s3`, title: `Pronunciation Refinement`, description: `Fix pronunciation issues in key words`, emoji: "🔊", estimatedMins: 20, orderIndex: 3 },
+        ],
+      },
+      {
+        id: `d${d}-t3`, title: `Comprehensive Test`, description: `Full test covering all concepts learned so far`,
+        emoji: "🎯", color: "#ec4899", orderIndex: 3,
+        subtopics: [
+          { id: `d${d}-t3-s1`, title: `Grammar Test`, description: `50 questions covering all grammar rules`, emoji: "✅", estimatedMins: 30, orderIndex: 1 },
+          { id: `d${d}-t3-s2`, title: `Vocabulary Test`, description: `Test your word knowledge`, emoji: "📚", estimatedMins: 20, orderIndex: 2 },
+          { id: `d${d}-t3-s3`, title: `Speaking Assessment`, description: `Record yourself and assess fluency`, emoji: "🏆", estimatedMins: 25, orderIndex: 3 },
+        ],
+      },
+    ];
+  }
+
+  // Regular days: 4 topics with 3-4 subtopics each
+  const colors = ["#6272f1", "#8b5cf6", "#ec4899", "#10b981", "#f59e0b", "#06b6d4", "#f43f5e", "#8b5cf6"];
+  const color1 = colors[d % colors.length];
+  const color2 = colors[(d + 2) % colors.length];
+  const color3 = colors[(d + 4) % colors.length];
+  const color4 = colors[(d + 6) % colors.length];
+
+  return [
     {
-      id: `d${meta.dayNumber}-t1`,
-      title: meta.title,
-      description: meta.description,
-      emoji: meta.emoji,
-      color: "#6272f1",
-      orderIndex: 1,
+      id: `d${d}-t1`,
+      title: `Understanding ${t}`,
+      description: `Deep understanding of the concept, structure, and when to use ${t}`,
+      emoji: e, color: color1, orderIndex: 1,
       subtopics: [
-        {
-          id: `d${meta.dayNumber}-t1-s1`,
-          title: `Introduction to ${meta.title}`,
-          description: `Complete guide to ${meta.title}`,
-          emoji: "📖",
-          estimatedMins: 20,
-          orderIndex: 1,
-        },
-        {
-          id: `d${meta.dayNumber}-t1-s2`,
-          title: `${meta.title} - Rules & Examples`,
-          description: `Detailed rules with 20+ examples`,
-          emoji: "📐",
-          estimatedMins: 25,
-          orderIndex: 2,
-        },
-        {
-          id: `d${meta.dayNumber}-t1-s3`,
-          title: `${meta.title} - Common Mistakes`,
-          description: `Mistakes to avoid and how to fix them`,
-          emoji: "⚠️",
-          estimatedMins: 15,
-          orderIndex: 3,
-        },
-        {
-          id: `d${meta.dayNumber}-t1-s4`,
-          title: `${meta.title} - Practice & Exercises`,
-          description: `Intensive practice with 80+ questions`,
-          emoji: "✏️",
-          estimatedMins: 30,
-          orderIndex: 4,
-        },
+        { id: `d${d}-t1-s1`, title: `Introduction to ${t}`, description: `What is ${t} and why is it important in English?`, emoji: "📖", estimatedMins: 15, orderIndex: 1 },
+        { id: `d${d}-t1-s2`, title: `${t} - Structure & Formula`, description: `The exact formula and sentence structure with clear examples`, emoji: "📐", estimatedMins: 20, orderIndex: 2 },
+        { id: `d${d}-t1-s3`, title: `Positive, Negative & Questions`, description: `Form all three types of sentences using ${t}`, emoji: "✅", estimatedMins: 20, orderIndex: 3 },
+        { id: `d${d}-t1-s4`, title: `${t} with Different Subjects`, description: `How the structure changes with I/You/He/She/They/We`, emoji: "👥", estimatedMins: 15, orderIndex: 4 },
       ],
     },
-  ],
+    {
+      id: `d${d}-t2`,
+      title: `${t} - Real Usage`,
+      description: `How to use ${t} in daily life, office, and conversations`,
+      emoji: "💬", color: color2, orderIndex: 2,
+      subtopics: [
+        { id: `d${d}-t2-s1`, title: `Daily Life Sentences`, description: `Use ${t} in everyday situations at home, market, and social settings`, emoji: "🏠", estimatedMins: 20, orderIndex: 1 },
+        { id: `d${d}-t2-s2`, title: `Professional & Office Usage`, description: `How to use ${t} professionally in emails, meetings, and interviews`, emoji: "💼", estimatedMins: 20, orderIndex: 2 },
+        { id: `d${d}-t2-s3`, title: `Common Mistakes & Corrections`, description: `The most common errors Indians make with ${t} and how to avoid them`, emoji: "⚠️", estimatedMins: 15, orderIndex: 3 },
+      ],
+    },
+    {
+      id: `d${d}-t3`,
+      title: `${t} - Vocabulary`,
+      description: `Key vocabulary words and phrases connected to ${t}`,
+      emoji: "📚", color: color3, orderIndex: 3,
+      subtopics: [
+        { id: `d${d}-t3-s1`, title: `Key Vocabulary for ${t}`, description: `50 important words related to today's topic with Hindi meanings`, emoji: "📝", estimatedMins: 25, orderIndex: 1 },
+        { id: `d${d}-t3-s2`, title: `Phrasal Verbs & Idioms`, description: `Common phrases and expressions connected to ${t}`, emoji: "🗣️", estimatedMins: 20, orderIndex: 2 },
+        { id: `d${d}-t3-s3`, title: `${t} in Stories & Dialogues`, description: `See ${t} used naturally in a short story and real dialogue`, emoji: "📖", estimatedMins: 20, orderIndex: 3 },
+      ],
+    },
+    {
+      id: `d${d}-t4`,
+      title: `${t} - Practice & Test`,
+      description: `Intensive practice questions and final assessment for ${t}`,
+      emoji: "🎯", color: color4, orderIndex: 4,
+      subtopics: [
+        { id: `d${d}-t4-s1`, title: `Practice Questions (Type)`, description: `80+ fill-in-the-blank and translation practice questions`, emoji: "✏️", estimatedMins: 30, orderIndex: 1 },
+        { id: `d${d}-t4-s2`, title: `Speaking Practice`, description: `Say the sentences aloud — practice ${t} verbally`, emoji: "🎤", estimatedMins: 25, orderIndex: 2 },
+        { id: `d${d}-t4-s3`, title: `Final Assessment`, description: `50-question comprehensive test on ${t}`, emoji: "🏆", estimatedMins: 30, orderIndex: 3 },
+      ],
+    },
+  ];
+}
+
+// Build remaining days with comprehensive multi-topic structure
+const remainingDays: DayConfig[] = REMAINING_DAYS_META.map((meta) => ({
+  ...meta,
+  topics: buildTopicsForDay(meta),
 }));
 
 // The complete array of all 75 days

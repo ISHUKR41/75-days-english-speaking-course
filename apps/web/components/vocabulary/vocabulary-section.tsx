@@ -15,6 +15,8 @@ import { cn, playSound } from "@/lib/utils";
 import { ALL_DAY_1_VOCABULARY } from "@/data/vocabulary/day-1-vocabulary";
 // Import Day 2 vocabulary
 import { DAY_2_VOCABULARY } from "@/data/vocabulary/day-2-vocabulary";
+// Import all-days vocabulary generator for Days 3-75
+import { getVocabularyForDay } from "@/data/vocabulary/all-days-vocabulary";
 // Import the VocabularyWord type for type compatibility
 import type { VocabularyWord } from "@/data/vocabulary/day-1-vocabulary";
 
@@ -72,9 +74,8 @@ function loadVocabularyForDay(dayNumber: number): VocabWord[] {
   if (dayNumber === 2) {
     return DAY_2_VOCABULARY.map(mapVocabWord);
   }
-  // For other days (3-75), fallback to Day 1 until content is developed
-  // TODO: Add Day 3-75 vocabulary loaders
-  return ALL_DAY_1_VOCABULARY.map(mapVocabWord);
+  // For Days 3-75, use the comprehensive vocabulary generator
+  return getVocabularyForDay(dayNumber, 50).map(mapVocabWord);
 }
 
 export function VocabularySection({ dayNumber, subtopicId, subtopicTitle, onComplete }: VocabularySectionProps) {

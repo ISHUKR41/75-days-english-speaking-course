@@ -23,6 +23,8 @@ import type { PracticeQ } from "@/data/questions/day-1-questions";
 // Import vocabulary data for question generation
 import { ALL_DAY_1_VOCABULARY } from "@/data/vocabulary/day-1-vocabulary";
 import { ALL_DAY_2_VOCABULARY } from "@/data/vocabulary/day-2-vocabulary";
+// Import all-days vocabulary generator for Days 3-75
+import { getVocabularyForDay } from "@/data/vocabulary/all-days-vocabulary";
 // Import question generator (creates 3 questions per vocabulary word)
 import { generateQuestionsFromVocab } from "@/data/questions/question-generator";
 
@@ -83,10 +85,16 @@ function mapPracticeQToQuestion(pq: PracticeQ): Question {
 // ─── Helper: Generate vocab-based questions as rich fallback ──
 // Generates 3 questions per vocabulary word (600 per day)
 function getVocabGeneratedQuestions(dayNumber: number, subtopicId: string): Question[] {
-  const vocab = dayNumber === 2 ? ALL_DAY_2_VOCABULARY : ALL_DAY_1_VOCABULARY;
+  // Get vocabulary for this specific day (real words, not Day 1 fallback)
+  const vocab = dayNumber === 1
+    ? ALL_DAY_1_VOCABULARY
+    : dayNumber === 2
+    ? ALL_DAY_2_VOCABULARY
+    : getVocabularyForDay(dayNumber, 60); // 60 topic-specific words per day
+
   // Use a slice of vocabulary relevant to this subtopic's index
   const subtopicNum = parseInt(subtopicId.split("-s").pop() || "1", 10);
-  const wordsPerSubtopic = 15; // 15 words × 3 questions = 45 questions per subtopic
+  const wordsPerSubtopic = 20; // 20 words × 3 questions = 60 questions per subtopic
   const startIdx = ((subtopicNum - 1) * wordsPerSubtopic) % vocab.length;
   const slicedVocab = vocab.slice(startIdx, startIdx + wordsPerSubtopic);
   // If slice is too short, wrap around
@@ -127,10 +135,10 @@ function loadQuestionsForSubtopic(dayNumber: number, subtopicId: string): Questi
     if (combined.length > 0) return combined;
     return [...ALL_DAY_2_QUESTIONS.map(mapPracticeQToQuestion), ...generated];
   }
-  // For all other days (3-75): generate 45 questions from Day 1 vocab
-  // (will be replaced when day-specific content is added)
-  const fallbackGenerated = getVocabGeneratedQuestions(1, subtopicId);
-  if (fallbackGenerated.length > 0) return fallbackGenerated;
+  // For all other days (3-75): generate topic-specific questions using day-specific vocabulary
+  const daySpecificGenerated = getVocabGeneratedQuestions(dayNumber, subtopicId);
+  if (daySpecificGenerated.length > 0) return daySpecificGenerated;
+  // Ultimate fallback: Day 1 questions (should not normally happen)
   return ALL_DAY_1_QUESTIONS.map(mapPracticeQToQuestion);
 }
 

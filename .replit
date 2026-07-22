@@ -29,3 +29,15 @@ outputType = "webview"
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[userenv]
+
+[userenv.shared]
+NEXT_PUBLIC_APP_NAME = "75 Days Hard English"
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL = "/dashboard"
+NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL = "/dashboard"
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY = "pk_test_b3JnYW5pYy1sb25naG9ybi0yNi5jbGVyay5hY2NvdW50cy5kZXYk"
+NEXT_PUBLIC_CLERK_SIGN_IN_URL = "/sign-in"
+NEXT_PUBLIC_CLERK_SIGN_UP_URL = "/sign-up"
+NEXT_PUBLIC_ENABLE_GAMIFICATION = "true"
+NEXT_PUBLIC_ENABLE_SPEECH_RECOGNITION = "true"
