@@ -57,8 +57,8 @@ const AVATAR_COLORS = [
 
 // ─── Hero Component ────────────────────────────────────────────
 export function LandingHero() {
-  // Control animation entry timing
-  const [visible, setVisible] = useState(false);
+  // Control animation entry timing — start visible to avoid blank flash
+  const [visible, setVisible] = useState(true);
   // Whether CountUp has started
   const [countStarted, setCountStarted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
