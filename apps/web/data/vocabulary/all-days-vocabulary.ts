@@ -68,7 +68,7 @@ const DAY_3_WORDS: W[] = [
   ["Seriously","In a way showing importance or concern","गंभीरता से","adverb","beginner","/ˈsɪəriəsli/","Take this matter seriously.","She looked at him seriously.","gravely","solemnly","lightly"],
   ["Repeatedly","Many times, again and again","बार-बार, बार-बार करके","adverb","elementary","/rɪˈpiːtɪdli/","She repeatedly asked for help.","He failed repeatedly but never quit.","again and again","often","once"],
   ["Sincerely","In a genuine and honest way","ईमानदारी से, सच्चे दिल से","adverb","beginner","/sɪnˈsɪəli/","She sincerely apologized.","I sincerely hope you recover soon.","genuinely","honestly","falsely"],
-  ["Immediately","Without pause or delay","तत्काल","adverb","beginner","/ɪˈmiːdiətli/","Evacuate the building immediately!","Come to the front immediately.","","",""],
+  ["Immediately","Without pause or delay","तत्काल","adverb","beginner","/ɪˈmiːdiətli/","Evacuate the building immediately!","Come to the front immediately.","at once","instantly","later"],
   ["Silently","Without making any sound","चुपचाप, बिना आवाज़ के","adverb","beginner","/ˈsaɪləntli/","She silently left the room.","Read silently to yourself.","quietly","noiselessly","aloud"],
   ["Patiently","Waiting calmly without complaining","धैर्यपूर्वक, सब्र के साथ","adverb","beginner","/ˈpeɪʃəntli/","Wait patiently for your turn.","She patiently explained everything.","calmly","tolerantly","impatiently"],
   ["Clearly","Easy to understand, without confusion","साफ़ तौर पर, स्पष्ट रूप से","adverb","beginner","/ˈklɪəli/","Speak clearly so everyone understands.","Write your name clearly.","plainly","distinctly","unclearly"],

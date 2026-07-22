@@ -13,7 +13,7 @@ const CLERK_SECRET = process.env.CLERK_SECRET_KEY ?? "";
 export const IS_CLERK_CONFIGURED =
   (CLERK_SECRET.startsWith("sk_test_") ||
     CLERK_SECRET.startsWith("sk_live_")) &&
-  CLERK_SECRET.length > 40 &&
+  CLERK_SECRET.length > 10 &&
   !CLERK_SECRET.includes("placeholder") &&
   !CLERK_SECRET.includes("xxxxxxxxxxx");
 

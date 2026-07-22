@@ -413,7 +413,7 @@ export function AppSidebar() {
                           : "text-muted-foreground/60 hover:bg-accent/30"
                       )}
                       aria-label={`Day ${dayItem.day}: ${dayItem.title}${isLocked ? " (locked)" : ""}`}
-                      onClick={isLocked ? (e) => e.preventDefault() : undefined}
+                      onClick={isLocked ? (e: React.MouseEvent) => e.preventDefault() : undefined}
                     >
                       {/* Day status icon */}
                       {isCompleted ? (

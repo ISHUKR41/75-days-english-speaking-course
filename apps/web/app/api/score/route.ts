@@ -126,7 +126,15 @@ export async function POST(req: NextRequest) {
 
     // Create score record
     const score = await db.score.create({
-      data: { userId: user.id, ...parsed.data },
+      data: {
+        userId: user.id,
+        activity: parsed.data.activity,
+        points: parsed.data.points,
+        xp: parsed.data.xp,
+        coins: parsed.data.coins,
+        dayId: parsed.data.dayId,
+        subtopicId: parsed.data.subtopicId,
+      },
     });
 
     // Update user totals

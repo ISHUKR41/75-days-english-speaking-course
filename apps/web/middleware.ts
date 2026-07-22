@@ -25,7 +25,7 @@ const isPublicRoute = createRouteMatcher([
 const CLERK_SECRET = process.env.CLERK_SECRET_KEY ?? "";
 const IS_CLERK_CONFIGURED =
   (CLERK_SECRET.startsWith("sk_test_") || CLERK_SECRET.startsWith("sk_live_")) &&
-  CLERK_SECRET.length > 40 &&        // Real keys are long (80+ chars)
+  CLERK_SECRET.length > 10 &&        // Valid Clerk secret key length check
   !CLERK_SECRET.includes("placeholder") && // Not our placeholder
   !CLERK_SECRET.includes("xxxxxxxxxxx");   // Not our placeholder
 

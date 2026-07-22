@@ -40,7 +40,9 @@ interface VocabularySectionProps {
   dayNumber: number;    // Which day (1-75)
   subtopicId: string;   // Which subtopic this belongs to
   subtopicTitle: string; // Display title
-  onComplete: () => void; // Callback when user completes vocabulary
+  topicColor?: string;  // Brand color for topic
+  userId?: string;      // Current user ID for tracking
+  onComplete?: () => void; // Callback when user completes vocabulary
 }
 
 // View modes for displaying vocabulary

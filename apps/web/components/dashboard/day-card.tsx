@@ -140,7 +140,7 @@ export function DayCard({
           className={cn(
             "badge mb-2",
             isRevision && "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400",
-            isMockTest && "bg-gold-400/10 text-gold-600 dark:text-gold-400"
+            isMockTest && "bg-amber-500/10 text-amber-600 dark:text-amber-400"
           )}
         >
           {isRevision ? (
