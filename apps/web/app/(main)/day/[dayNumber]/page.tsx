@@ -68,14 +68,15 @@ export default async function DayPage({
         estimatedMins: sub.estimatedMins,
         orderIndex: sub.orderIndex,
         _count: {
-          practiceQs: dayNum <= 2 ? 80 : 20,
-          testQs: dayNum <= 2 ? 50 : 15,
-          vocabulary: dayNum <= 2 ? 200 : 50,
+          // All days have rich content; days 1–2 hand-written, 3–75 generator
+          practiceQs: dayNum <= 2 ? 80 : 40,
+          testQs: dayNum <= 2 ? 50 : 25,
+          vocabulary: dayNum <= 2 ? 200 : 150,
         },
       })),
     })),
     _count: {
-      vocabulary: dayNum <= 2 ? 200 : 50,
+      vocabulary: dayNum <= 2 ? 200 : 150,
     },
   };
 

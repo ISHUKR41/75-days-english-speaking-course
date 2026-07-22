@@ -265,39 +265,108 @@ export function PracticeSection({ dayNumber, subtopicId, subtopicTitle, topicCol
   };
 
   // Completion screen
+  // ── Practice completion screen — premium celebration UI ──
   if (showComplete) {
     const accuracy = Math.round((correct / questions.length) * 100);
+    const grade =
+      accuracy >= 90 ? { label: "Excellent!", emoji: "🏆", color: "text-gold-400" } :
+      accuracy >= 75 ? { label: "Great Job!", emoji: "🌟", color: "text-emerald-400" } :
+      accuracy >= 50 ? { label: "Good Work!", emoji: "💪", color: "text-blue-400" } :
+                       { label: "Keep Going!", emoji: "🎯", color: "text-purple-400" };
     return (
-      <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
-        className="text-center space-y-6 py-8">
-        <div>
-          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", delay: 0.2 }}>
-            <Trophy className="h-20 w-20 text-gold-400 mx-auto mb-4" />
-          </motion.div>
-          <h2 className="text-3xl font-black text-foreground">Practice Complete!</h2>
-          <p className="text-muted-foreground mt-2">Great work on {subtopicTitle}</p>
-        </div>
-        <div className="grid grid-cols-3 gap-4 max-w-sm mx-auto">
-          {[
-            { label: "Score", value: `${score}`, color: "text-gold-500" },
-            { label: "Correct", value: `${correct}/${questions.length}`, color: "text-emerald-500" },
-            { label: "Accuracy", value: `${accuracy}%`, color: "text-blue-500" },
-          ].map(stat => (
-            <div key={stat.label} className="card-base rounded-xl text-center py-4">
-              <p className={`text-2xl font-black ${stat.color}`}>{stat.value}</p>
-              <p className="text-xs text-muted-foreground">{stat.label}</p>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="relative text-center space-y-7 py-6 overflow-hidden"
+      >
+        {/* Animated background orbs */}
+        <div className="pointer-events-none absolute -top-20 left-1/2 -translate-x-1/2 h-64 w-64 rounded-full bg-primary/10 blur-[80px] animate-pulse" />
+        <div className="pointer-events-none absolute bottom-0 left-1/4 h-40 w-40 rounded-full bg-gold-400/10 blur-[60px] animate-pulse" style={{ animationDelay: "0.6s" }} />
+
+        {/* Trophy icon with bounce */}
+        <div className="relative z-10">
+          <motion.div
+            initial={{ scale: 0, rotate: -15 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ type: "spring", stiffness: 280, damping: 14, delay: 0.15 }}
+            className="relative inline-block"
+          >
+            {/* Glow ring behind trophy */}
+            <div className="absolute inset-0 rounded-full bg-gold-400/20 blur-xl scale-150" />
+            <div className="relative flex h-24 w-24 mx-auto items-center justify-center rounded-full bg-gradient-to-br from-amber-400/20 to-gold-400/10 border border-gold-400/30">
+              <Trophy className="h-12 w-12 text-gold-400" />
             </div>
-          ))}
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <p className="text-4xl mb-2">{grade.emoji}</p>
+            <h2 className={`text-3xl font-black ${grade.color}`}>{grade.label}</h2>
+            <p className="text-muted-foreground mt-1 text-sm">
+              You finished <span className="font-semibold text-foreground">{subtopicTitle}</span>
+            </p>
+          </motion.div>
         </div>
-        <div className="flex gap-3 justify-center">
-          <button onClick={() => { setCurrentQIndex(0); setScore(0); setCorrect(0); setWrong(0); setQuestionState("unanswered"); setShowComplete(false); }}
-            className="btn-secondary gap-2">
+
+        {/* Stats cards */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.45 }}
+          className="grid grid-cols-3 gap-3 max-w-sm mx-auto relative z-10"
+        >
+          {[
+            { label: "Score", value: `${score} pts`, icon: "⚡", bg: "bg-amber-500/10 border-amber-500/20", text: "text-amber-400" },
+            { label: "Correct", value: `${correct}/${questions.length}`, icon: "✓", bg: "bg-emerald-500/10 border-emerald-500/20", text: "text-emerald-400" },
+            { label: "Accuracy", value: `${accuracy}%`, icon: "%", bg: "bg-blue-500/10 border-blue-500/20", text: "text-blue-400" },
+          ].map((stat, i) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.5 + i * 0.08, type: "spring", stiffness: 300 }}
+              className={`rounded-2xl border p-4 ${stat.bg}`}
+            >
+              <p className={`text-2xl font-black stat-number ${stat.text}`}>{stat.value}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">{stat.label}</p>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* XP earned animation */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.7, type: "spring" }}
+          className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-5 py-2 relative z-10"
+        >
+          <Zap className="h-4 w-4 text-primary" />
+          <span className="text-sm font-bold text-primary">+{Math.round(score * 0.5)} XP Earned!</span>
+        </motion.div>
+
+        {/* Action buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8 }}
+          className="flex gap-3 justify-center relative z-10"
+        >
+          <button
+            onClick={() => {
+              setCurrentQIndex(0); setScore(0); setCorrect(0); setWrong(0);
+              setQuestionState("unanswered"); setShowComplete(false); setSelectedOption(null);
+            }}
+            className="btn-secondary gap-2"
+          >
             <RefreshCcw className="h-4 w-4" /> Retry
           </button>
-          <button onClick={() => onComplete(accuracy)} className="btn-primary gap-2 px-8">
-            <Zap className="h-4 w-4" /> Continue to Test →
+          <button onClick={() => onComplete(accuracy)} className="btn-gradient gap-2 px-8">
+            <Trophy className="h-4 w-4" /> Go to Test →
           </button>
-        </div>
+        </motion.div>
       </motion.div>
     );
   }
@@ -351,30 +420,47 @@ export function PracticeSection({ dayNumber, subtopicId, subtopicTitle, topicCol
         </div>
       </div>
 
-      {/* Answer mode toggle */}
-      <div className="flex gap-1.5 p-1 rounded-xl bg-muted/60 border border-border/60 w-fit">
-        <button
+      {/* Answer mode toggle — premium segmented control */}
+      <div className="flex gap-1 p-1 rounded-2xl bg-muted/50 border border-border/60 w-fit shadow-inner">
+        <motion.button
           onClick={() => setAnswerMode("type")}
+          whileTap={{ scale: 0.97 }}
           className={cn(
-            "flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-200",
+            "relative flex items-center gap-2.5 rounded-xl px-5 py-2.5 text-sm font-bold transition-all duration-200",
             answerMode === "type"
-              ? "bg-card text-foreground shadow-sm border border-border/50"
-              : "text-muted-foreground hover:text-foreground"
+              ? "bg-card text-foreground shadow-md border border-border/60"
+              : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
           )}
         >
-          <span>⌨️</span> Type
-        </button>
-        <button
+          {/* Active indicator dot */}
+          {answerMode === "type" && (
+            <motion.span
+              layoutId="mode-dot"
+              className="absolute left-2.5 top-1/2 -translate-y-1/2 h-1.5 w-1.5 rounded-full bg-primary"
+            />
+          )}
+          <span className="text-base">⌨️</span>
+          <span>Type Answer</span>
+        </motion.button>
+        <motion.button
           onClick={() => setAnswerMode("speak")}
+          whileTap={{ scale: 0.97 }}
           className={cn(
-            "flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-200",
+            "relative flex items-center gap-2.5 rounded-xl px-5 py-2.5 text-sm font-bold transition-all duration-200",
             answerMode === "speak"
-              ? "bg-card text-foreground shadow-sm border border-border/50"
-              : "text-muted-foreground hover:text-foreground"
+              ? "bg-card text-foreground shadow-md border border-border/60"
+              : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
           )}
         >
-          <span>🎤</span> Speak
-        </button>
+          {answerMode === "speak" && (
+            <motion.span
+              layoutId="mode-dot"
+              className="absolute left-2.5 top-1/2 -translate-y-1/2 h-1.5 w-1.5 rounded-full bg-rose-500"
+            />
+          )}
+          <span className="text-base">🎤</span>
+          <span>Speak Answer</span>
+        </motion.button>
       </div>
 
       {/* Question card */}
@@ -504,62 +590,126 @@ export function PracticeSection({ dayNumber, subtopicId, subtopicTitle, topicCol
             </form>
           )}
 
-          {/* Speak answer */}
+          {/* ── Speak answer mode — premium Apple-style recording UI ── */}
           {!isMCQ && answerMode === "speak" && questionState === "unanswered" && (
-            <div className="space-y-3">
-              {/* Speech recording area */}
+            <div className="space-y-4">
+
+              {/* Sound visualizer — shown while listening */}
+              <AnimatePresence>
+                {isListening && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="flex items-end justify-center gap-1.5 py-3"
+                    style={{ minHeight: 88 }}
+                  >
+                    {/* 11 animated sound bars — large, vibrant */}
+                    {Array.from({ length: 11 }).map((_, i) => (
+                      <div key={i} className="sound-bar-lg" />
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Transcript area — shows spoken text */}
               <div
                 className={cn(
-                  "rounded-xl border-2 p-5 min-h-[72px] flex items-center justify-center transition-all duration-300",
+                  "rounded-2xl border-2 p-5 min-h-[70px] flex items-center justify-center transition-all duration-300",
                   isListening
-                    ? "border-rose-500/60 bg-rose-500/5"
+                    ? "border-rose-500/50 bg-rose-500/5 shadow-[0_0_20px_rgba(244,63,94,0.1)]"
                     : spokenAnswer
-                    ? "border-primary/30 bg-primary/5"
+                    ? "border-primary/40 bg-primary/5 shadow-[0_0_20px_rgba(98,114,241,0.1)]"
                     : "border-border/50 bg-muted/20"
                 )}
               >
                 {isListening ? (
-                  <div className="flex items-center gap-4">
-                    <div className="sound-wave">
-                      {[1,2,3,4,5,6,7].map(n => <div key={n} className="sound-wave-bar" />)}
-                    </div>
-                    <span className="text-sm text-rose-500 font-semibold">Listening...</span>
+                  /* Active listening indicator */
+                  <div className="text-center">
+                    <p className="text-rose-400 font-bold text-sm animate-pulse">🎙️ Listening — speak clearly in English…</p>
+                    {spokenAnswer && (
+                      <p className="text-foreground font-semibold mt-2 text-base">&ldquo;{spokenAnswer}&rdquo;</p>
+                    )}
                   </div>
                 ) : spokenAnswer ? (
-                  <p className="text-foreground font-semibold text-center">{spokenAnswer}</p>
-                ) : (
+                  /* Show the transcript */
                   <div className="text-center">
-                    <Mic className="h-6 w-6 text-muted-foreground/40 mx-auto mb-1" />
-                    <p className="text-muted-foreground text-sm">Tap the mic and speak in English</p>
+                    <p className="text-xs text-muted-foreground mb-1 uppercase tracking-widest font-medium">Your answer</p>
+                    <p className="text-foreground font-bold text-lg">&ldquo;{spokenAnswer}&rdquo;</p>
+                  </div>
+                ) : (
+                  /* Idle prompt */
+                  <div className="text-center">
+                    <Mic className="h-7 w-7 text-muted-foreground/30 mx-auto mb-2" />
+                    <p className="text-muted-foreground text-sm font-medium">
+                      Tap the microphone and speak your answer in English
+                    </p>
+                    <p className="text-muted-foreground/50 text-xs mt-1">
+                      Web Speech API — works best in Chrome
+                    </p>
                   </div>
                 )}
               </div>
-              <div className="flex gap-2.5">
-                <motion.button
-                  onClick={toggleListening}
-                  whileTap={{ scale: 0.96 }}
-                  className={cn(
-                    "flex items-center gap-2 rounded-xl px-5 py-3 font-semibold flex-1 justify-center transition-all duration-200",
-                    isListening
-                      ? "bg-rose-500 text-white hover:bg-rose-600 shadow-lg shadow-rose-500/25"
-                      : "bg-primary text-white hover:bg-primary/90 shadow-lg shadow-primary/25"
+
+              {/* Big mic button — center stage, Apple/Siri style */}
+              <div className="flex flex-col items-center gap-4 pt-2">
+                <div className="relative flex items-center justify-center">
+                  {/* Pulse rings — only when listening */}
+                  {isListening && (
+                    <>
+                      <div className="mic-ring absolute inset-[-16px]" />
+                      <div className="mic-ring absolute inset-[-16px]" />
+                      <div className="mic-ring absolute inset-[-16px]" />
+                    </>
                   )}
-                >
-                  {isListening ? (
-                    <><MicOff className="h-5 w-5" /> Stop</>
-                  ) : (
-                    <><Mic className="h-5 w-5" /> Start Speaking</>
-                  )}
-                </motion.button>
-                {spokenAnswer && (
+
+                  {/* The main mic button */}
                   <motion.button
-                    onClick={handleSpokenSubmit}
-                    whileTap={{ scale: 0.96 }}
-                    className="btn-primary px-6 rounded-xl"
+                    onClick={toggleListening}
+                    whileHover={{ scale: 1.08 }}
+                    whileTap={{ scale: 0.94 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                    className={cn(
+                      "relative z-10 flex h-24 w-24 items-center justify-center rounded-full text-white transition-all duration-300",
+                      isListening
+                        ? "bg-gradient-to-br from-rose-500 to-red-600 shadow-[0_0_40px_rgba(244,63,94,0.5),0_0_80px_rgba(244,63,94,0.2)] speak-active"
+                        : "bg-gradient-to-br from-primary to-violet-600 shadow-[0_0_30px_rgba(98,114,241,0.4),0_0_60px_rgba(98,114,241,0.15)] hover:shadow-[0_0_50px_rgba(98,114,241,0.5),0_0_80px_rgba(98,114,241,0.2)]"
+                    )}
                   >
-                    <Send className="h-4 w-4" />
+                    {/* Inner ring decoration */}
+                    <div className="absolute inset-2 rounded-full border border-white/20" />
+                    {isListening ? (
+                      <MicOff className="h-10 w-10 relative z-10" />
+                    ) : (
+                      <Mic className="h-10 w-10 relative z-10" />
+                    )}
                   </motion.button>
-                )}
+                </div>
+
+                {/* Label under button */}
+                <p className={cn(
+                  "text-sm font-semibold transition-colors duration-200",
+                  isListening ? "text-rose-400" : "text-muted-foreground"
+                )}>
+                  {isListening ? "Tap to stop recording" : "Tap to start speaking"}
+                </p>
+
+                {/* Submit button — appears once answer is transcribed */}
+                <AnimatePresence>
+                  {spokenAnswer && !isListening && (
+                    <motion.button
+                      initial={{ opacity: 0, scale: 0.85, y: 8 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.85, y: 8 }}
+                      transition={{ type: "spring", stiffness: 350, damping: 20 }}
+                      onClick={handleSpokenSubmit}
+                      className="btn-primary gap-2 px-8 py-3 text-base rounded-xl"
+                    >
+                      <Send className="h-4 w-4" />
+                      Submit Answer
+                    </motion.button>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
           )}

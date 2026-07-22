@@ -436,21 +436,21 @@ export function DashboardClient({
             </span>
           </div>
 
-          {/* Level progress bar */}
-          <div className="progress-bar h-3">
+          {/* Level progress bar — animated gradient */}
+          <div className="h-3 rounded-full bg-muted/60 overflow-hidden">
             <motion.div
-              className="progress-fill"
+              className="h-full xp-bar-fill"
               initial={{ width: 0 }}
-              animate={{ width: `${stats.levelProgress}%` }}
-              transition={{ duration: 1.5, ease: "easeOut", delay: 0.5 }}
+              animate={{ width: `${Math.max(2, stats.levelProgress)}%` }}
+              transition={{ duration: 1.8, ease: "easeOut", delay: 0.5 }}
             />
           </div>
           <div className="flex justify-between mt-2">
-            <span className="text-xs text-muted-foreground">
-              Level {stats.level}
+            <span className="text-xs text-muted-foreground font-medium">
+              Lv. {stats.level}
             </span>
-            <span className="text-xs text-muted-foreground">
-              {stats.levelProgress}% to Level {stats.level + 1}
+            <span className="text-xs font-bold text-primary">
+              {stats.levelProgress}% → Lv. {stats.level + 1}
             </span>
           </div>
         </div>
