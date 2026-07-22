@@ -1,10 +1,13 @@
 // ============================================================
 // Landing Page - 75 Days Hard English Course
-// Hero section + features + CTA
+// Shows landing page to ALL visitors (dev or not)
+// Redirects ONLY when Clerk is properly configured + user is logged in
 // ============================================================
 
+// Check if Clerk is properly set up (real auth vs dev passthrough)
+import { IS_CLERK_CONFIGURED, safeAuth } from "@/lib/safe-auth";
 import { redirect } from "next/navigation";
-import { safeAuth } from "@/lib/safe-auth";
+// Import all landing page section components
 import { LandingHero } from "@/components/landing/landing-hero";
 import { LandingFeatures } from "@/components/landing/landing-features";
 import { LandingCurriculum } from "@/components/landing/landing-curriculum";
@@ -13,39 +16,43 @@ import { LandingCTA } from "@/components/landing/landing-cta";
 import { LandingNavbar } from "@/components/landing/landing-navbar";
 import { LandingFooter } from "@/components/landing/landing-footer";
 
-// This page is shown to users who are NOT logged in
-// Logged-in users are redirected to the dashboard
+// ─── Landing Page Server Component ──────────────────────────────
+// This is shown to visitors who are NOT logged in
+// Authenticated users (with real Clerk) go to dashboard
 export default async function HomePage() {
-  // Check if user is already authenticated (safe wrapper handles invalid Clerk keys)
-  const { userId } = await safeAuth();
-
-  // Redirect authenticated users to dashboard
-  if (userId) {
-    redirect("/dashboard");
+  // Only redirect when Clerk is properly configured AND user is logged in
+  // In dev passthrough mode — always show the landing page
+  if (IS_CLERK_CONFIGURED) {
+    // Real Clerk auth is active — check if user is already signed in
+    const { userId } = await safeAuth();
+    // Redirect authenticated users directly to their dashboard
+    if (userId) {
+      redirect("/dashboard");
+    }
   }
-
-  // Show the beautiful landing page for new visitors
+  // Show the full landing page for new visitors (or dev mode)
   return (
+    // Full-page wrapper with dark background and hidden overflow
     <main className="min-h-screen bg-background overflow-hidden">
-      {/* Navigation header */}
+      {/* Top navigation bar with logo, nav links, and CTA */}
       <LandingNavbar />
 
-      {/* Hero section - main value proposition */}
+      {/* Hero section — main headline and value proposition */}
       <LandingHero />
 
-      {/* Features section - what they will learn */}
+      {/* Features section — 6 key features with icons */}
       <LandingFeatures />
 
-      {/* Curriculum overview - 75 days breakdown */}
+      {/* Curriculum overview — 75 days breakdown */}
       <LandingCurriculum />
 
-      {/* Social proof - testimonials */}
+      {/* Social proof — testimonials from students */}
       <LandingTestimonials />
 
-      {/* Call to action - sign up */}
+      {/* Bottom call-to-action — sign up prompt */}
       <LandingCTA />
 
-      {/* Footer */}
+      {/* Footer with links and copyright */}
       <LandingFooter />
     </main>
   );
