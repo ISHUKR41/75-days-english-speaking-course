@@ -71,13 +71,21 @@ const nextConfig = {
     ];
   },
 
-  // Webpack configuration for audio files and other assets
-  webpack: (config) => {
-    // Handle audio files
+  // Webpack configuration — disable filesystem cache in dev to prevent
+  // vendor-chunk corruption when packages are installed mid-session
+  webpack: (config, { dev }) => {
+    // Handle audio files so Howler/Web Audio mp3s can be imported
     config.module.rules.push({
       test: /\.(mp3|wav|ogg|flac|aac)$/,
       type: "asset/resource",
     });
+
+    // Disable the persistent filesystem cache in development.
+    // This prevents the recurring "Cannot find module ./vendor-chunks/@tanstack.js"
+    // error that appears after npm install while the dev server is running.
+    if (dev) {
+      config.cache = false; // no disk cache — recompile fresh every restart
+    }
 
     return config;
   },

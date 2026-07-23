@@ -30,23 +30,45 @@ const MEANING_DISTRACTORS = [
   "to speak loudly",
 ];
 
-// Pick 3 random distractors that are not the correct answer
-function getDistractors(correct: string, pool: string[]): [string, string, string] {
-  const filtered = pool.filter((d) => d.toLowerCase() !== correct.toLowerCase());
-  const shuffled = filtered.sort(() => 0.5 - Math.random());
-  return [shuffled[0] || "none", shuffled[1] || "never", shuffled[2] || "always"];
+// Deterministic "shuffle" using a seed derived from word index.
+// IMPORTANT: Math.random() is intentionally avoided here — this function
+// runs inside useState() initializer in a "use client" component, so it
+// only executes on the client. But we keep it deterministic anyway so
+// that MCQ options are stable across renders for the same word.
+function seededPick<T>(arr: T[], seed: number, count: number): T[] {
+  // Simple LCG-style deterministic selection
+  const result: T[] = [];
+  const used = new Set<number>();
+  let s = Math.abs(seed) % (arr.length || 1);
+  for (let i = 0; i < count && result.length < arr.length; i++) {
+    // Step through array using a large prime offset so picks spread out
+    s = (s * 1664525 + 1013904223) % arr.length;
+    if (!used.has(s)) { used.add(s); result.push(arr[s]); }
+  }
+  // If we still need more, fill sequentially
+  for (let j = 0; j < arr.length && result.length < count; j++) {
+    if (!used.has(j)) { used.add(j); result.push(arr[j]); }
+  }
+  return result;
 }
 
-// Pick 3 random meaning distractors (not the correct one)
-function getMeaningDistractors(correct: string): [string, string, string] {
+// Pick 3 deterministic distractors that are not the correct answer
+function getDistractors(correct: string, pool: string[], seed = 42): [string, string, string] {
+  const filtered = pool.filter((d) => d.toLowerCase() !== correct.toLowerCase());
+  const picked = seededPick(filtered, seed, 3);
+  return [picked[0] || "none", picked[1] || "never", picked[2] || "always"];
+}
+
+// Pick 3 deterministic meaning distractors (not the correct one)
+function getMeaningDistractors(correct: string, seed = 42): [string, string, string] {
   const filtered = MEANING_DISTRACTORS.filter(
     (d) => !correct.toLowerCase().includes(d.split(" ")[2] || "xxxx")
   );
-  const shuffled = filtered.sort(() => 0.5 - Math.random());
+  const picked = seededPick(filtered, seed, 3);
   return [
-    shuffled[0] || "to move forward",
-    shuffled[1] || "a type of fruit",
-    shuffled[2] || "feeling happy",
+    picked[0] || "to move forward",
+    picked[1] || "a type of fruit",
+    picked[2] || "feeling happy",
   ];
 }
 
@@ -114,13 +136,16 @@ export function generateQuestionsFromVocab(
     }
 
     // ── Q3: MCQ — What is the meaning? ────────────────────────
-    const [d1, d2, d3] = getMeaningDistractors(word.meaning);
-    // Randomly shuffle the correct answer into A/B/C/D
-    const options = [word.meaning, d1, d2, d3].sort(() => 0.5 - Math.random());
-    const optA = options[0];
-    const optB = options[1];
-    const optC = options[2];
-    const optD = options[3];
+    const [d1, d2, d3] = getMeaningDistractors(word.meaning, idx * 31 + 7);
+    // Deterministically place the correct answer into A/B/C/D using seed
+    const rawOptions = [word.meaning, d1, d2, d3];
+    const options = seededPick(rawOptions, idx * 17 + 3, 4);
+    // If seededPick returns fewer than 4 items, fill remaining
+    const finalOptions = [...options, ...rawOptions.filter(o => !options.includes(o))].slice(0, 4);
+    const optA = finalOptions[0];
+    const optB = finalOptions[1];
+    const optC = finalOptions[2];
+    const optD = finalOptions[3];
 
     questions.push({
       id: `${qBase}-m`,
