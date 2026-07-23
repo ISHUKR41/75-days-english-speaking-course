@@ -18,13 +18,13 @@ args = "Start application"
 name = "Start application"
 author = "agent"
 
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd apps/web && DATABASE_URL='file:./prisma/dev.db' npm run dev"
-waitForPort = 5000
-
 [workflows.workflow.metadata]
 outputType = "webview"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd apps/web && npm install --prefer-offline 2>/dev/null | tail -1; DATABASE_URL='file:./prisma/dev.db' npx prisma db push --accept-data-loss 2>/dev/null | tail -1; DATABASE_URL='file:./prisma/dev.db' npx tsx prisma/seed.ts 2>/dev/null | tail -3; DATABASE_URL='file:./prisma/dev.db' npm run dev"
+waitForPort = 5000
 
 [[ports]]
 localPort = 5000
@@ -34,11 +34,11 @@ externalPort = 80
 
 [userenv.shared]
 NEXT_PUBLIC_APP_NAME = "75 Days Hard English Course"
-NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL = "/dashboard"
-NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL = "/dashboard"
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY = "pk_test_b3JnYW5pYy1sb25naG9ybi0yNi5jbGVyay5hY2NvdW50cy5kZXYk"
 NEXT_PUBLIC_CLERK_SIGN_IN_URL = "/sign-in"
 NEXT_PUBLIC_CLERK_SIGN_UP_URL = "/sign-up"
 NEXT_PUBLIC_ENABLE_GAMIFICATION = "true"
 NEXT_PUBLIC_ENABLE_SPEECH_RECOGNITION = "true"
 NEXT_PUBLIC_APP_URL = "https://0.0.0.0:5000"
+NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL = "/dashboard"
+NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL = "/dashboard"
