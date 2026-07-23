@@ -105,12 +105,18 @@ To enable real auth:
 ## Environment variables
 
 Already configured as Replit env vars (shared):
-- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`
+- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` — Clerk public key (pk_test_...)
 - `NEXT_PUBLIC_CLERK_SIGN_IN_URL` / `NEXT_PUBLIC_CLERK_SIGN_UP_URL`
 - `NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL` / `NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL`
 - `NEXT_PUBLIC_APP_NAME`, `NEXT_PUBLIC_ENABLE_GAMIFICATION`, `NEXT_PUBLIC_ENABLE_SPEECH_RECOGNITION`
 
+A local `apps/web/.env.local` file is also present for overriding values in dev.
+
 See `apps/web/.env.example` for the full list of supported variables.
+
+## Health check
+
+`GET /api/health` — public endpoint that confirms the app is running, DB is connected, and Clerk mode (dev passthrough vs. real auth). Used by the mobile app sync bridge to verify connectivity.
 
 ## Available npm scripts (run from `apps/web/`)
 

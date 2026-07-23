@@ -10,12 +10,17 @@
 const CLERK_SECRET = process.env.CLERK_SECRET_KEY ?? "";
 
 // Export this so other parts of the app can check if auth is real
+// A real Clerk secret key: starts with sk_test_ or sk_live_, is 80+ chars,
+// and does NOT contain any placeholder string we might accidentally set.
 export const IS_CLERK_CONFIGURED =
   (CLERK_SECRET.startsWith("sk_test_") ||
     CLERK_SECRET.startsWith("sk_live_")) &&
-  CLERK_SECRET.length > 10 &&
-  !CLERK_SECRET.includes("placeholder") &&
-  !CLERK_SECRET.includes("xxxxxxxxxxx");
+  CLERK_SECRET.length > 40 &&               // real keys are ~80+ chars
+  !CLERK_SECRET.includes("placeholder") &&  // not our placeholder string
+  !CLERK_SECRET.includes("xxxxxxxxxxx") &&  // not the example placeholder
+  !CLERK_SECRET.includes("REPLACE") &&      // not the .env.example value
+  !CLERK_SECRET.includes("YOUR_SECRET") &&  // not a template variable
+  !CLERK_SECRET.includes("YOUR_KEY");       // not a template variable
 
 // ─── Dev user ID used when Clerk is not configured ───────────
 // This must match a user created in the database during seeding
