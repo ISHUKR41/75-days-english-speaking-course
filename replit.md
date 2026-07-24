@@ -1,143 +1,87 @@
-# 75 Days Hard English Course
+# 75 Days Hard English Course — Replit Configuration
 
-A full-stack gamified English learning platform that takes learners from absolute beginner to fluent English speaker across 75 structured days.
-
-## How to run on Replit
-
-The app starts automatically via the configured workflow. The workflow:
-1. Installs the monorepo npm dependencies from the repository root (if needed)
-2. Pushes the Prisma schema to SQLite (`apps/web/prisma/dev.db`)
-3. Seeds 75 days of course content (safe to re-run — clears and re-inserts)
-4. Starts Next.js dev server on **port 5000**
-
-To run manually from the Shell:
-```bash
-npm install
-cd apps/web
-DATABASE_URL='file:./dev.db' npx prisma db push --accept-data-loss
-DATABASE_URL='file:./dev.db' npx tsx prisma/seed.ts
-DATABASE_URL='file:./dev.db' npm run dev
-```
-
-Or use the root helper:
-```bash
-bash setup.sh
-```
+## Project Overview
+A full-stack gamified English learning platform that takes students from beginner to fluent in 75 structured days. Features XP/badges/streaks, speaking lab, vocabulary bank, practice with Type & Speak modes, and a complete 75-day curriculum.
 
 ## Tech Stack
+- **Framework**: Next.js 14 (App Router), TypeScript 5.6
+- **Auth**: Clerk v5 (dev passthrough when key not configured)
+- **Database**: SQLite via Prisma ORM (`apps/web/prisma/dev.db`)
+- **Styling**: Tailwind CSS + custom design tokens
+- **Animation**: Framer Motion + GSAP + Anime.js
+- **State**: Zustand (persist), React Query
+- **Charts**: Recharts
+- **Speech**: Web Speech API (browser built-in)
+- **Monorepo**: Turborepo
 
-| Layer | Choice |
-|-------|--------|
-| Framework | Next.js 14 (App Router, TypeScript) |
-| Monorepo | Turborepo — main app is `apps/web/` |
-| Database | Prisma ORM + SQLite (`dev.db`) |
-| Auth | Clerk (`@clerk/nextjs` v5) — required for protected routes |
-| Styling | Tailwind CSS + custom design tokens |
-| Animation | Framer Motion, GSAP, Anime.js, Lottie |
-| State | Zustand (with localStorage persist) |
-| Charts | Recharts |
-| Speech | Web Speech API (browser-native) |
-| Sounds | Web Audio API + Howler |
+## How to Run
+The **"Start application"** workflow handles everything automatically:
+1. `npm install` (root — installs all workspaces)
+2. `cd apps/web`
+3. `DATABASE_URL='file:./dev.db' npx prisma db push --accept-data-loss`
+4. `npx tsx prisma/seed.ts` (seeds 75 days, dev user, badges)
+5. `npm run dev` (Next.js on port 5000)
 
-## Project structure
+## Environment Variables Set
+| Variable | Status | Description |
+|----------|--------|-------------|
+| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | ✅ Set | Clerk publishable key (dev) |
+| `NEXT_PUBLIC_CLERK_SIGN_IN_URL` | ✅ Set | `/sign-in` |
+| `NEXT_PUBLIC_CLERK_SIGN_UP_URL` | ✅ Set | `/sign-up` |
+| `NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL` | ✅ Set | `/dashboard` |
+| `NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL` | ✅ Set | `/dashboard` |
+| `SESSION_SECRET` | ✅ Secret | Session secret |
+| `CLERK_SECRET_KEY` | ❌ Needs setting | Add as Replit Secret (starts with `sk_test_`) |
 
-```
-apps/
-  web/                        ← Main Next.js 14 app (port 5000)
-    app/
-      (auth)/                 ← /sign-in  /sign-up  (Clerk)
-      (main)/                 ← All protected pages
-        dashboard/            ← User dashboard
-        day/[dayNumber]/      ← Day overview (1–75)
-          topic/[topicId]/subtopic/[subtopicId]/
-            page.tsx          ← Lesson content
-            practice/         ← Practice questions (type + speak)
-            test/             ← Test assessment
-            vocabulary/       ← Subtopic vocabulary
-        vocabulary/           ← Full vocabulary bank
-        speaking/             ← Speaking lab
-        writing/              ← Writing lab
-        progress/             ← Progress charts
-        revision/             ← Revision sessions
-        leaderboard/          ← Leaderboard
-        mock-test/            ← Mock tests
-        settings/             ← User settings
-      api/                    ← API routes (progress, scores, speech, mobile)
-    components/               ← UI components (landing/, learning/, layout/, ui/)
-    data/                     ← Static course content (days-config.ts, vocabulary/, questions/)
-    lib/                      ← db.ts, safe-auth.ts, utils.ts, mobile-sync.ts
-    prisma/                   ← schema.prisma, seed.ts, dev.db
-    store/                    ← Zustand stores
-    hooks/                    ← Custom React hooks
-    types/                    ← TypeScript types
-    scripts/                  ← Helper scripts (setup-db.sh)
-  mobile/                     ← Vite/React mobile app (port 5001, skeleton)
-packages/                     ← Shared monorepo packages (currently placeholders)
-setup.sh                      ← Root first-run setup script
-```
+## Authentication Notes
+- **Without CLERK_SECRET_KEY**: App runs in "dev passthrough mode" — all pages accessible with a seeded dev user (`dev_user_75days_english`). Great for development.
+- **With CLERK_SECRET_KEY**: Full Clerk auth active — users must sign up/sign in. Add the key via Replit Secrets panel.
+- Dev user is seeded with: `firstName: "Dev"`, `lastName: "Student"`, `currentDay: 1`
+
+## Key Routes
+| Route | Description |
+|-------|-------------|
+| `/` | Landing page (marketing) |
+| `/dashboard` | Main learning hub |
+| `/day/1` through `/day/75` | Daily lesson pages |
+| `/day/N/topic/dN-tN/subtopic/dN-tN-sN/learn` | Theory lesson |
+| `/day/N/topic/dN-tN/subtopic/dN-tN-sN/practice` | Practice (Type/Speak) |
+| `/day/N/topic/dN-tN/subtopic/dN-tN-sN/test` | Timed test |
+| `/vocabulary` | Global vocabulary bank |
+| `/speaking` | Speaking lab |
+| `/mock-test` | 50-question mock test |
+| `/progress` | Progress charts & heatmap |
+| `/leaderboard` | Global leaderboard |
 
 ## Database
+- **Dev**: SQLite at `apps/web/prisma/dev.db` (auto-created on startup)
+- **Schema**: See `apps/web/prisma/schema.prisma`
+- **Seeding**: `cd apps/web && DATABASE_URL='file:./dev.db' npx tsx prisma/seed.ts`
 
-SQLite database lives at `apps/web/prisma/dev.db`.
+## Content Architecture
+- **Day/Topic/Subtopic structure**: Static TypeScript config in `data/course-content/`
+- **Questions**: Static files for Days 1-7, auto-generated for Days 8-75
+- **Vocabulary**: Static files for Days 1-7 (300+ words/day), generated for Days 8-75
+- **Progress/XP/Scores**: Database only
 
-To reset and re-seed:
-```bash
-cd apps/web
-DATABASE_URL='file:./dev.db' npx prisma db push --accept-data-loss
-DATABASE_URL='file:./dev.db' npx tsx prisma/seed.ts
-```
+## User Preferences
+- Keep all 75 days with separate folders and pages
+- Use Type AND Speak answer modes for all practice
+- Real data from database (no fake/placeholder data in dashboard)
+- Modern, animated, professional UI
+- Every page should have a separate route
+- All files should have comments on every line
+- Fully responsive for mobile and desktop
+- Open source friendly
 
-Seed output: **75 days, 470 subtopics, vocabulary words, practice questions, badges, dev user**.
-
-The `dev.db` file is in `.gitignore` so it is not committed — the workflow re-creates it automatically on every fresh Replit session.
-
-## Auth / Clerk
-
-Dashboard, day, practice, and other `(main)` routes require an authenticated
-Clerk session. When `CLERK_SECRET_KEY` is absent or invalid, protected routes
-redirect to `/sign-in`; the app does not use a seeded user as an auth bypass.
-
-To enable real auth:
-1. Create a Clerk project at https://dashboard.clerk.com
-2. Add `CLERK_SECRET_KEY` as a **Replit Secret** (value starts with `sk_test_` or `sk_live_`)
-3. `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` is already set as a shared env var
-
-## Environment variables
-
-Already configured as Replit env vars (shared):
-- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` — Clerk public key (pk_test_...)
-- `NEXT_PUBLIC_CLERK_SIGN_IN_URL` / `NEXT_PUBLIC_CLERK_SIGN_UP_URL`
-- `NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL` / `NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL`
-- `NEXT_PUBLIC_APP_NAME`, `NEXT_PUBLIC_ENABLE_GAMIFICATION`, `NEXT_PUBLIC_ENABLE_SPEECH_RECOGNITION`
-
-A local `apps/web/.env.local` file is also present for overriding values in dev.
-
-See `apps/web/.env.example` for the full list of supported variables.
-
-## Health check
-
-`GET /api/health` — public endpoint that confirms the app is running, DB is connected, and Clerk configuration mode. Used by the mobile app sync bridge to verify connectivity.
-
-## Available npm scripts (run from `apps/web/`)
-
-```bash
-npm run dev          # Start dev server on port 5000
-npm run build        # Production build
-npm run lint         # ESLint
-npm run type-check   # TypeScript check
-npm run db:push      # Push Prisma schema (needs DATABASE_URL)
-npm run db:seed      # Seed course data  (needs DATABASE_URL)
-npm run db:studio    # Open Prisma Studio UI
-```
-
-## User preferences
-
-- Keep existing file/folder structure — do not rename or delete files without confirmation
-- Every file should have inline comments on key lines explaining the logic
-- Use big, visual fonts with accessible color contrast
-- All sections must be fully responsive (mobile → tablet → desktop)
-- Design inspiration: Apple, Vercel, Linear, Stripe, Airbnb (see reference URLs in messages)
-- Animations via Framer Motion, GSAP, Anime.js — smooth and professional, never janky
-- Content tone: warm, encouraging, like a great teacher — not robotic
-- Both **type** and **speak** answer modes must always be available in practice sessions
-- Protected app pages must require sign-in; the landing page and auth pages remain previewable without a Clerk secret
+## Status (2026-07-24)
+- ✅ App running on port 5000
+- ✅ All pages working (dashboard, day pages, learn, practice, test, vocabulary)
+- ✅ TypeScript: 0 errors
+- ✅ Clerk publishable key configured
+- ✅ Dev mode auth working (no Clerk secret needed for development)
+- ✅ Sound effects (Web Audio API)
+- ✅ Dark/light theme
+- ❌ CLERK_SECRET_KEY needs to be added as a Replit Secret for production auth
+- ❌ Mobile app is a skeleton (needs full implementation)
+- ❌ Days 8-75 use auto-generated content (no hand-crafted lessons)

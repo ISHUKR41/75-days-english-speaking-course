@@ -1,86 +1,108 @@
 {
   "name": "75 Days Hard English Course",
   "short_name": "75 Days English",
-  "description": "The World's Most Advanced English Learning Platform. Master fluent English in 75 days.",
+  "description": "The World's Most Advanced Free English Learning Platform. Master fluent English in 75 structured days.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0a0a0f",
+  "background_color": "#0d1117",
   "theme_color": "#6272f1",
   "orientation": "portrait-primary",
-  "scope": "/",
-  "lang": "en",
   "categories": ["education", "productivity"],
+  "lang": "en",
   "icons": [
     {
-      "src": "/icons/icon-72x72.svg",
+      "src": "/icons/icon-72x72.png",
       "sizes": "72x72",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "/icons/icon-96x96.svg",
+      "src": "/icons/icon-96x96.png",
       "sizes": "96x96",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "/icons/icon-128x128.svg",
+      "src": "/icons/icon-128x128.png",
       "sizes": "128x128",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "/icons/icon-144x144.svg",
+      "src": "/icons/icon-144x144.png",
       "sizes": "144x144",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "/icons/icon-152x152.svg",
+      "src": "/icons/icon-152x152.png",
       "sizes": "152x152",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "/icons/icon-192x192.svg",
+      "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "/icons/icon-384x384.svg",
+      "src": "/icons/icon-384x384.png",
       "sizes": "384x384",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "/icons/icon-512x512.svg",
+      "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "maskable any"
     }
   ],
   "shortcuts": [
     {
-      "name": "Continue Learning",
-      "short_name": "Continue",
-      "description": "Continue your current day",
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "Go to your learning dashboard",
       "url": "/dashboard",
-      "icons": [{ "src": "/icons/icon-96x96.svg", "sizes": "96x96" }]
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
     },
     {
-      "name": "Practice Speaking",
-      "short_name": "Speaking",
-      "description": "Speaking practice lab",
-      "url": "/speaking",
-      "icons": [{ "src": "/icons/icon-96x96.svg", "sizes": "96x96" }]
+      "name": "Day 1",
+      "short_name": "Day 1",
+      "description": "Start with Day 1 - Basic English",
+      "url": "/day/1",
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
     },
     {
       "name": "Vocabulary",
-      "short_name": "Words",
-      "description": "Today's vocabulary words",
+      "short_name": "Vocab",
+      "description": "Browse vocabulary bank",
       "url": "/vocabulary",
-      "icons": [{ "src": "/icons/icon-96x96.svg", "sizes": "96x96" }]
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Speaking Lab",
+      "short_name": "Speaking",
+      "description": "Practice speaking English",
+      "url": "/speaking",
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/dashboard.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Dashboard with learning progress"
+    },
+    {
+      "src": "/screenshots/practice.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Practice questions with Type and Speak modes"
     }
   ],
   "related_applications": [],
