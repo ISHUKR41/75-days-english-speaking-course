@@ -23,18 +23,18 @@ echo ""
 
 # ── Step 2: Push Prisma schema to SQLite database ─────────────
 echo "🗄️  Setting up database schema..."
-DATABASE_URL='file:./prisma/dev.db' npx prisma db push --accept-data-loss
+DATABASE_URL='file:./dev.db' npx prisma db push --accept-data-loss
 echo "✅ Database schema ready"
 echo ""
 
 # ── Step 3: Seed the database with 75 days of course content ──
 echo "🌱 Seeding 75-day course content..."
-DATABASE_URL='file:./prisma/dev.db' npx tsx prisma/seed.ts
+DATABASE_URL='file:./dev.db' npx tsx prisma/seed.ts
 echo "✅ Database seeded (75 days, 470 subtopics, vocabulary, badges)"
 echo ""
 
 echo "=================================================="
 echo "  Setup complete! Start the app with:"
-echo "  cd apps/web && DATABASE_URL='file:./prisma/dev.db' npm run dev"
+echo "  cd apps/web && DATABASE_URL='file:./dev.db' npm run dev"
 echo "=================================================="
 echo ""

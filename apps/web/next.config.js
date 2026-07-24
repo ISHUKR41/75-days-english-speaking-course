@@ -18,18 +18,6 @@ const nextConfig = {
     "127.0.0.1",
   ],
 
-  // Enable experimental features for best performance
-  experimental: {
-    // Optimize package imports for faster builds
-    optimizePackageImports: [
-      "lucide-react",
-      "framer-motion",
-      "@radix-ui/react-accordion",
-      "@radix-ui/react-dialog",
-      "recharts",
-    ],
-  },
-
   // Image optimization configuration
   images: {
     // Allow images from these external domains
@@ -71,8 +59,8 @@ const nextConfig = {
     ];
   },
 
-  // Webpack configuration — disable filesystem cache in dev to prevent
-  // vendor-chunk corruption when packages are installed mid-session
+  // Webpack configuration — keep development output deterministic after
+  // package installation and avoid unstable vendor chunk splitting
   webpack: (config, { dev }) => {
     // Handle audio files so Howler/Web Audio mp3s can be imported
     config.module.rules.push({
@@ -80,9 +68,8 @@ const nextConfig = {
       type: "asset/resource",
     });
 
-    // Disable the persistent filesystem cache in development.
-    // This prevents the recurring "Cannot find module ./vendor-chunks/@tanstack.js"
-    // error that appears after npm install while the dev server is running.
+    // Disable the persistent filesystem cache in development so a restarted
+    // Replit workflow always rebuilds from the current dependency graph.
     if (dev) {
       config.cache = false; // no disk cache — recompile fresh every restart
     }

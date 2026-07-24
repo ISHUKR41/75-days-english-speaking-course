@@ -23,20 +23,12 @@ outputType = "webview"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "set -e; npm install --prefer-offline --no-audit --no-fund; cd apps/web; export DATABASE_URL='file:./prisma/dev.db'; npx prisma db push --accept-data-loss; npx tsx prisma/seed.ts; npm run dev"
+args = "set -e; npm install --prefer-offline --no-audit --no-fund; cd apps/web; rm -rf .next; export DATABASE_URL='file:./dev.db'; npx prisma db push --accept-data-loss; npx tsx prisma/seed.ts; npm run dev"
 waitForPort = 5000
 
 [[ports]]
 localPort = 5000
 externalPort = 80
-
-[[ports]]
-localPort = 5010
-externalPort = 3002
-
-[[ports]]
-localPort = 5050
-externalPort = 3003
 
 [userenv]
 

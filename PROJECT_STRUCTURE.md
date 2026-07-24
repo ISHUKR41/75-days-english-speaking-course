@@ -1,6 +1,20 @@
 # 📁 75 Days Hard English — Complete Project Structure
 > Last updated: 2026-07-24
 > Purpose: Save AI tokens — read this FIRST before exploring files individually.
+> Source of truth: update this document when a major folder, route, data source, or run instruction changes.
+
+## Replit verification notes
+
+- The primary preview workflow is `Start application`.
+- It installs from the repository root, recreates the local Prisma SQLite schema,
+  seeds the course, removes the stale Next.js development cache, and serves
+  `apps/web` on port 5000.
+- Local development authentication uses the documented safe-auth passthrough
+  when a valid Clerk secret is not configured. Real Clerk authentication must
+  be enabled with a Replit Secret before production use.
+- The web app is the source of truth for mobile data through the mobile API
+  routes under `apps/web/app/api/mobile/`; the mobile app is currently a
+  lightweight client skeleton, not a second content database.
 
 ---
 
@@ -48,7 +62,7 @@ root/
 
 ### Port & Run
 - Dev server runs on **port 5000** (`next dev --port 5000`)
-- DATABASE_URL: `file:./prisma/dev.db` (SQLite)
+- DATABASE_URL: `file:./dev.db` when commands run from `apps/web` (SQLite file at `apps/web/prisma/dev.db`)
 - Workflow: `cd apps/web && npm install; prisma db push; tsx prisma/seed.ts; npm run dev`
 
 ---
@@ -428,7 +442,7 @@ mobile/
 |----------|----------|-------------|
 | `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | For real auth | Clerk publishable key (pk_test_... or pk_live_...) |
 | `CLERK_SECRET_KEY` | For real auth | Clerk secret key (sk_test_... or sk_live_...) |
-| `DATABASE_URL` | Always | `file:./prisma/dev.db` for SQLite |
+| `DATABASE_URL` | Always | `file:./dev.db` from `apps/web` (SQLite file at `apps/web/prisma/dev.db`) |
 | `SESSION_SECRET` | Optional | Express session secret |
 | `NEXT_PUBLIC_APP_URL` | Optional | Production URL for SEO/OG tags |
 

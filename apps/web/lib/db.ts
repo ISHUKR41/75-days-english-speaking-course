@@ -6,6 +6,12 @@
 
 import { PrismaClient } from "@prisma/client";
 
+// Keep local CLI/build commands deterministic when DATABASE_URL was not
+// exported by the caller. Deployment environments still use their own URL.
+if (!process.env.DATABASE_URL) {
+  process.env.DATABASE_URL = "file:./dev.db";
+}
+
 // ─── Global Declaration ──────────────────────────────────────
 // We need to declare the global prisma variable for TypeScript
 declare global {

@@ -13,10 +13,10 @@ The app MUST run on port 5000. The Replit webview only proxies port 5000 by defa
 **How to apply:**
 - `apps/web/package.json` dev script: `next dev --port 5000`
 - Workflow name: "Start application"
-- Workflow command: `cd apps/web && DATABASE_URL='file:./prisma/dev.db' npm run dev`
+- Workflow command: `cd apps/web && DATABASE_URL='file:./dev.db' npm run dev`
 - The `DATABASE_URL` must be set inline in the workflow command (not just in .env.local) for the seed scripts to work
 
 ## Database
 - SQLite via Prisma at `apps/web/prisma/dev.db`
-- `DATABASE_URL=file:./prisma/dev.db` (relative to `apps/web/` directory)
+- `DATABASE_URL=file:./dev.db` (relative to `apps/web/`; resolves to `apps/web/prisma/dev.db`)
 - Dev user clerkId: `dev_user_75days_english` (created in the DB, needed for dev mode)

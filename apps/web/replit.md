@@ -18,7 +18,7 @@ A full-stack gamified English learning platform built with Next.js 14, Clerk aut
 ### How to Run
 The app is configured to run via the "Start application" workflow:
 ```
-cd apps/web && npm install --prefer-offline; DATABASE_URL='file:./prisma/dev.db' npx prisma db push --accept-data-loss; DATABASE_URL='file:./prisma/dev.db' npx tsx prisma/seed.ts; DATABASE_URL='file:./prisma/dev.db' npm run dev
+cd apps/web && npm install --prefer-offline; DATABASE_URL='file:./dev.db' npx prisma db push --accept-data-loss; DATABASE_URL='file:./dev.db' npx tsx prisma/seed.ts; DATABASE_URL='file:./dev.db' npm run dev
 ```
 Server runs on port 5000.
 

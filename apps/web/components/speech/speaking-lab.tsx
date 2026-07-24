@@ -4,7 +4,7 @@
 // Modes: sentence reading, shadowing, pronunciation check
 // ============================================================
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Mic,
@@ -111,6 +111,36 @@ export function SpeakingLab({ userId }: SpeakingLabProps) {
   };
 
   // When we get a transcript, evaluate it
+  const saveSpeechAttempt = useCallback(
+    async (accuracy: number, spokenTranscript: string) => {
+      if (isSubmitting) return;
+      setIsSubmitting(true);
+      try {
+        await fetch("/api/speech", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            targetText: currentSentence,
+            transcript: spokenTranscript,
+            confidence,
+            accuracy: accuracy / 100,
+            wordsCorrect: Math.round(
+              (accuracy / 100) * currentSentence.split(" ").length,
+            ),
+            wordsTotal: currentSentence.split(" ").length,
+            pronunciationScore: accuracy / 100,
+            fluencyScore: confidence || accuracy / 100,
+          }),
+        });
+      } catch {
+        // Speech progress is best-effort when offline or unsupported.
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    [confidence, currentSentence, isSubmitting],
+  );
+
   useEffect(() => {
     if (transcript && !isListening) {
       const accuracy = evaluateSpeech(transcript, currentSentence);
@@ -137,34 +167,7 @@ export function SpeakingLab({ userId }: SpeakingLabProps) {
         saveSpeechAttempt(accuracy, transcript);
       }
     }
-  }, [transcript, isListening]);
-
-  const saveSpeechAttempt = async (accuracy: number, spokenTranscript: string) => {
-    if (isSubmitting) return;
-    setIsSubmitting(true);
-    try {
-      await fetch("/api/speech", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          targetText: currentSentence,
-          transcript: spokenTranscript,
-          confidence,
-          accuracy: accuracy / 100,
-          wordsCorrect: Math.round(
-            (accuracy / 100) * currentSentence.split(" ").length
-          ),
-          wordsTotal: currentSentence.split(" ").length,
-          pronunciationScore: accuracy / 100,
-          fluencyScore: confidence || accuracy / 100,
-        }),
-      });
-    } catch {
-      // Silently fail
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  }, [currentSentence, isListening, saveSpeechAttempt, transcript, userId]);
 
   const handleNextSentence = () => {
     const sentences = currentCategory.sentences;

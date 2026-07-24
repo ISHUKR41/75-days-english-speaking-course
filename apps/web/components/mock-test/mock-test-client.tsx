@@ -85,48 +85,6 @@ export function MockTestClient({ questions, userId }: MockTestClientProps) {
 
   const currentQuestion = questions[currentIndex];
 
-  // Timer
-  useEffect(() => {
-    if (testState !== "running" || showFeedback) {
-      if (timerRef.current) clearInterval(timerRef.current);
-      return;
-    }
-
-    timerRef.current = setInterval(() => {
-      setTimeLeft((t) => {
-        if (t <= 1) {
-          handleTimeUp();
-          return 0;
-        }
-        return t - 1;
-      });
-    }, 1000);
-
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [testState, currentIndex, showFeedback]);
-
-  // Reset timer on question change
-  useEffect(() => {
-    if (testState === "running") {
-      setTimeLeft(TIME_PER_QUESTION);
-      startTimeRef.current = Date.now();
-    }
-  }, [currentIndex, testState]);
-
-  // When speech transcript comes in
-  useEffect(() => {
-    if (transcript && !isListening) {
-      setTypedAnswer(transcript);
-    }
-  }, [transcript, isListening]);
-
-  const handleTimeUp = useCallback(() => {
-    if (showFeedback) return;
-    submitAnswer("", true);
-  }, [showFeedback, currentQuestion]);
-
   const submitAnswer = useCallback(
     (answer: string, timedOut = false) => {
       if (showFeedback) return;
@@ -134,7 +92,8 @@ export function MockTestClient({ questions, userId }: MockTestClientProps) {
 
       const timeTaken = Math.round((Date.now() - startTimeRef.current) / 1000);
       const finalAnswer = answer || typedAnswer || selectedOption || "";
-      const correct = finalAnswer.trim().toLowerCase() ===
+      const correct =
+        finalAnswer.trim().toLowerCase() ===
         currentQuestion.correctAnswer.trim().toLowerCase();
       const pointsEarned = correct ? currentQuestion.points : 0;
 
@@ -166,8 +125,50 @@ export function MockTestClient({ questions, userId }: MockTestClientProps) {
       answerMode,
       playCorrect,
       playWrong,
-    ]
+    ],
   );
+
+  const handleTimeUp = useCallback(() => {
+    if (showFeedback) return;
+    submitAnswer("", true);
+  }, [showFeedback, submitAnswer]);
+
+  // Timer
+  useEffect(() => {
+    if (testState !== "running" || showFeedback) {
+      if (timerRef.current) clearInterval(timerRef.current);
+      return;
+    }
+
+    timerRef.current = setInterval(() => {
+      setTimeLeft((t) => {
+        if (t <= 1) {
+          handleTimeUp();
+          return 0;
+        }
+        return t - 1;
+      });
+    }, 1000);
+
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [currentIndex, handleTimeUp, showFeedback, testState]);
+
+  // Reset timer on question change
+  useEffect(() => {
+    if (testState === "running") {
+      setTimeLeft(TIME_PER_QUESTION);
+      startTimeRef.current = Date.now();
+    }
+  }, [currentIndex, testState]);
+
+  // When speech transcript comes in
+  useEffect(() => {
+    if (transcript && !isListening) {
+      setTypedAnswer(transcript);
+    }
+  }, [transcript, isListening]);
 
   const handleNext = () => {
     if (currentIndex === questions.length - 1) {

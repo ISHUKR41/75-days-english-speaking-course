@@ -16,7 +16,7 @@ export function SidebarMobileCloser() {
     if (window.innerWidth < 1024) {
       setOpen(false);
     }
-  }, []); // Run once on mount, no deps needed
+  }, [setOpen]); // Run on mount; the provider action is the only dependency
 
   return null; // Renders nothing
 }

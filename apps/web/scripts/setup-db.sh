@@ -14,9 +14,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR/.."
 
 echo "🗄️  Pushing Prisma schema..."
-DATABASE_URL='file:./prisma/dev.db' npx prisma db push --accept-data-loss
+DATABASE_URL='file:./dev.db' npx prisma db push --accept-data-loss
 echo "✅ Schema up to date"
 
 echo "🌱 Seeding course content..."
-DATABASE_URL='file:./prisma/dev.db' npx tsx prisma/seed.ts
+DATABASE_URL='file:./dev.db' npx tsx prisma/seed.ts
 echo "✅ Seed complete"

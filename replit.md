@@ -14,9 +14,9 @@ To run manually from the Shell:
 ```bash
 npm install
 cd apps/web
-DATABASE_URL='file:./prisma/dev.db' npx prisma db push --accept-data-loss
-DATABASE_URL='file:./prisma/dev.db' npx tsx prisma/seed.ts
-DATABASE_URL='file:./prisma/dev.db' npm run dev
+DATABASE_URL='file:./dev.db' npx prisma db push --accept-data-loss
+DATABASE_URL='file:./dev.db' npx tsx prisma/seed.ts
+DATABASE_URL='file:./dev.db' npm run dev
 ```
 
 Or use the root helper:
@@ -83,8 +83,8 @@ SQLite database lives at `apps/web/prisma/dev.db`.
 To reset and re-seed:
 ```bash
 cd apps/web
-DATABASE_URL='file:./prisma/dev.db' npx prisma db push --accept-data-loss
-DATABASE_URL='file:./prisma/dev.db' npx tsx prisma/seed.ts
+DATABASE_URL='file:./dev.db' npx prisma db push --accept-data-loss
+DATABASE_URL='file:./dev.db' npx tsx prisma/seed.ts
 ```
 
 Seed output: **75 days, 470 subtopics, vocabulary words, practice questions, badges, dev user**.
