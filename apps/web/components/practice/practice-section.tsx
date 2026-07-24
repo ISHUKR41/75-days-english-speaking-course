@@ -16,6 +16,8 @@ import { cn, checkAnswer, playSound } from "@/lib/utils";
 import { ALL_DAY_1_QUESTIONS } from "@/data/questions/day-1-questions";
 // Import extended questions (80+ additional questions)
 import { ALL_DAY1_EXTENDED_QUESTIONS } from "@/data/questions/day-1-extended-questions";
+// Import comprehensive subtopic-specific questions for all Day 1 subtopics
+import { ALL_D1_SUBTOPIC_QUESTIONS } from "@/data/questions/day-1-subtopics-questions";
 // Import Day 2 questions
 import { ALL_DAY_2_QUESTIONS } from "@/data/questions/day-2-questions";
 // Import Days 3-7 hand-curated questions
