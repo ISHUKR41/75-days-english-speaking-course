@@ -27,7 +27,9 @@ interface DayCardProps {
   isMockTest: boolean;
   topicsCount: number;
   currentDay: number;
-  completedDays: number;
+  isCompleted: boolean;
+  isInProgress: boolean;
+  progressPercent: number;
 }
 
 export function DayCard({
@@ -39,23 +41,18 @@ export function DayCard({
   isMockTest,
   topicsCount,
   currentDay,
-  completedDays,
+  isCompleted,
+  isInProgress,
+  progressPercent,
 }: DayCardProps) {
   // Determine the status of this day
-  const isCompleted = dayNumber < currentDay;
   const isCurrent = dayNumber === currentDay;
-  const isLocked = dayNumber > currentDay;
+  // Every authenticated learner can open every day. currentDay is only the
+  // learner's primary navigation pointer and must never lock course content.
+  const isLocked = false;
 
   // Color for this specific day
   const dayColor = getDayColor(dayNumber);
-
-  // Generate deterministic progress percentage for current day
-  // Using dayNumber for stable server/client rendering (no Math.random())
-  const progressPercent = isCompleted
-    ? 100
-    : isCurrent
-    ? ((dayNumber * 17 + 23) % 45) + 20 // Deterministic: 20-65% range
-    : 0;
 
   // Can the user access this day?
   const canAccess = !isLocked;
@@ -156,6 +153,12 @@ export function DayCard({
               </div>
             )}
 
+            {isInProgress && !isCompleted && (
+              <div className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-bold text-primary w-fit border border-primary/20">
+                IN PROGRESS
+              </div>
+            )}
+
             {isLocked && (
               <div className="inline-flex items-center gap-1 rounded-full bg-muted-foreground/10 px-2.5 py-0.5 text-xs font-bold text-muted-foreground w-fit border border-border">
                 LOCKED
@@ -228,7 +231,11 @@ export function DayCard({
                 <span
                   className={cn(
                     "text-xs font-bold tabular-nums",
-                    isCompleted ? "text-emerald-500" : isCurrent ? "text-primary" : "text-muted-foreground"
+                    isCompleted || isInProgress
+                      ? isCompleted
+                        ? "text-emerald-500"
+                        : "text-primary"
+                      : "text-muted-foreground"
                   )}
                 >
                   {progressPercent}%

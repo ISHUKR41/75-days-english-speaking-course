@@ -43,7 +43,6 @@ async function getDashboardData(userId: string) {
             day: true,
           },
           orderBy: { updatedAt: "desc" },
-          take: 5,
         },
         // Get badge count
         badges: {
@@ -118,8 +117,11 @@ async function getDashboardData(userId: string) {
         .filter((s) => new Date(s.createdAt) >= weekStart)
         .reduce((sum, s) => sum + (s.xp ?? 0), 0);
 
-      // Estimate words learned based on completed days
-      wordsLearned = Math.min((user.currentDay - 1) * 200, 15000);
+      // Only count vocabulary the user has actually mastered. Day number is
+      // navigation context, not evidence that words were learned.
+      wordsLearned = await db.userVocabulary.count({
+        where: { userId: user.id, mastered: true },
+      });
     } catch {
       // Ignore stat errors — fall back to zeros
     }

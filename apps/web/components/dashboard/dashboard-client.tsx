@@ -147,13 +147,39 @@ export function DashboardClient({
     firstName?: string; lastName?: string;
     currentDay?: number; totalXp?: number; level?: number;
     streak?: number; longestStreak?: number; totalCoins?: number;
-    progress?: Array<{ status?: string }>;
+    progress?: Array<{
+      status?: string;
+      topicsCompleted?: number;
+      topicsTotal?: number;
+      day?: { dayNumber: number };
+    }>;
     badges?: Array<unknown>;
   } | null;
 
+  const progressByDay = new Map(
+    (realUser?.progress ?? [])
+      .filter((progress) => progress.day?.dayNumber)
+      .map((progress) => [progress.day!.dayNumber, progress])
+  );
+  const completedDayNumbers = new Set(
+    (realUser?.progress ?? [])
+      .filter((progress) => progress.status === "COMPLETED" && progress.day?.dayNumber)
+      .map((progress) => progress.day!.dayNumber)
+  );
+  const inProgressDayNumbers = new Set(
+    (realUser?.progress ?? [])
+      .filter(
+        (progress) =>
+          progress.status === "IN_PROGRESS" &&
+          progress.day?.dayNumber &&
+          !completedDayNumbers.has(progress.day!.dayNumber)
+      )
+      .map((progress) => progress.day!.dayNumber)
+  );
+
   const stats = {
     currentDay: realUser?.currentDay ?? 1,
-    completedDays: realUser?.currentDay ? Math.max(0, realUser.currentDay - 1) : 0,
+    completedDays: completedDayNumbers.size,
     streak: realUser?.streak ?? 0,
     totalXp: realUser?.totalXp ?? 0,
     level: realUser?.level ?? 1,
@@ -174,9 +200,9 @@ export function DashboardClient({
   // Filter days based on active tab
   const filteredDays = initialDays.filter((day) => {
     if (activeFilter === "all") return true;
-    if (activeFilter === "completed") return day.dayNumber < stats.currentDay;
-    if (activeFilter === "in-progress") return day.dayNumber === stats.currentDay;
-    if (activeFilter === "locked") return day.dayNumber > stats.currentDay;
+    if (activeFilter === "completed") return completedDayNumbers.has(day.dayNumber);
+    if (activeFilter === "in-progress") return inProgressDayNumbers.has(day.dayNumber);
+    if (activeFilter === "locked") return false;
     return true;
   });
 
@@ -479,8 +505,8 @@ export function DashboardClient({
             [
               { key: "all", label: "All Days", count: 75 },
               { key: "completed", label: "Completed", count: stats.completedDays },
-              { key: "in-progress", label: "In Progress", count: 1 },
-              { key: "locked", label: "Locked", count: 74 - stats.completedDays },
+              { key: "in-progress", label: "In Progress", count: inProgressDayNumbers.size },
+              { key: "locked", label: "Locked", count: 0 },
             ] as const
           ).map((filter) => (
             <button
@@ -526,7 +552,18 @@ export function DashboardClient({
                 isMockTest={day.isMockTest || false}
                 topicsCount={day._count?.topics || 0}
                 currentDay={stats.currentDay}
-                completedDays={stats.completedDays}
+                isCompleted={completedDayNumbers.has(day.dayNumber)}
+                isInProgress={inProgressDayNumbers.has(day.dayNumber)}
+                progressPercent={(() => {
+                  const progress = progressByDay.get(day.dayNumber);
+                  if (!progress) return 0;
+                  if (progress.status === "COMPLETED") return 100;
+                  if (!progress.topicsTotal) return 0;
+                  return Math.min(
+                    100,
+                    Math.round(((progress.topicsCompleted ?? 0) / progress.topicsTotal) * 100)
+                  );
+                })()}
               />
             </motion.div>
           ))}

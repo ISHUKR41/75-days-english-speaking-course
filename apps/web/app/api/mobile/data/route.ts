@@ -5,7 +5,7 @@
 // Designed to be fetched by the mobile React app.
 // ============================================================
 
-import { NextRequest, NextResponse } from "next/server"; // Next.js API types
+import { NextResponse } from "next/server"; // Next.js API types
 import { auth } from "@/lib/safe-auth"; // Auth helper for protected mobile data
 import { db } from "@/lib/db"; // Prisma database client
 import { COURSE_DAYS_DATA } from "@/data/course-content/days-config"; // Static course structure
@@ -15,10 +15,16 @@ export const dynamic = "force-dynamic";
 
 // ─── GET handler ──────────────────────────────────────────────
 // Returns course structure + authenticated user data for the mobile app
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     // ── Authenticate the request ──────────────────────────────
     const { userId } = await auth(); // Get the authenticated Clerk user ID
+    if (!userId) {
+      return NextResponse.json(
+        { error: "Authentication required" },
+        { status: 401 }
+      );
+    }
 
     // ── Build the course structure from static config ─────────
     // We use static data so mobile gets the same structure as web
@@ -54,7 +60,7 @@ export async function GET(req: NextRequest) {
     let completedSubtopics: string[] = []; // User's completed subtopic IDs
     let completedDays: number[] = []; // Day numbers the user has completed
 
-    if (userId) {
+    {
       // Try to find the user in our database
       const user = await db.user.findUnique({
         where: { clerkId: userId }, // Match by Clerk user ID
@@ -105,6 +111,11 @@ export async function GET(req: NextRequest) {
           });
           completedDays = dbDays.map((d) => d.dayNumber); // Extract numbers
         }
+      } else {
+        return NextResponse.json(
+          { error: "User account is not ready" },
+          { status: 404 }
+        );
       }
     }
 
@@ -115,9 +126,8 @@ export async function GET(req: NextRequest) {
         totalDays: 75,
         days, // All 75 days with topics and subtopics
       },
-      // Authenticated user's progress data (null if not logged in)
-      user: userData
-        ? {
+      // Authenticated user's progress data
+      user: {
             clerkId: userData.clerkId,
             firstName: userData.firstName ?? "Learner",
             lastName: userData.lastName ?? "",
@@ -132,8 +142,7 @@ export async function GET(req: NextRequest) {
             completedSubtopics, // All completed subtopic IDs
             completedDays, // All completed day numbers
             isAuthenticated: true, // Flag for mobile app
-          }
-        : null,
+          },
       // Meta information
       meta: {
         syncedAt: new Date().toISOString(), // When this was fetched

@@ -6,7 +6,7 @@
 // ============================================================
 
 // ─── Storage key for local cache ─────────────────────────────
-const STORAGE_KEY = "75days_mobile_v2"; // Cache key in localStorage
+const STORAGE_KEY = "75days_mobile_v3"; // Cache key in localStorage
 
 // ─── Type definitions ─────────────────────────────────────────
 
@@ -166,15 +166,23 @@ async function apiFetch<T>(
 export async function syncUserFromAPI(): Promise<MobileSyncState> {
   const cached = getMobileSyncState(); // Start with cached state
 
-  // Try fetching from the web API
-  const data = await apiFetch<{ user: Record<string, unknown> | null }>("/user");
+  // The mobile data endpoint is the source of truth for both identity and
+  // completed course progress. Do not infer authentication from local cache.
+  const data = await apiFetch<{
+    user: Record<string, unknown> & {
+      completedSubtopics?: string[];
+      completedDays?: number[];
+    };
+  }>("/mobile/data");
 
   // If API returned a user, update the cached state
   if (data?.user) {
     const user = data.user as Record<string, unknown>; // Type-cast for safety
+    const serverUserId = user.clerkId as string;
+    const switchedAccount = Boolean(cached.userId && cached.userId !== serverUserId);
     const updated: MobileSyncState = {
-      ...cached, // Keep existing local state
-      userId: (user.clerkId as string) ?? cached.userId,
+      ...cached, // Keep existing local state when the same account is offline
+      userId: serverUserId,
       currentDay: (user.currentDay as number) ?? cached.currentDay,
       totalXp: (user.totalXp as number) ?? cached.totalXp,
       level: (user.level as number) ?? cached.level,
@@ -185,6 +193,12 @@ export async function syncUserFromAPI(): Promise<MobileSyncState> {
       firstName: (user.firstName as string) ?? cached.firstName,
       lastName: (user.lastName as string) ?? cached.lastName,
       imageUrl: (user.imageUrl as string | null) ?? cached.imageUrl,
+      completedSubtopics: switchedAccount
+        ? user.completedSubtopics ?? []
+        : user.completedSubtopics ?? cached.completedSubtopics,
+      completedDays: switchedAccount
+        ? user.completedDays ?? []
+        : user.completedDays ?? cached.completedDays,
       lastSyncedAt: Date.now(), // Update sync timestamp
     };
     saveMobileSyncState(updated); // Persist updated state
@@ -244,6 +258,12 @@ export async function markSubtopicCompleted(
   accuracy = 100 // Accuracy percentage (default 100)
 ): Promise<MobileSyncState> {
   const current = getMobileSyncState(); // Get current cached state
+
+  // A local cache is not proof of identity. Only a state obtained from the
+  // authenticated mobile sync may create progress records.
+  if (!current.isAuthenticated || !current.userId) {
+    return current;
+  }
 
   // Only update if not already completed (idempotent)
   if (!current.completedSubtopics.includes(subtopicId)) {

@@ -11,7 +11,12 @@ import {
   Volume2, Search, ArrowRight, Zap, RefreshCcw, Wifi, WifiOff,
   ChevronRight, Sparkles
 } from "lucide-react";
-import { getMobileSyncState, markSubtopicCompletedMobile, MobileSyncState } from "./lib/syncBridge";
+import {
+  getMobileSyncState,
+  syncUserFromAPI,
+  markSubtopicCompletedMobile,
+  MobileSyncState,
+} from "./lib/syncBridge";
 
 // Navigation tabs
 type TabType = "home" | "speaking" | "vocab" | "profile";
@@ -34,6 +39,19 @@ export default function App() {
     return () => {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
+
+  // Refresh identity and progress from the web source of truth. If the
+  // network is unavailable, the last verified account cache may continue
+  // offline; a brand-new device remains signed out.
+  useEffect(() => {
+    let cancelled = false;
+    syncUserFromAPI().then((nextState) => {
+      if (!cancelled) setSyncState(nextState);
+    });
+    return () => {
+      cancelled = true;
     };
   }, []);
 
