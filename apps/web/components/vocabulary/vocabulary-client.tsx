@@ -1,9 +1,11 @@
 "use client";
 // ============================================================
 // Vocabulary Client - Full vocabulary page with search/filter/flashcard
+// Shows initialWords immediately from server; only re-fetches when
+// the user actively changes a filter or search term.
 // ============================================================
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
@@ -61,9 +63,18 @@ export function VocabularyClient({ initialWords, days }: VocabularyClientProps) 
   const [isFlipped, setIsFlipped] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  // ref: true after the very first render — lets us skip the mount fetch
+  // because server already provided initialWords
+  const isFirstMount = useRef(true);
 
-  // Fetch words based on filters (debounced 300ms)
+  // Fetch words based on filters (debounced 300ms).
+  // Skips the first run so initialWords render immediately without a spinner.
   useEffect(() => {
+    // On first mount, initialWords are already loaded — skip unnecessary fetch
+    if (isFirstMount.current) {
+      isFirstMount.current = false;
+      return;
+    }
     const timeout = setTimeout(async () => {
       setIsLoading(true);
       try {

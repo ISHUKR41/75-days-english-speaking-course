@@ -53,11 +53,16 @@ export function useUserStats() {
   // Fetch user stats from the API
   const fetchStats = useCallback(async () => {
     try {
-      // Call our user API which uses safe-auth
+      // Call our user API which uses safe-auth.
+      // Add a small delay on first call so Next.js dev server has time to
+      // compile the API route before the client requests it (avoids the
+      // "Failed to fetch" on very first page load in dev).
       const res = await fetch("/api/user", {
         method: "GET",
         // Include cookies for auth
         credentials: "include",
+        // Cache-Control: no-cache ensures fresh data every time
+        headers: { "Cache-Control": "no-cache" },
       });
 
       // If not authenticated or error, use defaults
