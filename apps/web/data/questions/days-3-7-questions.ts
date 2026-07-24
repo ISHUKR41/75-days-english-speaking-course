@@ -14,6 +14,7 @@ import type { PracticeQ } from "./day-1-questions";
 // ══════════════════════════════════════════════════════════════
 
 // Helper to make Day 3 questions
+// hindiExplanation is optional (defaults to explanation if not provided)
 const d3q = (
   id: string,
   subtopicId: string,
@@ -21,27 +22,41 @@ const d3q = (
   questionType: "translation" | "mcq" | "fill_blank" | "error_detection",
   correctAnswer: string,
   explanation: string,
-  hindiExplanation: string,
-  points: number,
-  options?: { a: string; b: string; c: string; d: string },
+  hindiExplanationOrPoints: string | number,
+  pointsOrOptions?: number | { a: string; b: string; c: string; d: string },
+  optionsOrHints?: { a: string; b: string; c: string; d: string } | { word: string; meaning: string }[],
   hints?: { word: string; meaning: string }[]
-): PracticeQ => ({
-  id,
-  subtopicId,
-  dayNumber: 3,
-  questionText,
-  questionType,
-  difficulty: points <= 5 ? "beginner" : points <= 8 ? "elementary" : "intermediate",
-  correctAnswer,
-  explanation,
-  hindiExplanation,
-  optionA: options?.a,
-  optionB: options?.b,
-  optionC: options?.c,
-  optionD: options?.d,
-  wordHints: hints || [],
-  points,
-});
+): PracticeQ => {
+  // Determine if hindiExplanation was provided or if it was skipped
+  const hasHindi = typeof hindiExplanationOrPoints === "string";
+  const hindiExplanation = hasHindi ? hindiExplanationOrPoints : explanation;
+  const points = hasHindi
+    ? (typeof pointsOrOptions === "number" ? pointsOrOptions : 5)
+    : (typeof hindiExplanationOrPoints === "number" ? hindiExplanationOrPoints : 5);
+  const options = hasHindi
+    ? (typeof pointsOrOptions === "object" && !Array.isArray(pointsOrOptions) ? pointsOrOptions : undefined)
+    : (typeof optionsOrHints === "object" && !Array.isArray(optionsOrHints) ? optionsOrHints as { a: string; b: string; c: string; d: string } : undefined);
+  const wordHints = hasHindi
+    ? (Array.isArray(optionsOrHints) ? optionsOrHints as { word: string; meaning: string }[] : hints || [])
+    : (Array.isArray(optionsOrHints) ? optionsOrHints as { word: string; meaning: string }[] : hints || []);
+
+  return {
+    id,
+    subtopicId,
+    questionText,
+    questionType,
+    difficulty: points <= 5 ? "beginner" : points <= 8 ? "elementary" : "intermediate",
+    correctAnswer,
+    explanation,
+    hindiExplanation,
+    optionA: options?.a,
+    optionB: options?.b,
+    optionC: options?.c,
+    optionD: options?.d,
+    wordHints,
+    points,
+  };
+};
 
 // ── Day 3, Topic 1: Definition and Types ──────────────────────
 export const DAY_3_T1_QUESTIONS: PracticeQ[] = [
@@ -86,7 +101,7 @@ export const DAY_3_T2_QUESTIONS: PracticeQ[] = [
   d3q("d3-t2-s2-q02","d3-t2-s2","'Late mat aana.' ko English mein translate karo.","translation","Don't be late.","'Don't be late' = negative imperative with Be verb. Very important professional phrase.",5),
   d3q("d3-t2-s2-q03","d3-t2-s2","'Bolte waqt interrupt mat karo.' ko English mein translate karo.","translation","Don't interrupt while speaking.","'Don't interrupt' is a polite rule. 'While speaking' = bolte waqt. Professional etiquette.",7),
   d3q("d3-t2-s2-q04","d3-t2-s2","'Is kamre mein smoke mat karo.' ko English mein translate karo.","translation","Don't smoke in this room.","'Don't smoke' = mat piyo (cigarette). 'In this room' = is kamre mein. Common rule/sign.",6),
-  d3q("d3-t2-s2-q05","d3-t2-s2","Identify the error: 'Not open the door.'","error_detection","Don't open the door.","Negative imperatives need 'Don't' or 'Do not', not just 'Not'. 'Not' alone cannot start a command.",6,{a:"Not open the door.",b:"Don't open the door.",c:"Do not opening the door.",d:"Don't to open the door."},{word:"negative",meaning:"nahi"},{word:"imperative",meaning:"aadesh"}),
+  d3q("d3-t2-s2-q05","d3-t2-s2","Identify the error: 'Not open the door.'","error_detection","Don't open the door.","Negative imperatives need 'Don't' or 'Do not', not just 'Not'. 'Not' alone cannot start a command.","Negative imperative mein 'Don't' ya 'Do not' use karte hain sirf 'Not' se nahi shuru karte.",6,{a:"Not open the door.",b:"Don't open the door.",c:"Do not opening the door.",d:"Don't to open the door."},[{word:"negative",meaning:"nahi"},{word:"imperative",meaning:"aadesh"}]),
   d3q("d3-t2-s3-q01","d3-t2-s3","'Chaliye bahar chalte hain.' ko English mein translate karo.","translation","Let's go outside.","Let's + base verb. 'Let's go' = chaliye chalte hain. Used for inclusive suggestions.",5),
   d3q("d3-t2-s3-q02","d3-t2-s3","'Let's have a meeting.' ka Hindi mein kya matlab hai?","mcq","Chaliye meeting karte hain.","Let's have a meeting = Chaliye meeting karte hain. A suggestion to include everyone.",5,{a:"Wo meeting karega.",b:"Meeting thi.",c:"Chaliye meeting karte hain.",d:"Main meeting karoon?"}),
   d3q("d3-t2-s4-q01","d3-t2-s4","'Do come to my party.' mein 'Do' kyon use hua hai?","mcq","Emphasis ke liye — zaroori hain aana","'Do' before an imperative adds emphasis and warmth. 'Do come' is stronger and more inviting than 'Come'.",7,{a:"Negative banane ke liye",b:"Emphasis ke liye — zaroori hain aana",c:"Question banane ke liye",d:"Future tense ke liye"}),
@@ -158,19 +173,31 @@ export const ALL_DAY_3_QUESTIONS: PracticeQ[] = [
 // 90 practice questions across all subtopics
 // ══════════════════════════════════════════════════════════════
 
+// Day 4 question helper — hindiExplanation is optional
 const d4q = (
   id: string, subtopicId: string, questionText: string,
   questionType: "translation" | "mcq" | "fill_blank" | "error_detection",
-  correctAnswer: string, explanation: string, hindiExplanation: string,
-  points: number, options?: { a: string; b: string; c: string; d: string },
-  hints?: { word: string; meaning: string }[]
-): PracticeQ => ({
-  id, subtopicId, dayNumber: 4, questionText, questionType,
-  difficulty: points <= 5 ? "beginner" : points <= 8 ? "elementary" : "intermediate",
-  correctAnswer, explanation, hindiExplanation,
-  optionA: options?.a, optionB: options?.b, optionC: options?.c, optionD: options?.d,
-  wordHints: hints || [], points,
-});
+  correctAnswer: string, explanation: string,
+  hindiOrPoints: string | number,
+  pointsOrOptions?: number | { a: string; b: string; c: string; d: string },
+  optionsParam?: { a: string; b: string; c: string; d: string }
+): PracticeQ => {
+  const hasHindi = typeof hindiOrPoints === "string";
+  const hindiExplanation = hasHindi ? hindiOrPoints : explanation;
+  const points = hasHindi
+    ? (typeof pointsOrOptions === "number" ? pointsOrOptions : 5)
+    : (typeof hindiOrPoints === "number" ? hindiOrPoints : 5);
+  const options = hasHindi
+    ? (typeof pointsOrOptions === "object" ? pointsOrOptions as { a: string; b: string; c: string; d: string } : optionsParam)
+    : (typeof pointsOrOptions === "object" ? pointsOrOptions as { a: string; b: string; c: string; d: string } : undefined);
+  return {
+    id, subtopicId, questionText, questionType,
+    difficulty: points <= 5 ? "beginner" : points <= 8 ? "elementary" : "intermediate",
+    correctAnswer, explanation, hindiExplanation,
+    optionA: options?.a, optionB: options?.b, optionC: options?.c, optionD: options?.d,
+    wordHints: [], points,
+  };
+};
 
 export const DAY_4_T1_QUESTIONS: PracticeQ[] = [
   d4q("d4-t1-s1-q01","d4-t1-s1","'Main ek teacher hun.' ko English mein translate karo.","translation","I am a teacher.","'I am' = main hun. 'A teacher' = ek teacher. Be verb 'am' is used with 'I'.",5),
@@ -255,18 +282,31 @@ export const ALL_DAY_4_QUESTIONS: PracticeQ[] = [
 // DAY 5: DEMONSTRATIVE PRONOUN QUESTIONS
 // ══════════════════════════════════════════════════════════════
 
+// Day 5 question helper — hindiExplanation is optional
 const d5q = (
   id: string, subtopicId: string, questionText: string,
   questionType: "translation" | "mcq" | "fill_blank" | "error_detection",
-  correctAnswer: string, explanation: string, hindiExplanation: string,
-  points: number, options?: { a: string; b: string; c: string; d: string }
-): PracticeQ => ({
-  id, subtopicId, dayNumber: 5, questionText, questionType,
-  difficulty: points <= 5 ? "beginner" : points <= 8 ? "elementary" : "intermediate",
-  correctAnswer, explanation, hindiExplanation,
-  optionA: options?.a, optionB: options?.b, optionC: options?.c, optionD: options?.d,
-  wordHints: [], points,
-});
+  correctAnswer: string, explanation: string,
+  hindiOrPoints: string | number,
+  pointsOrOptions?: number | { a: string; b: string; c: string; d: string },
+  optionsParam?: { a: string; b: string; c: string; d: string }
+): PracticeQ => {
+  const hasHindi = typeof hindiOrPoints === "string";
+  const hindiExplanation = hasHindi ? hindiOrPoints : explanation;
+  const points = hasHindi
+    ? (typeof pointsOrOptions === "number" ? pointsOrOptions : 5)
+    : (typeof hindiOrPoints === "number" ? hindiOrPoints : 5);
+  const options = hasHindi
+    ? (typeof pointsOrOptions === "object" ? pointsOrOptions as { a: string; b: string; c: string; d: string } : optionsParam)
+    : (typeof pointsOrOptions === "object" ? pointsOrOptions as { a: string; b: string; c: string; d: string } : undefined);
+  return {
+    id, subtopicId, questionText, questionType,
+    difficulty: points <= 5 ? "beginner" : points <= 8 ? "elementary" : "intermediate",
+    correctAnswer, explanation, hindiExplanation,
+    optionA: options?.a, optionB: options?.b, optionC: options?.c, optionD: options?.d,
+    wordHints: [], points,
+  };
+};
 
 export const DAY_5_T1_QUESTIONS: PracticeQ[] = [
   d5q("d5-t1-s1-q01","d5-t1-s1","'Yeh meri kitaab hai.' ko English mein translate karo.","translation","This is my book.","'This' = yeh (paas ki cheez). 'This is my book' = Yeh meri kitaab hai.",5),
@@ -338,18 +378,31 @@ export const ALL_DAY_5_QUESTIONS: PracticeQ[] = [
 // DAY 6: HAS / HAVE QUESTIONS
 // ══════════════════════════════════════════════════════════════
 
+// Day 6 question helper — hindiExplanation is optional
 const d6q = (
   id: string, subtopicId: string, questionText: string,
   questionType: "translation" | "mcq" | "fill_blank" | "error_detection",
-  correctAnswer: string, explanation: string, hindiExplanation: string,
-  points: number, options?: { a: string; b: string; c: string; d: string }
-): PracticeQ => ({
-  id, subtopicId, dayNumber: 6, questionText, questionType,
-  difficulty: points <= 5 ? "beginner" : points <= 8 ? "elementary" : "intermediate",
-  correctAnswer, explanation, hindiExplanation,
-  optionA: options?.a, optionB: options?.b, optionC: options?.c, optionD: options?.d,
-  wordHints: [], points,
-});
+  correctAnswer: string, explanation: string,
+  hindiOrPoints: string | number,
+  pointsOrOptions?: number | { a: string; b: string; c: string; d: string },
+  optionsParam?: { a: string; b: string; c: string; d: string }
+): PracticeQ => {
+  const hasHindi = typeof hindiOrPoints === "string";
+  const hindiExplanation = hasHindi ? hindiOrPoints : explanation;
+  const points = hasHindi
+    ? (typeof pointsOrOptions === "number" ? pointsOrOptions : 5)
+    : (typeof hindiOrPoints === "number" ? hindiOrPoints : 5);
+  const options = hasHindi
+    ? (typeof pointsOrOptions === "object" ? pointsOrOptions as { a: string; b: string; c: string; d: string } : optionsParam)
+    : (typeof pointsOrOptions === "object" ? pointsOrOptions as { a: string; b: string; c: string; d: string } : undefined);
+  return {
+    id, subtopicId, questionText, questionType,
+    difficulty: points <= 5 ? "beginner" : points <= 8 ? "elementary" : "intermediate",
+    correctAnswer, explanation, hindiExplanation,
+    optionA: options?.a, optionB: options?.b, optionC: options?.c, optionD: options?.d,
+    wordHints: [], points,
+  };
+};
 
 export const DAY_6_T1_QUESTIONS: PracticeQ[] = [
   d6q("d6-t1-s1-q01","d6-t1-s1","'Mere paas ek car hai.' ko English mein translate karo.","translation","I have a car.","'I have' = mere paas hai. 'Have' is used with I/You/We/They.",5),
@@ -415,18 +468,31 @@ export const ALL_DAY_6_QUESTIONS: PracticeQ[] = [
 // DAY 7: HAD QUESTIONS
 // ══════════════════════════════════════════════════════════════
 
+// Day 7 question helper — hindiExplanation is optional
 const d7q = (
   id: string, subtopicId: string, questionText: string,
   questionType: "translation" | "mcq" | "fill_blank" | "error_detection",
-  correctAnswer: string, explanation: string, hindiExplanation: string,
-  points: number, options?: { a: string; b: string; c: string; d: string }
-): PracticeQ => ({
-  id, subtopicId, dayNumber: 7, questionText, questionType,
-  difficulty: points <= 5 ? "beginner" : points <= 8 ? "elementary" : "intermediate",
-  correctAnswer, explanation, hindiExplanation,
-  optionA: options?.a, optionB: options?.b, optionC: options?.c, optionD: options?.d,
-  wordHints: [], points,
-});
+  correctAnswer: string, explanation: string,
+  hindiOrPoints: string | number,
+  pointsOrOptions?: number | { a: string; b: string; c: string; d: string },
+  optionsParam?: { a: string; b: string; c: string; d: string }
+): PracticeQ => {
+  const hasHindi = typeof hindiOrPoints === "string";
+  const hindiExplanation = hasHindi ? hindiOrPoints : explanation;
+  const points = hasHindi
+    ? (typeof pointsOrOptions === "number" ? pointsOrOptions : 5)
+    : (typeof hindiOrPoints === "number" ? hindiOrPoints : 5);
+  const options = hasHindi
+    ? (typeof pointsOrOptions === "object" ? pointsOrOptions as { a: string; b: string; c: string; d: string } : optionsParam)
+    : (typeof pointsOrOptions === "object" ? pointsOrOptions as { a: string; b: string; c: string; d: string } : undefined);
+  return {
+    id, subtopicId, questionText, questionType,
+    difficulty: points <= 5 ? "beginner" : points <= 8 ? "elementary" : "intermediate",
+    correctAnswer, explanation, hindiExplanation,
+    optionA: options?.a, optionB: options?.b, optionC: options?.c, optionD: options?.d,
+    wordHints: [], points,
+  };
+};
 
 export const DAY_7_T1_QUESTIONS: PracticeQ[] = [
   d7q("d7-t1-s1-q01","d7-t1-s1","'Pehle mere paas ek car thi.' ko English mein translate karo.","translation","I had a car.","'Had' = past of Have. 'I had a car' = pehle mere paas ek car thi.",5),
