@@ -21,6 +21,8 @@ import { cn } from "@/lib/utils";
 import type { LessonContent as LessonContentType } from "@/data/course-content/day-1-content";
 // Import the content retrieval function
 import { getDay1LessonContent } from "@/data/course-content/day-1-content";
+// Import rich day-specific content (Days 3-9) and per-subtopic content (Days 3-7)
+import { getSpecificDayContent, getSubtopicSpecificContent } from "@/data/course-content/topic-content-map";
 
 // ─── Props for this component ─────────────────────────────────
 interface LessonContentProps {
@@ -2428,7 +2430,19 @@ export function LessonContent({
     if (dayNumber === 2) {
       return generateDay2Content(subtopicId, subtopicTitle);
     }
-    // For other days, return placeholder content
+    // For Days 3-7, first try per-subtopic specific content (richest)
+    const subtopicSpecific = getSubtopicSpecificContent(subtopicId, dayNumber);
+    if (subtopicSpecific) {
+      const genericBase = generateGenericContent(subtopicId, subtopicTitle, dayNumber);
+      return { ...genericBase, ...subtopicSpecific, id: `day${dayNumber}-${subtopicId}`, subtopicId } as LessonContentType;
+    }
+    // For Days 3-9, use rich day-level content merged on top of the generic template
+    const specificDayContent = getSpecificDayContent(dayNumber);
+    if (specificDayContent) {
+      const genericBase = generateGenericContent(subtopicId, subtopicTitle, dayNumber);
+      return { ...genericBase, ...specificDayContent, id: `day${dayNumber}-${subtopicId}`, subtopicId } as LessonContentType;
+    }
+    // For other days, return generic placeholder content
     return generateGenericContent(subtopicId, subtopicTitle, dayNumber);
   }, [dayNumber, subtopicId, subtopicTitle]);
 

@@ -1290,3 +1290,647 @@ export function getSpecificDayContent(
   // Check if we have specific content for this day
   return SPECIFIC_DAY_CONTENT[dayNumber] || null;
 }
+
+// ─── Per-Subtopic Content Map (Days 3–7) ──────────────────────
+// Rich, handcrafted lesson content tailored for each individual subtopic
+// This overrides the day-level content for maximum teaching quality
+// Each entry is a complete or partial LessonContent for a specific subtopic
+const SUBTOPIC_CONTENT_MAP: Record<string, Partial<LessonContentType>> = {
+
+  // ══════════════════════════════════════════════════════════════
+  // DAY 3 — IMPERATIVE SENTENCE
+  // ══════════════════════════════════════════════════════════════
+
+  // d3-t1-s1: Definition and Types of Imperatives
+  "d3-t1-s1": {
+    whyLearnThis: `Every single conversation involves giving or receiving instructions. "Come here." "Don't do that." "Please sit down." These are IMPERATIVE sentences — and you use them HUNDREDS of times every day!\n\nWithout imperative sentences:\n❌ You can't give directions: "Go left, then right."\n❌ You can't give instructions: "Read page 5."\n❌ You can't make requests: "Please help me."\n❌ You can't give warnings: "Be careful! Watch out!"\n\nIn your CAREER:\n✓ Every office email uses imperatives: "Please find attached..."\n✓ Every manager uses imperatives: "Submit the report by Friday."\n✓ Every interview has imperatives: "Tell me about yourself."\n\nMastering this TODAY means you can immediately start giving clear, confident instructions in English!`,
+
+    conceptExplanation: `An IMPERATIVE SENTENCE is a sentence that gives a COMMAND, REQUEST, INSTRUCTION, or SUGGESTION.\n\n🎯 THE BIG SECRET: The subject is HIDDEN!\nIn every imperative, the subject is "YOU" — but we never say it.\n\n"Sit down." = (You) sit down.\n"Read this book." = (You) read this book.\n"Please be quiet." = (You) please be quiet.\n\n📚 FOUR TYPES OF IMPERATIVES:\n\n1️⃣ COMMAND (आदेश) — Strong, direct:\n• "Stop talking!"\n• "Give me that pen."\n• "Look at the board."\n\n2️⃣ REQUEST (अनुरोध) — Polite, gentle:\n• "Please help me with this."\n• "Could you please open the window?"\n• "Kindly submit your assignment."\n\n3️⃣ INSTRUCTION (निर्देश) — Step-by-step:\n• "First, open the file. Then, click Save."\n• "Mix the flour and add water."\n• "Press the green button to start."\n\n4️⃣ SUGGESTION (सुझाव) — Friendly advice:\n• "Try the new restaurant!"\n• "Let's go for a walk."\n• "Just breathe and relax."\n\nKEY FORMULA:\nVerb (base form) + rest of sentence\n[The word 'YOU' is always understood]`,
+
+    hindiExplanation: `Imperative Sentence = वह sentence जो command (आदेश), request (अनुरोध), instruction (निर्देश), या suggestion (सुझाव) देता है।\n\n🔑 सबसे बड़ा secret: Subject हमेशा "YOU" होता है — लेकिन हम इसे बोलते नहीं!\n\nचार प्रकार:\n1. Command: "Stop!" (रुको!)\n2. Request: "Please help me." (कृपया मेरी मदद करो।)\n3. Instruction: "Read chapter 5." (Chapter 5 पढ़ो।)\n4. Suggestion: "Try this once." (एक बार कोशिश करो।)\n\nFormula: Verb (base form) + बाकी sentence\nउदाहरण: "Go to school." = जाओ + school + में → स्कूल जाओ।`,
+
+    rules: [
+      {
+        rule: "Always use the BASE form of the verb (no 'to', no '-ing', no '-ed')",
+        explanation: "Imperatives use the simplest, dictionary form of the verb. Never 'to go', never 'going', just 'go'. This makes English imperatives very simple to form.",
+        example: "✅ Go to the market. | ✅ Read this. | ✅ Open the door. | ✅ Be quiet.\n❌ To go to market. | ❌ Going to market. | ❌ Went to market.",
+        exception: "The verb 'be' is an exception — it stays as 'be': 'Be careful.' / 'Be honest.' / 'Be on time.'",
+      },
+      {
+        rule: "The subject 'YOU' is always understood — never written or spoken",
+        explanation: "Unlike all other sentence types, imperatives NEVER include the subject. If you say 'You go to the market', it sounds very rude and unnatural in English. Just say 'Go to the market'.",
+        example: "✅ Come here! | ✅ Listen carefully. | ✅ Write your name.\n❌ You come here! | ❌ You listen carefully. | ❌ You write your name.",
+        exception: "Exception: You CAN say 'You go!' for strong emphasis in an argument, but this is very informal and confrontational.",
+      },
+      {
+        rule: "Use 'please' or 'kindly' to make requests polite",
+        explanation: "A command sounds direct and sometimes rude. Adding 'please' (or 'kindly' in formal writing) transforms a command into a polite request. 'Please' can go at the start OR end of the sentence.",
+        example: "✅ Please sit down. | ✅ Sit down, please. | ✅ Kindly submit your form.\nSame meaning: 'Close the door.' vs 'Please close the door.' — very different tone!",
+        exception: "In emergencies, skip 'please': 'Call the ambulance NOW!' / 'Run!' / 'Duck!'",
+      },
+      {
+        rule: "Commands can end with ! (urgent) or . (normal)",
+        explanation: "Use an exclamation mark when the command is urgent, strong, or emotional. Use a period for normal, calm instructions and requests.",
+        example: "Urgent: 'Stop the car!' / 'Help me!' / 'Watch out!'\nNormal: 'Please have a seat.' / 'Submit the form by Monday.' / 'Read chapter 3.'",
+        exception: "Don't overuse ! in professional emails — it appears unprofessional and immature in formal writing.",
+      },
+    ],
+
+    commonMistakes: [
+      { wrong: "You sit down please.", correct: "Please sit down.", explanation: "Remove 'You' — the subject is always hidden in imperatives. Use 'Please' at the beginning for a polite request." },
+      { wrong: "To open the door.", correct: "Open the door.", explanation: "Never use 'to + verb' for imperatives. Remove 'to' and just use the base verb directly." },
+      { wrong: "Be sitting down.", correct: "Sit down.", explanation: "Use the base verb, not the -ing form. 'Be sitting' is wrong — just say 'Sit'." },
+      { wrong: "Does open the window!", correct: "Open the window!", explanation: "Never use 'do/does/did' before the main verb in a positive imperative (only in negative: 'Don't open')." },
+      { wrong: "Please to call me.", correct: "Please call me.", explanation: "After 'please', use the base verb directly — never 'to + verb'. Formula: Please + base verb." },
+    ],
+
+    sentencePatterns: [
+      {
+        pattern: "Command (Direct Order)",
+        hindiPattern: "सीधा आदेश",
+        examples: [
+          { english: "Close the door.", hindi: "दरवाज़ा बंद करो।" },
+          { english: "Write your name at the top.", hindi: "सबसे ऊपर अपना नाम लिखो।" },
+          { english: "Answer all the questions.", hindi: "सभी सवालों के जवाब दो।" },
+          { english: "Stand up straight.", hindi: "सीधे खड़े रहो।" },
+          { english: "Stop talking and listen.", hindi: "बात करना बंद करो और सुनो।" },
+        ],
+      },
+      {
+        pattern: "Polite Request (Please + Verb)",
+        hindiPattern: "विनम्र अनुरोध",
+        examples: [
+          { english: "Please send me the document.", hindi: "कृपया मुझे document भेजिए।" },
+          { english: "Please be on time tomorrow.", hindi: "कृपया कल समय पर आइए।" },
+          { english: "Please help me understand this.", hindi: "कृपया मुझे यह समझने में मदद करें।" },
+          { english: "Please keep this confidential.", hindi: "कृपया इसे गोपनीय रखें।" },
+        ],
+      },
+      {
+        pattern: "Instruction (Step-by-Step)",
+        hindiPattern: "निर्देश (Step-by-Step)",
+        examples: [
+          { english: "First, read the question carefully, then answer.", hindi: "पहले, सवाल को ध्यान से पढ़ो, फिर जवाब दो।" },
+          { english: "Open the app and click on 'New File'.", hindi: "App खोलो और 'New File' पर click करो।" },
+          { english: "Mix the ingredients and stir for 2 minutes.", hindi: "सामग्री मिलाओ और 2 मिनट हिलाओ।" },
+        ],
+      },
+    ],
+
+    speakingTips: [
+      "Practice giving commands in a FIRM but friendly tone — not angry, not weak",
+      "Add 'please' naturally — don't make it sound forced or sarcastic",
+      "When giving instructions, slow down and pause between steps",
+      "Practice these 10 daily imperatives: 'Come in', 'Sit down', 'Listen', 'Look', 'Read', 'Write', 'Stop', 'Start', 'Wait', 'Go'",
+      "Record yourself giving instructions and check if you sound clear and natural",
+    ],
+
+    memoryTricks: [
+      "Remember: VERB FIRST! If your sentence starts with a verb, it's probably an imperative.",
+      "The 'YOU' rule: Pretend 'you' is invisible but always there. (You) Go! (You) Stop! (You) Come!",
+      "Types: CRISP = Command, Request, Instruction, Suggestion, Polite imperative",
+      "Please test: 'Please' at start or end = polite request | No 'please' = direct command",
+    ],
+
+    summary: [
+      "Imperative sentences give commands, requests, instructions, or suggestions",
+      "The subject 'you' is ALWAYS hidden — never write or say it",
+      "Always use the BASE FORM of the verb (go, read, open, be)",
+      "Add 'please' or 'kindly' to make it polite",
+      "End with . for normal, ! for urgent/emotional",
+      "4 types: Commands, Requests, Instructions, Suggestions",
+    ],
+  },
+
+  // d3-t1-s2: The Hidden Subject 'You' Explained
+  "d3-t1-s2": {
+    whyLearnThis: `Why does English grammar work differently for imperatives? Why do we skip the subject?\n\nThis is one of the most UNIQUE features of English — and understanding it will make everything click!\n\nIn Hindi/Urdu: "Aap jaiye." (You go.) — subject included\nIn English: "Go." — subject hidden!\n\nWhen you understand WHY 'you' is hidden in imperatives, you will:\n✓ Stop making the mistake of adding 'you' in commands\n✓ Understand why "You go!" sounds rude\n✓ Know when it's acceptable to say 'you' in imperatives\n✓ Write better professional emails and messages`,
+
+    conceptExplanation: `In English, every sentence normally needs a subject and a verb:\n• "I go to school." (I = subject)\n• "She reads books." (She = subject)\n• "They play cricket." (They = subject)\n\nBUT in IMPERATIVE sentences, the subject is ALWAYS 'you' — and we DROP it!\n\nWHY? Because:\n1. When you give a command, you're ALWAYS talking TO someone\n2. That someone is always 'you' — so it's obvious\n3. Saying 'you' makes it sound rude, aggressive, or childish\n\nComparison:\n🔴 "You sit down!" — sounds rude, like scolding a child\n🟢 "Sit down." — sounds normal, calm\n🟢 "Please sit down." — sounds polite\n\nSO THE RULE IS SIMPLE:\n❌ NEVER add 'you' at the start of an imperative sentence\n✅ Just start directly with the verb\n\nExceptions (RARE cases where 'you' is used):\n1. To single out one person from a group:\n"You, come here! The rest, stay back."\n\n2. For very strong emphasis (sounds aggressive):\n"You listen to me right now!"\n\n3. In informal/dramatic situations:\n"You stay here. I'll go."`,
+
+    rules: [
+      {
+        rule: "Never start an imperative sentence with 'you'",
+        explanation: "Adding 'you' to the beginning of a command sounds either very rude (like scolding) or unnatural. Native English speakers never say 'You come here' — they just say 'Come here'.",
+        example: "✅ Come here. | ✅ Go away. | ✅ Read this.\n❌ You come here. | ❌ You go away. | ❌ You read this.",
+        exception: "RARE exception: 'You, come here!' can single out one person from a group. But this is unusual and should be used carefully.",
+      },
+      {
+        rule: "The understood 'you' makes imperatives direct and efficient",
+        explanation: "English imperatives are powerful because they get straight to the point. In professional communication, clear and direct imperatives save time and prevent confusion.",
+        example: "Email subject line: 'Please review and respond by Friday.' (Much cleaner than 'You should please review and you should respond by Friday.')",
+      },
+    ],
+
+    commonMistakes: [
+      { wrong: "You go to market.", correct: "Go to the market.", explanation: "Drop 'you' — imperatives never include the subject." },
+      { wrong: "You please help me.", correct: "Please help me.", explanation: "The subject 'you' is hidden. Start with 'Please' + verb." },
+      { wrong: "You don't make noise.", correct: "Don't make noise.", explanation: "In negative imperatives too, 'you' is dropped. Start with 'Don't'." },
+    ],
+
+    summary: [
+      "In imperatives, the subject 'you' is ALWAYS understood but never written or spoken",
+      "Saying 'You sit down!' sounds rude — just say 'Sit down.' or 'Please sit down.'",
+      "Rare exceptions: 'You, come here!' (singling someone out from a group)",
+      "This makes English imperatives direct, efficient, and natural",
+    ],
+  },
+
+  // d3-t2-s2: Negative Imperatives — Don't Do This!
+  "d3-t2-s2": {
+    whyLearnThis: `"Don't worry." "Don't be late." "Please don't forget."\n\nNegative imperatives are used CONSTANTLY in daily life! Every time you want to STOP someone from doing something — warn them, advise them, or ask them not to do something — you use a negative imperative.\n\nIn your daily life:\n• "Don't run in the corridor!"\n• "Don't forget your keys."\n• "Please don't be late for the meeting."\n\nIn office communication:\n• "Do not share confidential information."\n• "Please do not reply to all."\n• "Do not leave early without permission."\n\nMastering negative imperatives gives you the power to set clear boundaries and give warnings in English!`,
+
+    conceptExplanation: `NEGATIVE IMPERATIVES — How to say "Don't do this!"\n\nFormula:\nDON'T + Base verb + rest of sentence\n\nExamples:\n• Don't run. (मत दौड़ो।)\n• Don't be late. (देर मत करो।)\n• Don't touch this. (इसे मत छुओ।)\n• Don't forget your homework. (अपना homework मत भूलो।)\n\nFORMAL version:\nDO NOT + Base verb + rest of sentence\n\nExamples:\n• Do not enter without permission.\n• Do not use mobile phones here.\n• Do not disturb.\n\nPOLITE negative:\nPLEASE + DON'T + Base verb\nor\nDON'T + Base verb + please\n\nExamples:\n• Please don't be late.\n• Don't worry about it, please.\n• Please don't make noise.\n\nIMPORTANT:\n❌ NOT run. (WRONG)\n❌ No run. (WRONG)\n✅ Don't run. (CORRECT)\n✅ Do not run. (CORRECT — formal)`,
+
+    hindiExplanation: `Negative Imperative = "मत + verb" या "Don't + verb"\n\nSimple formula:\nDon't + verb (base form) + बाकी sentence\n\nउदाहरण:\n• Don't cry. = मत रो।\n• Don't worry. = चिंता मत करो।\n• Don't be rude. = रूखा मत बनो।\n• Don't give up. = हार मत मानो।\n\nFormal (office, signs, notices में):\nDo not + verb\n• Do not enter. = प्रवेश न करें।\n• Do not smoke. = धूम्रपान न करें।\n\nPolite:\nPlease don't + verb\n• Please don't be late. = कृपया देर मत करें।`,
+
+    rules: [
+      {
+        rule: "Negative imperative formula: Don't / Do not + base verb",
+        explanation: "To make an imperative negative, add 'don't' (informal/conversational) or 'do not' (formal/written) before the base verb. NEVER use just 'not' alone.",
+        example: "✅ Don't run! | ✅ Do not enter. | ✅ Please don't shout.\n❌ Not run! | ❌ No running! (signs only) | ❌ Don't to run.",
+        exception: "'No + verb-ing' is used on signs only: 'No Smoking' / 'No Parking'. This is not a sentence — just a notice.",
+      },
+      {
+        rule: "Use 'Do not' for formal writing, 'Don't' for conversation",
+        explanation: "'Do not' is used in formal notices, official letters, emails, and professional documents. 'Don't' is used in casual conversation with friends, family, and informal settings.",
+        example: "Formal: 'Please do not use mobile phones during the meeting.' | Casual: 'Don't use your phone now.'",
+      },
+      {
+        rule: "Add 'please' to make negative imperatives polite",
+        explanation: "Negative commands can sound harsh. Adding 'please' makes them sound like requests rather than orders. 'Please don't' is the most polite way to ask someone not to do something.",
+        example: "Harsh: 'Don't be late.' | Polite: 'Please don't be late.' | Very polite: 'I would appreciate it if you could be on time.'",
+      },
+    ],
+
+    commonMistakes: [
+      { wrong: "Not go there!", correct: "Don't go there!", explanation: "Never use just 'not' to make a negative imperative. Always use 'don't' or 'do not'." },
+      { wrong: "Don't to touch this.", correct: "Don't touch this.", explanation: "After 'don't', use the BASE verb — never 'to + verb'. Formula: Don't + base verb." },
+      { wrong: "Please you don't come late.", correct: "Please don't come late.", explanation: "No 'you' in imperatives! Formula: Please + don't + base verb." },
+      { wrong: "Do not ran away.", correct: "Do not run away.", explanation: "After 'do not', use the BASE form (run), not the past tense (ran)." },
+    ],
+
+    sentencePatterns: [
+      {
+        pattern: "Don't + verb (Casual/Conversational)",
+        hindiPattern: "मत + क्रिया (बातचीत में)",
+        examples: [
+          { english: "Don't be scared.", hindi: "डरो मत।" },
+          { english: "Don't give up so easily.", hindi: "इतनी आसानी से हार मत मानो।" },
+          { english: "Don't forget to call me.", hindi: "मुझे call करना मत भूलो।" },
+          { english: "Don't make the same mistake again.", hindi: "वही गलती फिर से मत करो।" },
+          { english: "Don't worry, everything will be fine.", hindi: "चिंता मत करो, सब ठीक हो जाएगा।" },
+        ],
+      },
+      {
+        pattern: "Please don't + verb (Polite Request)",
+        hindiPattern: "कृपया मत + क्रिया (विनम्र अनुरोध)",
+        examples: [
+          { english: "Please don't be late for the meeting.", hindi: "कृपया meeting के लिए देर मत करें।" },
+          { english: "Please don't share this with anyone.", hindi: "कृपया इसे किसी के साथ share मत करें।" },
+          { english: "Please don't interrupt while I'm speaking.", hindi: "कृपया जब मैं बोल रहा हूँ तो बीच में मत बोलें।" },
+        ],
+      },
+      {
+        pattern: "Do not + verb (Formal/Official)",
+        hindiPattern: "न + क्रिया (formal/आधिकारिक)",
+        examples: [
+          { english: "Do not enter without permission.", hindi: "बिना अनुमति के प्रवेश न करें।" },
+          { english: "Do not share your password with anyone.", hindi: "अपना password किसी के साथ share न करें।" },
+          { english: "Do not leave the office without informing your manager.", hindi: "Manager को बताए बिना office मत छोड़ें।" },
+        ],
+      },
+    ],
+
+    summary: [
+      "Negative imperatives = Don't / Do not + base verb",
+      "'Don't' = casual conversation | 'Do not' = formal writing",
+      "Add 'please' for polite negative requests: 'Please don't be late'",
+      "NEVER use just 'not' alone — always 'don't' or 'do not'",
+      "NEVER add 'to' after 'don't': ❌ 'Don't to run' | ✅ 'Don't run'",
+    ],
+  },
+
+  // d3-t3-s2: Imperatives at Work and Office
+  "d3-t3-s2": {
+    whyLearnThis: `Office communication in English is 80% imperatives!\n\nEvery email, every meeting, every instruction uses imperative sentences. If you want to SUCCEED in a professional English-speaking environment, you MUST master office imperatives.\n\nSituations you'll use this DAILY:\n• Writing professional emails\n• Giving instructions to colleagues\n• Running or attending meetings\n• Customer service communication\n• Phone calls and video conferences\n\nThe difference between sounding professional and unprofessional often comes down to HOW you give instructions. A good professional uses imperatives correctly!`,
+
+    conceptExplanation: `OFFICE IMPERATIVES — Professional English Commands\n\n📧 IN EMAILS:\n• "Please find the attached document."\n• "Kindly review and revert by EOD."\n• "Please confirm receipt of this email."\n• "Do not reply to all — only to the sender."\n\n🤝 IN MEETINGS:\n• "Let's start the meeting." / "Let's begin."\n• "Please take your seats." / "Please be seated."\n• "Hold on, let me check." / "Give me a moment."\n• "Please mute your mic when not speaking."\n• "Note down the action items, please."\n\n📱 ON CALLS:\n• "Can you hear me clearly?" → "Speak up, please."\n• "Please repeat that." / "Please say that again."\n• "Hold on, please." / "Please hold."\n• "Please call me back in 10 minutes."\n\n💼 INSTRUCTIONS TO TEAM:\n• "Submit your reports by Friday."\n• "Please copy me on all client emails."\n• "Inform me before taking any decision."\n• "Please check with the client before proceeding."`,
+
+    rules: [
+      {
+        rule: "Use 'Please' or 'Kindly' in all professional imperatives",
+        explanation: "In office settings, direct commands without 'please' can come across as rude or aggressive. Always add 'please' (casual-professional) or 'kindly' (formal-professional) to imperatives.",
+        example: "Casual: 'Send me the report.' | Professional: 'Please send me the report.' | Formal: 'Kindly send me the report at your earliest convenience.'",
+      },
+      {
+        rule: "EOD, ASAP, and other office acronyms go with imperatives",
+        explanation: "In Indian offices, common phrases like 'by EOD' (end of day), 'ASAP' (as soon as possible), 'revert' (reply) are often used with imperative sentences.",
+        example: "'Please revert by EOD.' / 'Submit ASAP.' / 'Please share an update at the earliest.'",
+        exception: "Note: 'Revert' in Indian English means 'reply/respond'. In global English, revert means 'go back to a previous state'.",
+      },
+    ],
+
+    sentencePatterns: [
+      {
+        pattern: "Professional Email Imperatives",
+        hindiPattern: "Professional Email में Imperatives",
+        examples: [
+          { english: "Please find the attached report.", hindi: "कृपया संलग्न report देखें।" },
+          { english: "Kindly revert by end of day.", hindi: "कृपया आज दिन के अंत तक जवाब दें।" },
+          { english: "Please confirm your availability for the meeting.", hindi: "कृपया meeting के लिए अपनी उपलब्धता confirm करें।" },
+          { english: "Please do not hesitate to contact me for any queries.", hindi: "किसी भी प्रश्न के लिए कृपया मुझसे संपर्क करने में संकोच न करें।" },
+        ],
+      },
+      {
+        pattern: "Meeting Room Imperatives",
+        hindiPattern: "Meeting में Imperatives",
+        examples: [
+          { english: "Let's start the meeting.", hindi: "चलिए meeting शुरू करते हैं।" },
+          { english: "Please mute your microphone.", hindi: "कृपया अपना microphone mute करें।" },
+          { english: "Note down the key points.", hindi: "मुख्य बिंदु note कर लो।" },
+          { english: "Please hold your questions until the end.", hindi: "कृपया अपने सवाल अंत तक रोकें।" },
+        ],
+      },
+    ],
+
+    summary: [
+      "Always use 'Please' or 'Kindly' in professional imperatives",
+      "Common office imperatives: 'Please find attached', 'Kindly revert', 'Please confirm'",
+      "Meeting imperatives: 'Let's begin', 'Please mute', 'Note down'",
+      "Phone imperatives: 'Please hold', 'Please repeat', 'Call me back'",
+      "The more polite your imperative, the more professional you sound",
+    ],
+  },
+
+  // ══════════════════════════════════════════════════════════════
+  // DAY 4 — BE VERB (Am / Is / Are / Was / Were / Will Be)
+  // ══════════════════════════════════════════════════════════════
+
+  // d4-t1-s1: What is Be Verb and Why It's Special
+  "d4-t1-s1": {
+    whyLearnThis: `The Be Verb (am, is, are, was, were, will be) is the MOST IMPORTANT verb in the entire English language!\n\nHere's why:\n• It appears in EVERY English conversation\n• It's used to describe EVERYTHING: people, places, things, feelings\n• Without Be Verb, you can't use continuous tenses (I am going, She was reading)\n• Without Be Verb, you can't use passive voice (It is done, The letter was sent)\n\nYou use Be Verb when you:\n✓ Introduce yourself: "I am Rahul. I am from Delhi."\n✓ Describe things: "The book is interesting."\n✓ Tell the time: "It is 3 o'clock."\n✓ Talk about feelings: "I am tired. She is happy."\n✓ Describe location: "He is at home. They are in Mumbai."\n\nMaster Be Verb today — you'll use it in literally EVERY English sentence!`,
+
+    conceptExplanation: `THE BE VERB FAMILY — Complete Overview\n\nBe Verb is one verb that has MANY forms depending on the subject and time:\n\n📊 PRESENT TENSE (अभी):\n• AM → only with 'I': "I am a student."\n• IS → with He, She, It (singular): "She is beautiful. It is hot."\n• ARE → with You, We, They (plural): "You are smart. We are friends."\n\n📊 PAST TENSE (पहले):\n• WAS → with I, He, She, It: "I was there. He was tired."\n• WERE → with You, We, They: "You were right. They were happy."\n\n📊 FUTURE TENSE (आगे):\n• WILL BE → with all subjects: "I will be ready. She will be there."\n• SHALL BE → formal: "We shall be pleased to meet you."\n\nUSES OF BE VERB:\n1. Identity: "I am a teacher." (मैं एक शिक्षक हूँ।)\n2. Description: "She is tall and beautiful." (वह लंबी और सुंदर है।)\n3. Location: "He is in the office." (वह office में है।)\n4. Time: "It is Monday." / "It is 5 PM."\n5. Age: "I am 25 years old." (मैं 25 साल का हूँ।)\n6. Feeling: "We are excited!" (हम excited हैं!)`,
+
+    hindiExplanation: `Be Verb = हिंदी में "हूँ / है / हैं / था / थी / थे / होगा/होगी"\n\nSubject के हिसाब से Be Verb बदलता है:\n\nPresent (अभी):\n• I → am: "I am happy." = "मैं खुश हूँ।"\n• He/She/It → is: "She is tired." = "वह थकी है।"\n• You/We/They → are: "They are ready." = "वे तैयार हैं।"\n\nPast (पहले):\n• I/He/She/It → was: "He was sick." = "वह बीमार था।"\n• You/We/They → were: "We were late." = "हम देर से आए थे।"\n\nFuture (आगे):\n• सभी subjects → will be: "I will be there." = "मैं वहाँ रहूँगा।"`,
+
+    rules: [
+      {
+        rule: "AM goes only with 'I' (always, no exceptions)",
+        explanation: "In English, 'am' is exclusively used with the first person singular 'I'. Never use 'am' with any other subject.",
+        example: "✅ I am a doctor. | ✅ I am from India. | ✅ I am happy.\n❌ He am a doctor. | ❌ We am ready. | ❌ You am correct.",
+        exception: "In questions: 'Am I correct?' / 'Am I late?' — 'am' still only goes with 'I'.",
+      },
+      {
+        rule: "IS goes with He, She, It, and singular nouns",
+        explanation: "Use 'is' for all third-person singular subjects — one person, one thing, one place.",
+        example: "✅ He is smart. | ✅ She is a teacher. | ✅ It is hot today. | ✅ Ravi is at home. | ✅ The book is interesting.",
+        exception: "Collective nouns can use 'is': 'The team is ready.' But plural nouns use 'are': 'The teams are ready.'",
+      },
+      {
+        rule: "ARE goes with You, We, They, and plural nouns",
+        explanation: "Use 'are' for second person (you), and all plural subjects (we, they, plural nouns).",
+        example: "✅ You are right. | ✅ We are friends. | ✅ They are ready. | ✅ The students are smart. | ✅ Priya and Rahul are colleagues.",
+        exception: "'You are' is used for BOTH singular and plural 'you'. 'You are my friend.' and 'You are all my friends.' both use 'are'.",
+      },
+      {
+        rule: "WAS for I/He/She/It in past, WERE for You/We/They in past",
+        explanation: "In past tense, Be Verb has only two forms: was (singular) and were (plural). The same subject-based rule applies.",
+        example: "✅ I was tired. | ✅ She was right. | ✅ They were happy. | ✅ You were late.\n❌ I were there. | ❌ He were sick. | ❌ She were wrong.",
+        exception: "In formal/literary writing: 'If I were you...' (subjunctive mood — not a grammar mistake, actually correct!)",
+      },
+    ],
+
+    commonMistakes: [
+      { wrong: "He am a teacher.", correct: "He is a teacher.", explanation: "'Am' is ONLY for 'I'. He/She/It always use 'is'." },
+      { wrong: "They is ready.", correct: "They are ready.", explanation: "'Is' is for singular (He/She/It). 'Are' is for plural (They/We) and 'You'." },
+      { wrong: "I are happy.", correct: "I am happy.", explanation: "'Are' is for You/We/They. 'I' always uses 'am'." },
+      { wrong: "We was late yesterday.", correct: "We were late yesterday.", explanation: "'Was' is for I/He/She/It in past. 'Were' is for You/We/They in past." },
+      { wrong: "She are my best friend.", correct: "She is my best friend.", explanation: "'She' is singular — always use 'is', not 'are'." },
+    ],
+
+    story: {
+      title: "Arjun's First Day at a Multinational Company",
+      paragraphs: [
+        "Arjun was nervous. It was his first day at a big company in Bengaluru. As he entered the office, he thought, 'I am ready for this. This is my big chance.'",
+        "'Good morning!' said the receptionist. 'You are Arjun Sharma, right? Your team is on the 3rd floor. The elevator is to your left.'",
+        "When Arjun reached the 3rd floor, his new manager was there to greet him. 'I am Priya Nair, your manager,' she said warmly. 'The team is very excited to meet you.'",
+        "Arjun introduced himself to his team: 'Hi everyone! I am Arjun. I am from Pune. I am a software developer with 3 years of experience. I am really happy to be here!'",
+        "His colleague Ravi smiled: 'We are happy to have you! The project we are working on is very interesting. Our deadline is next month, but we are well prepared.'",
+        "That evening, Arjun called his mother. 'Mom, the office is amazing! My manager is very kind. My colleagues are friendly. I am so glad I took this opportunity!'",
+        "His mother replied: 'I am so proud of you, beta. You are exactly where you are supposed to be!'",
+      ],
+      moral: "Every new beginning requires clear communication. Be Verb helps you describe who you are, where you are, and how you feel — in any situation!",
+      keyWords: [
+        { word: "nervous", meaning: "feeling worried or anxious about something" },
+        { word: "receptionist", meaning: "person who greets visitors at an office" },
+        { word: "colleague", meaning: "person you work with" },
+        { word: "deadline", meaning: "the last date to complete something" },
+      ],
+    },
+
+    dialogue: {
+      title: "Job Interview — Using Be Verb Perfectly",
+      setting: "Rahul is being interviewed for a Software Engineer position at a tech company.",
+      lines: [
+        { speaker: "Interviewer", text: "Good morning! Please have a seat. I am Mr. Singh, the HR manager. How are you today?", hindi: "शुभ प्रभात! कृपया बैठिए। मैं Mr. Singh, HR manager हूँ। आज आप कैसे हैं?" },
+        { speaker: "Rahul", text: "Good morning, Mr. Singh! I am doing great, thank you. I am Rahul Verma. I am very excited to be here today.", hindi: "शुभ प्रभात, Mr. Singh! मैं बहुत अच्छा हूँ, धन्यवाद। मैं Rahul Verma हूँ। मैं आज यहाँ होकर बहुत excited हूँ।" },
+        { speaker: "Interviewer", text: "Great! So, Rahul, tell me — where are you from, and what is your current role?", hindi: "बढ़िया! तो, Rahul, बताइए — आप कहाँ से हैं, और आपकी वर्तमान भूमिका क्या है?" },
+        { speaker: "Rahul", text: "I am from Jaipur, Rajasthan. Currently, I am a software developer at ABC Technologies. I am responsible for the backend API development. My team is of 8 people.", hindi: "मैं Jaipur, Rajasthan से हूँ। वर्तमान में, मैं ABC Technologies में software developer हूँ। मैं backend API development के लिए जिम्मेदार हूँ। मेरी team 8 लोगों की है।" },
+        { speaker: "Interviewer", text: "That is impressive! Why are you interested in this position?", hindi: "यह प्रभावशाली है! आप इस position में रुचि क्यों रखते हैं?" },
+        { speaker: "Rahul", text: "Your company is known for innovation. The projects here are challenging and exciting. I am confident that I am the right fit for this role. I am ready to contribute from day one!", hindi: "आपकी company innovation के लिए जानी जाती है। यहाँ के projects challenging और exciting हैं। मुझे विश्वास है कि मैं इस role के लिए सही व्यक्ति हूँ। मैं पहले दिन से योगदान देने के लिए तैयार हूँ!" },
+        { speaker: "Interviewer", text: "Excellent, Rahul! Your answers are very clear. We are certainly interested in you. We will be in touch.", hindi: "बहुत बढ़िया, Rahul! आपके जवाब बहुत स्पष्ट हैं। हम निश्चित रूप से आपमें रुचि रखते हैं। हम संपर्क में रहेंगे।" },
+      ],
+      notes: [
+        "Notice how 'am', 'is', and 'are' are used throughout the interview",
+        "'I am + adjective' describes your feelings: 'I am excited', 'I am confident'",
+        "'I am + noun' describes your identity: 'I am a developer', 'I am from Jaipur'",
+        "Be Verb in present tense makes your introduction sound confident and clear",
+      ],
+    },
+
+    summary: [
+      "Be Verb = am / is / are (present) | was / were (past) | will be (future)",
+      "AM: only with 'I' | IS: He, She, It | ARE: You, We, They",
+      "WAS: I, He, She, It (past) | WERE: You, We, They (past)",
+      "Uses: identity, description, location, age, time, feelings",
+      "The most important verb in English — used in EVERY conversation",
+    ],
+  },
+
+  // d4-t1-s2: Am / Is / Are — Present Be Verb
+  "d4-t1-s2": {
+    whyLearnThis: `Am, Is, Are — these 3 small words unlock 90% of basic English conversation!\n\nEvery time you describe ANYTHING happening RIGHT NOW:\n• "I am hungry." (मुझे भूख है।)\n• "The weather is beautiful." (मौसम सुंदर है।)\n• "My friends are here." (मेरे दोस्त यहाँ हैं।)\n\nYou need Am/Is/Are.\n\nThink of Am/Is/Are as the BRIDGE between the subject and what you want to say about it:\nI → AM → [anything about me]\nHe/She/It → IS → [anything about him/her/it]\nYou/We/They → ARE → [anything about them]\n\nMaster these 3 words and you can describe EVERYTHING happening in the present moment!`,
+
+    conceptExplanation: `AM / IS / ARE — The Present Be Verb\n\nAM (हूँ) — ONLY with "I":\n• I am a student. (मैं एक छात्र हूँ।)\n• I am from Delhi. (मैं दिल्ली से हूँ।)\n• I am 22 years old. (मैं 22 साल का हूँ।)\n• I am happy today. (मैं आज खुश हूँ।)\n• I am ready! (मैं तैयार हूँ!)\n\nIS (है) — with He, She, It, singular nouns:\n• He is my brother. (वह मेरा भाई है।)\n• She is a doctor. (वह एक doctor है।)\n• It is very hot. (बहुत गर्मी है।)\n• Ravi is at work. (Ravi काम पर है।)\n• The movie is amazing! (Movie amazing है!)\n\nARE (हैं/हो) — with You, We, They, plural nouns:\n• You are right. (आप/तुम सही हो।)\n• We are classmates. (हम classmates हैं।)\n• They are from Hyderabad. (वे Hyderabad से हैं।)\n• My parents are at home. (मेरे माता-पिता घर पर हैं।)\n• The results are out! (Results आ गए हैं!)\n\nNEGATIVE FORM (am not / is not / are not):\n• I am not feeling well. → I'm not well.\n• He is not here. → He isn't here.\n• They are not ready. → They aren't ready.\n\nQUESTION FORM:\n• Am I late? | Are you sure? | Is she coming?`,
+
+    rules: [
+      {
+        rule: "Subject + Am/Is/Are + Description (main sentence structure)",
+        explanation: "Every Be Verb sentence follows this pattern: subject first, then the right Be Verb (am/is/are), then what you want to describe. The description can be a noun (I am a teacher), adjective (She is beautiful), location (He is at home), or time/age.",
+        example: "I am + [noun/adjective/location]: 'I am a developer. I am tired. I am in the office.'\nShe is + [description]: 'She is smart. She is from Mumbai. She is 25 years old.'",
+      },
+      {
+        rule: "Contractions: I'm / He's / She's / It's / You're / We're / They're",
+        explanation: "In spoken English and informal writing, we always contract 'am', 'is', 'are' with the subject. Using the full form ('I am', 'He is') sounds formal — contractions sound natural and native.",
+        example: "I am → I'm | He is → He's | She is → She's | It is → It's | You are → You're | We are → We're | They are → They're",
+        exception: "Never contract in formal writing (official letters, exams). Never contract the negative form when emphasizing: 'He is NOT here' (stress on 'not').",
+      },
+    ],
+
+    commonMistakes: [
+      { wrong: "I is tired.", correct: "I am tired.", explanation: "'I' always uses 'am'. Never 'is' or 'are' with 'I'." },
+      { wrong: "She are beautiful.", correct: "She is beautiful.", explanation: "'She' (singular, 3rd person) uses 'is'. 'Are' is for You/We/They." },
+      { wrong: "They is from Chennai.", correct: "They are from Chennai.", explanation: "'They' (plural) uses 'are'. 'Is' is only for He/She/It." },
+      { wrong: "He aren't my friend.", correct: "He isn't my friend.", explanation: "Negative of 'is' = 'isn't' (not 'aren't'). 'Aren't' is for You/We/They." },
+      { wrong: "My name is Rahul and I am 25 and I am engineer.", correct: "My name is Rahul. I am 25 years old. I am an engineer.", explanation: "Don't chain too many 'am/is/are' in one sentence. Use separate sentences for clarity." },
+    ],
+
+    sentencePatterns: [
+      {
+        pattern: "Subject + Am/Is/Are + Noun (Identity)",
+        hindiPattern: "Subject + हूँ/है/हैं + Noun (पहचान)",
+        examples: [
+          { english: "I am a software engineer.", hindi: "मैं एक software engineer हूँ।" },
+          { english: "She is the manager of this department.", hindi: "वह इस department की manager है।" },
+          { english: "We are students of the same college.", hindi: "हम एक ही college के छात्र हैं।" },
+          { english: "Ravi and Priya are my best friends.", hindi: "Ravi और Priya मेरे सबसे अच्छे दोस्त हैं।" },
+          { english: "It is a golden opportunity.", hindi: "यह एक सुनहरा मौका है।" },
+        ],
+      },
+      {
+        pattern: "Subject + Am/Is/Are + Adjective (Description)",
+        hindiPattern: "Subject + हूँ/है/हैं + Adjective (वर्णन)",
+        examples: [
+          { english: "I am very excited about the new project.", hindi: "मैं नए project को लेकर बहुत excited हूँ।" },
+          { english: "The presentation is impressive and well-prepared.", hindi: "Presentation प्रभावशाली और अच्छी तरह तैयार है।" },
+          { english: "My colleagues are hardworking and talented.", hindi: "मेरे colleagues मेहनती और talented हैं।" },
+          { english: "The new office is spacious, modern, and well-equipped.", hindi: "नया office विशाल, आधुनिक और अच्छी तरह से सुसज्जित है।" },
+        ],
+      },
+      {
+        pattern: "Questions with Am/Is/Are",
+        hindiPattern: "Am/Is/Are से सवाल",
+        examples: [
+          { english: "Are you free this evening?", hindi: "क्या आप आज शाम free हैं?" },
+          { english: "Is the meeting still scheduled for 3 PM?", hindi: "क्या meeting अभी भी 3 बजे scheduled है?" },
+          { english: "Am I correct in my understanding?", hindi: "क्या मेरी समझ सही है?" },
+          { english: "Are the results ready?", hindi: "क्या results तैयार हैं?" },
+        ],
+      },
+    ],
+
+    summary: [
+      "AM = only with 'I' | IS = He/She/It (singular) | ARE = You/We/They (plural)",
+      "Use Be Verb to describe identity, characteristics, location, time, feelings",
+      "Contractions: I'm, He's, She's, It's, You're, We're, They're",
+      "Negative: am not, isn't (is not), aren't (are not)",
+      "Questions: flip the subject and Be Verb — 'Are you...?', 'Is she...?', 'Am I...?'",
+    ],
+  },
+
+  // d4-t1-s3: Was / Were — Past Be Verb
+  "d4-t1-s3": {
+    whyLearnThis: `"Was" and "Were" are how you describe EVERYTHING from the past!\n\nWhen you talk about:\n• How you felt yesterday: "I was very tired."\n• What something was like: "The food was amazing!"\n• Where someone was: "She was in the hospital."\n• Past events: "The meeting was successful."\n\nYou use WAS or WERE.\n\nThis is ESSENTIAL for:\n✓ Telling stories: "Once upon a time, there was a young student..."\n✓ Job interviews: "I was the team leader at my previous company."\n✓ Daily conversations: "Yesterday was a great day!"\n✓ Writing: "The weather was perfect for a picnic."`,
+
+    conceptExplanation: `WAS / WERE — Past Tense of Be Verb\n\nWAS (था/थी) — with I, He, She, It:\n• I was in Delhi last year. (मैं पिछले साल Delhi में था।)\n• He was the best student. (वह सबसे अच्छा छात्र था।)\n• She was very nervous. (वह बहुत nervous थी।)\n• It was a beautiful morning. (यह एक सुंदर सुबह थी।)\n\nWERE (थे/थीं) — with You, We, They:\n• You were right about that. (आप उस बारे में सही थे।)\n• We were classmates in school. (हम school में classmates थे।)\n• They were late to the meeting. (वे meeting में देर से आए।)\n• The results were disappointing. (Results निराशाजनक थे।)\n\nNEGATIVE FORM:\n• I was not there. → I wasn't there.\n• He was not happy. → He wasn't happy.\n• They were not ready. → They weren't ready.\n\nQUESTION FORM:\n• Was I wrong? | Were you there?\n• Was she at home? | Were they ready?\n• Was the movie good? | Were the results good?`,
+
+    rules: [
+      {
+        rule: "WAS = I, He, She, It (past) | WERE = You, We, They (past)",
+        explanation: "Same as present tense rule but in past. WAS is the past form of 'am' and 'is'. WERE is the past form of 'are'.",
+        example: "Present → Past: I am → I was | He is → He was | They are → They were | You are → You were",
+        exception: "'If I were you...' — This is called the SUBJUNCTIVE mood. Even though 'I' normally uses 'was', in hypothetical situations ('if' statements), 'were' is used: 'If I were rich...' / 'If she were here...'",
+      },
+    ],
+
+    commonMistakes: [
+      { wrong: "I were at home yesterday.", correct: "I was at home yesterday.", explanation: "'I' uses 'was' in past tense (just like 'am' in present)." },
+      { wrong: "They was wrong.", correct: "They were wrong.", explanation: "'They' uses 'were' in past tense (just like 'are' in present)." },
+      { wrong: "Was you there?", correct: "Were you there?", explanation: "Questions with 'you' use 'were', not 'was': Were you there? Were you ready?" },
+    ],
+
+    sentencePatterns: [
+      {
+        pattern: "Subject + Was/Were + Description (Past Statements)",
+        hindiPattern: "Subject + था/थे + Description (भूतकाल)",
+        examples: [
+          { english: "I was very nervous during my first presentation.", hindi: "अपनी पहली presentation के दौरान मैं बहुत nervous था।" },
+          { english: "The interview was challenging but rewarding.", hindi: "Interview challenging था लेकिन फायदेमंद था।" },
+          { english: "My previous manager was very supportive.", hindi: "मेरे पिछले manager बहुत supportive थे।" },
+          { english: "We were a team of five when the project started.", hindi: "जब project शुरू हुआ तो हम पाँच लोगों की team थे।" },
+          { english: "The results were better than expected.", hindi: "Results अपेक्षा से बेहतर थे।" },
+        ],
+      },
+    ],
+
+    summary: [
+      "WAS = past of 'am' and 'is' → used with I, He, She, It",
+      "WERE = past of 'are' → used with You, We, They",
+      "Negative: wasn't (was not), weren't (were not)",
+      "Questions: Was she...? Were they...? Were you...?",
+      "Special: 'If I were you...' — subjunctive mood (hypothetical situations)",
+    ],
+  },
+
+  // ══════════════════════════════════════════════════════════════
+  // DAY 5 — DEMONSTRATIVE PRONOUN (This / That / These / Those)
+  // ══════════════════════════════════════════════════════════════
+
+  // d5-t1-s1: What Are Demonstrative Pronouns?
+  "d5-t1-s1": {
+    whyLearnThis: `"This is amazing!" "That was a great idea!" "These are the files you need." "Those were the best days!"\n\nDemonstrative pronouns are POINTING words — you use them to point out SPECIFIC things without repeating the noun!\n\nYou use them:\n✓ When you show something to someone: "Look at this!"\n✓ When you talk about something far: "That building over there."\n✓ When you refer to multiple things near you: "These are my documents."\n✓ When you refer to past things: "Those were the days!"\n\nIn conversations: CONSTANTLY!\nIn presentations: "This graph shows..." / "These figures represent..."\nIn phone calls: "Is this Priya?" / "This is Rahul calling."`,
+
+    conceptExplanation: `DEMONSTRATIVE PRONOUNS — The 4 Pointing Words\n\n📍 THE SIMPLE RULE:\nNEAR or PRESENT → THIS (one) / THESE (many)\nFAR or PAST → THAT (one) / THOSE (many)\n\n📊 THE COMPLETE CHART:\n\n       SINGULAR (एक)    PLURAL (अनेक)\nNEAR:   THIS             THESE\nFAR:    THAT             THOSE\n\n✅ THIS (यह — near, singular):\n• "This is my pen." (यह मेरी कलम है।)\n• "This book is interesting." (यह किताब interesting है।)\n• "Is this your phone?" (क्या यह आपका फ़ोन है?)\n\n✅ THAT (वह — far, singular):\n• "That is a beautiful painting." (वह एक सुंदर painting है।)\n• "Who is that woman?" (वह महिला कौन है?)\n• "That was an excellent presentation!" (वह एक उत्कृष्ट presentation थी!)\n\n✅ THESE (ये — near, plural):\n• "These are my project files." (ये मेरी project files हैं।)\n• "These results are excellent." (ये results excellent हैं।)\n• "Please look at these documents." (कृपया इन documents को देखें।)\n\n✅ THOSE (वे — far, plural):\n• "Those were the best results we ever had." (वे अब तक के सबसे अच्छे results थे।)\n• "Who are those people?" (वे लोग कौन हैं?)\n• "Those days were very tough." (वे दिन बहुत कठिन थे।)\n\n⚠️ DEMONSTRATIVE PRONOUN vs DEMONSTRATIVE ADJECTIVE:\nPronoun: "This is nice." (subject of sentence)\nAdjective: "This book is nice." (describes the noun 'book')`,
+
+    hindiExplanation: `Demonstrative Pronouns = संकेतवाचक सर्वनाम (Pointing Words)\n\nसरल नियम:\nपास / अभी → This (एक) / These (अनेक)\nदूर / पहले → That (एक) / Those (अनेक)\n\nThis = यह (एक, पास)\nThat = वह (एक, दूर)\nThese = ये (अनेक, पास)\nThose = वे (अनेक, दूर)\n\nउदाहरण:\n• This is my bag. = यह मेरा बैग है। (पास, एक)\n• That is his car. = वह उसकी car है। (दूर, एक)\n• These are my notes. = ये मेरे notes हैं। (पास, अनेक)\n• Those were good times. = वे अच्छे समय थे। (पहले, अनेक)`,
+
+    rules: [
+      {
+        rule: "THIS for one near thing, THESE for many near things",
+        explanation: "Use 'this' when pointing to one object/person close to you (physically or in time). Use 'these' when pointing to multiple objects/people close to you.",
+        example: "Near+Singular: 'This is my ID card.' | Near+Plural: 'These are the project documents.'",
+        exception: "'This' can also be used on phone calls when introducing yourself: 'Hello, this is Rahul calling.' Even though you're not physically 'near', it's a convention.",
+      },
+      {
+        rule: "THAT for one far thing, THOSE for many far things",
+        explanation: "Use 'that' for one distant object/person (far in space or past in time). Use 'those' for multiple distant objects/people.",
+        example: "Far+Singular: 'That is the head office building.' | Far+Plural: 'Those are old records from 2018.'",
+        exception: "'That' is also used to refer to something just mentioned: 'She got promoted. That is wonderful news!' (referring back to the promotion)",
+      },
+    ],
+
+    commonMistakes: [
+      { wrong: "These is my pen.", correct: "This is my pen.", explanation: "'This' is singular (one pen). 'These' is plural — use 'These are my pens' (many pens)." },
+      { wrong: "Those is a beautiful house.", correct: "That is a beautiful house.", explanation: "'Those' is plural. For one house far away, use 'That is a beautiful house.'" },
+      { wrong: "This are my friends.", correct: "These are my friends.", explanation: "'Friends' is plural — use 'these' (nearby, plural). The verb becomes 'are'." },
+      { wrong: "Hello? Is this Priya calling?", correct: "Hello? Is this Priya? This is Rahul calling.", explanation: "On phone: the CALLER says 'This is [name]'. To verify who you called: 'Is this Priya?' (correct!)" },
+    ],
+
+    summary: [
+      "4 demonstrative pronouns: This / That / These / Those",
+      "Near+Singular = THIS | Near+Plural = THESE",
+      "Far+Singular = THAT | Far+Plural = THOSE",
+      "They replace nouns to avoid repetition and point to specific things",
+      "Special: 'This is Rahul.' (phone) / 'That is wonderful!' (referring to news)",
+    ],
+  },
+
+  // ══════════════════════════════════════════════════════════════
+  // DAY 6 — HAS / HAVE
+  // ══════════════════════════════════════════════════════════════
+
+  // d6-t1-s1: Has vs Have — Which One to Use?
+  "d6-t1-s1": {
+    whyLearnThis: `"I have a dream." "She has a great personality." "Do you have time?"\n\nHas and Have are OWNERSHIP WORDS — they tell us who possesses, owns, or experiences something.\n\nYou use Has/Have:\n✓ To show possession: "I have a car." / "She has a laptop."\n✓ To describe: "He has blue eyes." / "We have a great team."\n✓ To ask questions: "Do you have a moment?" / "Does she have the report?"\n✓ In present perfect: "I have finished the work." / "She has already left."\n\nThis is one of the most IMPORTANT verbs in English. You will use it dozens of times every day!`,
+
+    conceptExplanation: `HAS vs HAVE — The Rules\n\nHAVE (हैं/है) — with I, You, We, They:\n• I have a meeting at 3 PM. (मेरी 3 बजे meeting है।)\n• You have a great attitude. (आपका नज़रिया बेहतरीन है।)\n• We have everything we need. (हमारे पास जो चाहिए सब है।)\n• They have submitted the report. (उन्होंने report submit कर दी है।)\n\nHAS (है) — with He, She, It (and singular nouns):\n• He has a lot of experience. (उसके पास बहुत experience है।)\n• She has a master's degree. (उसके पास master's degree है।)\n• It has many features. (इसमें कई features हैं।)\n• The company has 500 employees. (company में 500 employees हैं।)\n\nREMEMBER THE PATTERN:\nSame as Be Verb!\n• AM/HAVE → for 'I'\n• IS/HAS → for He, She, It\n• ARE/HAVE → for You, We, They\n\nQUESTION FORM:\n• Do I have...? / Do you have...? / Do we have...? / Do they have...?\n• Does he have...? / Does she have...? / Does it have...?\n\nNEGATIVE FORM:\n• I don't have time. / We don't have enough staff.\n• He doesn't have experience. / She doesn't have permission.`,
+
+    hindiExplanation: `Have = मेरे पास है, तुम्हारे पास है, हमारे पास है, उनके पास है\nHas = उसके पास है (he/she/it के लिए)\n\nसरल नियम:\n• I, You, We, They → HAVE\n• He, She, It → HAS\n\nउदाहरण:\n• I have a car. = मेरे पास एक car है।\n• She has a laptop. = उसके पास laptop है।\n• They have a big house. = उनके पास बड़ा घर है।\n• He has good English skills. = उसकी English अच्छी है।\n\nसवाल:\n• Do you have...? = क्या आपके पास... है?\n• Does he have...? = क्या उसके पास... है?`,
+
+    rules: [
+      {
+        rule: "HAVE with I, You, We, They | HAS with He, She, It",
+        explanation: "The rule is exactly the same as the Is/Are rule for Be Verb. Singular third person (he/she/it) gets 'has'. Everyone else gets 'have'.",
+        example: "✅ I have a pen. | ✅ You have time. | ✅ She has patience. | ✅ The phone has good camera.\n❌ She have a car. | ❌ He have experience. | ❌ It have many features.",
+        exception: "When using 'have' as a main verb (possession), it doesn't get -ing form: ❌ 'I am having a car.' ✅ 'I have a car.' BUT in experiences: ✅ 'I am having lunch right now.'",
+      },
+      {
+        rule: "Questions: Do + I/you/we/they + have | Does + he/she/it + have",
+        explanation: "To form questions with 'have' (possession), use the auxiliary 'do/does'. After 'does', always use 'have' (not 'has') because 'does' already marks the third person.",
+        example: "✅ Does she have time? | ✅ Do you have the report? | ✅ Does the product have a warranty?\n❌ Has she time? | ❌ Have you the report? (British English only) | ❌ Does she has time?",
+        exception: "In British English, 'Have you the time?' is acceptable but old-fashioned. Indian and American English always use 'Do you have...'",
+      },
+    ],
+
+    commonMistakes: [
+      { wrong: "She have a car.", correct: "She has a car.", explanation: "'She' = 3rd person singular → always use 'has', never 'have'." },
+      { wrong: "Does he has time?", correct: "Does he have time?", explanation: "After 'does', always use 'have' (base form). 'Does' already shows 3rd person." },
+      { wrong: "They has finished the work.", correct: "They have finished the work.", explanation: "'They' = plural → always use 'have'. 'Has' is only for He/She/It." },
+      { wrong: "I am having a smartphone.", correct: "I have a smartphone.", explanation: "For possession (owning), don't use -ing. 'I have a phone.' But for experience: 'I am having a great time!' is correct." },
+    ],
+
+    summary: [
+      "HAVE: I, You, We, They | HAS: He, She, It (singular)",
+      "For questions: Do you have...? Does she have...?",
+      "Negative: don't have / doesn't have",
+      "NEVER use -ing for possession: ❌ 'I am having a car' → ✅ 'I have a car'",
+      "Same subject pattern as Be Verb (am/is/are → have/has)",
+    ],
+  },
+
+  // ══════════════════════════════════════════════════════════════
+  // DAY 7 — HAD (Past of Have)
+  // ══════════════════════════════════════════════════════════════
+
+  // d7-t1-s1: What is Had? Past of Have Explained
+  "d7-t1-s1": {
+    whyLearnThis: `"I had a dream." "She had three interviews before getting the job." "We had a wonderful time together."\n\nHAD is the PAST TENSE of HAVE — and it's one of the most powerful verbs for storytelling and describing past experiences!\n\nYou use HAD when:\n✓ Describing past possession: "I had a bicycle when I was young."\n✓ Telling stories: "Once upon a time, a king had three sons."\n✓ Talking about past experiences: "I had never seen snow before."\n✓ Present Perfect: "I had already finished by the time he called."\n✓ Describing past characteristics: "She had a beautiful smile. He had a great sense of humor."\n\nUnlike HAVE and HAS (which depend on the subject), HAD is SAME for EVERYONE! This makes it easy to use!`,
+
+    conceptExplanation: `HAD — The Past of Have\n\n🎯 THE BIG ADVANTAGE: HAD is the same for ALL subjects!\n\nPresent: I have, You have, He HAS, She HAS, We have, They have\nPast: I HAD, You HAD, He HAD, She HAD, We HAD, They HAD\n\nEveryone uses HAD in the past!\n\n📚 USES OF HAD:\n\n1️⃣ PAST POSSESSION (पहले कुछ था):\n• I had a red bicycle in school. (School में मेरे पास लाल cycle थी।)\n• She had a beautiful garden. (उसके पास एक सुंदर बगीचा था।)\n• They had three offices in Delhi. (उनके तीन office थे Delhi में।)\n\n2️⃣ PAST EXPERIENCE (पहले कोई अनुभव था):\n• He had a terrible accident last year. (उसे पिछले साल भयानक accident हुई।)\n• We had a fantastic vacation in Goa. (हमने Goa में शानदार छुट्टियाँ बिताईं।)\n• I had an amazing teacher in college. (College में मेरे एक amazing teacher थे।)\n\n3️⃣ PAST PERFECT (और भी पहले):\n• By the time she arrived, I had already left. (जब वह आई, मैं पहले ही जा चुका था।)\n• He had finished the report before the meeting. (Meeting से पहले उसने report complete कर ली थी।)\n\n4️⃣ NEGATIVE FORM: HAD NOT / HADN'T\n• I didn't have... (Wait — for simple past, we use "didn't have"!)\n• Past Perfect negative: I hadn't finished when she called.\n\n⚠️ IMPORTANT DISTINCTION:\nSimple past: "I didn't have time." (NOT "I hadn't time")\nPast Perfect: "I hadn't seen that movie when she recommended it."`,
+
+    hindiExplanation: `HAD = HAVE/HAS का past tense (था/थी/थे)\n\nसबसे आसान बात: HAD सब subjects के साथ एक जैसा है!\n• I had = मेरे पास था\n• He had = उसके पास था\n• She had = उसके पास था\n• We had = हमारे पास था\n• They had = उनके पास था\n\nउपयोग:\n1. पुरानी चीज़ें: "I had a dog." (मेरे पास कुत्ता था।)\n2. पुराना अनुभव: "I had a great time." (मैंने बहुत मज़ा किया।)\n3. Past Perfect: "I had finished before he came." (वह आने से पहले मैं खत्म कर चुका था।)`,
+
+    rules: [
+      {
+        rule: "HAD is the same for ALL subjects — no 'hads' for he/she",
+        explanation: "Unlike 'have' and 'has' in present tense, 'had' is uniform. Every subject (I, you, he, she, it, we, they) uses the same 'had'. This makes past tense much simpler than present!",
+        example: "✅ I had / You had / He had / She had / It had / We had / They had\n❌ She hads / He hadded / They hadded (all wrong — 'had' never changes)",
+      },
+      {
+        rule: "For simple past negative: didn't have (NOT hadn't)",
+        explanation: "When negating simple past possession, use 'didn't have'. Reserve 'hadn't' for Past Perfect (had + past participle structure).",
+        example: "Simple past: 'I didn't have enough money.' / 'She didn't have time.'\nPast Perfect: 'She hadn't seen the movie before.' / 'I hadn't finished when he called.'",
+        exception: "In British English, 'I hadn't any money' is sometimes used, but 'I didn't have any money' is more common globally.",
+      },
+    ],
+
+    commonMistakes: [
+      { wrong: "She hads a car.", correct: "She had a car.", explanation: "'Had' never changes — no 's', no 'd' added. It's always just 'had' for all subjects." },
+      { wrong: "I hadn't time for it.", correct: "I didn't have time for it.", explanation: "For simple past negatives, use 'didn't have'. 'Hadn't' is for Past Perfect." },
+      { wrong: "Before I came, he had left already.", correct: "Before I came, he had already left.", explanation: "Put 'already' between 'had' and the past participle: 'had already left'." },
+    ],
+
+    sentencePatterns: [
+      {
+        pattern: "Subject + had + noun/adjective (Past Possession/State)",
+        hindiPattern: "Subject + था/थी/थे + noun (भूतकाल में था)",
+        examples: [
+          { english: "When I was a child, I had a bicycle.", hindi: "जब मैं बच्चा था, मेरे पास cycle थी।" },
+          { english: "She had a very good reputation in the company.", hindi: "Company में उसकी बहुत अच्छी reputation थी।" },
+          { english: "We had a beautiful office in Connaught Place.", hindi: "Connaught Place में हमारा एक सुंदर office था।" },
+          { english: "The project had many challenges, but we solved them all.", hindi: "Project में कई challenges थे, लेकिन हमने सभी को solve किया।" },
+        ],
+      },
+      {
+        pattern: "Past Perfect: had + past participle (Action completed before another past action)",
+        hindiPattern: "Past Perfect: जब ... तब पहले ही... हो चुका था",
+        examples: [
+          { english: "By the time I reached the office, the meeting had already started.", hindi: "जब मैं office पहुँचा, meeting पहले ही शुरू हो चुकी थी।" },
+          { english: "She had never visited abroad before getting this job.", hindi: "यह job मिलने से पहले उसने कभी विदेश नहीं देखा था।" },
+          { english: "I had prepared for months before the interview.", hindi: "Interview से पहले मैंने महीनों तैयारी की थी।" },
+        ],
+      },
+    ],
+
+    summary: [
+      "HAD = past tense of both HAVE and HAS",
+      "Same for ALL subjects — no exceptions, no 'hads'",
+      "Uses: past possession, past characteristics, past perfect",
+      "Simple past negative: 'didn't have' | Past perfect negative: 'hadn't + past participle'",
+      "Past perfect: 'I had finished before he called' (one past action before another)",
+    ],
+  },
+};
+
+// ─── Export per-subtopic content function ────────────────────
+// Returns specific content for a single subtopic ID, or null if not available
+// Used by lesson-content.tsx for maximum content richness
+export function getSubtopicSpecificContent(
+  subtopicId: string,
+  _dayNumber: number
+): Partial<LessonContentType> | null {
+  // Look up the subtopic in our handcrafted content map
+  return SUBTOPIC_CONTENT_MAP[subtopicId] || null;
+}
