@@ -15,7 +15,13 @@ import { cn, playSound } from "@/lib/utils";
 import { ALL_DAY_1_VOCABULARY } from "@/data/vocabulary/day-1-vocabulary";
 // Import Day 2 vocabulary
 import { DAY_2_VOCABULARY } from "@/data/vocabulary/day-2-vocabulary";
-// Import all-days vocabulary generator for Days 3-75
+// Import Days 3-7 specific vocabulary files (300+ words each, unique per day)
+import { ALL_DAY_3_VOCABULARY } from "@/data/vocabulary/day-3-vocabulary";
+import { ALL_DAY_4_VOCABULARY } from "@/data/vocabulary/day-4-vocabulary";
+import { ALL_DAY_5_VOCABULARY } from "@/data/vocabulary/day-5-vocabulary";
+import { ALL_DAY_6_VOCABULARY } from "@/data/vocabulary/day-6-vocabulary";
+import { ALL_DAY_7_VOCABULARY } from "@/data/vocabulary/day-7-vocabulary";
+// Import all-days vocabulary generator for Days 8-75
 import { getVocabularyForDay } from "@/data/vocabulary/all-days-vocabulary";
 // Import the VocabularyWord type for type compatibility
 import type { VocabularyWord } from "@/data/vocabulary/day-1-vocabulary";
@@ -66,18 +72,18 @@ function mapVocabWord(vw: VocabularyWord): VocabWord {
 }
 
 // ─── Helper: Load vocabulary for a specific day ───────────────
-// Returns all vocabulary words for the given day
+// Returns all vocabulary words for the given day (300+ per day)
 function loadVocabularyForDay(dayNumber: number): VocabWord[] {
-  // For Day 1, return the real vocabulary data
-  if (dayNumber === 1) {
-    return ALL_DAY_1_VOCABULARY.map(mapVocabWord);
-  }
-  // For Day 2, return Day 2 vocabulary
-  if (dayNumber === 2) {
-    return DAY_2_VOCABULARY.map(mapVocabWord);
-  }
-  // For Days 3-75, use the comprehensive vocabulary generator
-  return getVocabularyForDay(dayNumber, 50).map(mapVocabWord);
+  // Days 1-7: load from their specific hand-crafted vocabulary files
+  if (dayNumber === 1) return ALL_DAY_1_VOCABULARY.map(mapVocabWord);
+  if (dayNumber === 2) return DAY_2_VOCABULARY.map(mapVocabWord);
+  if (dayNumber === 3) return ALL_DAY_3_VOCABULARY.map(mapVocabWord); // 300+ imperative words
+  if (dayNumber === 4) return ALL_DAY_4_VOCABULARY.map(mapVocabWord); // 300+ be-verb words
+  if (dayNumber === 5) return ALL_DAY_5_VOCABULARY.map(mapVocabWord); // 300+ demonstrative words
+  if (dayNumber === 6) return ALL_DAY_6_VOCABULARY.map(mapVocabWord); // 300+ has/have words
+  if (dayNumber === 7) return ALL_DAY_7_VOCABULARY.map(mapVocabWord); // 300+ had/past words
+  // For Days 8-75, use the comprehensive vocabulary generator
+  return getVocabularyForDay(dayNumber, 100).map(mapVocabWord);
 }
 
 export function VocabularySection({ dayNumber, subtopicId, subtopicTitle, onComplete }: VocabularySectionProps) {

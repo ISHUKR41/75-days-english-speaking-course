@@ -27,7 +27,13 @@ import type { PracticeQ } from "@/data/questions/day-1-questions";
 // Import vocabulary data for question generation
 import { ALL_DAY_1_VOCABULARY } from "@/data/vocabulary/day-1-vocabulary";
 import { ALL_DAY_2_VOCABULARY } from "@/data/vocabulary/day-2-vocabulary";
-// Import all-days vocabulary generator for Days 3-75
+// Import Days 3-7 specific vocabulary files (300+ hand-crafted words each)
+import { ALL_DAY_3_VOCABULARY } from "@/data/vocabulary/day-3-vocabulary";
+import { ALL_DAY_4_VOCABULARY } from "@/data/vocabulary/day-4-vocabulary";
+import { ALL_DAY_5_VOCABULARY } from "@/data/vocabulary/day-5-vocabulary";
+import { ALL_DAY_6_VOCABULARY } from "@/data/vocabulary/day-6-vocabulary";
+import { ALL_DAY_7_VOCABULARY } from "@/data/vocabulary/day-7-vocabulary";
+// Import all-days vocabulary generator for Days 8-75
 import { getVocabularyForDay } from "@/data/vocabulary/all-days-vocabulary";
 // Import question generator (creates 3 questions per vocabulary word)
 import { generateQuestionsFromVocab } from "@/data/questions/question-generator";
@@ -89,12 +95,15 @@ function mapPracticeQToQuestion(pq: PracticeQ): Question {
 // ─── Helper: Generate vocab-based questions as rich fallback ──
 // Generates 3 questions per vocabulary word (600 per day)
 function getVocabGeneratedQuestions(dayNumber: number, subtopicId: string): Question[] {
-  // Get vocabulary for this specific day (real words, not Day 1 fallback)
-  const vocab = dayNumber === 1
-    ? ALL_DAY_1_VOCABULARY
-    : dayNumber === 2
-    ? ALL_DAY_2_VOCABULARY
-    : getVocabularyForDay(dayNumber, 60); // 60 topic-specific words per day
+  // Get vocabulary for this specific day — use hand-crafted files for Days 1-7
+  const vocab = dayNumber === 1 ? ALL_DAY_1_VOCABULARY
+    : dayNumber === 2 ? ALL_DAY_2_VOCABULARY
+    : dayNumber === 3 ? ALL_DAY_3_VOCABULARY   // 300+ imperative words
+    : dayNumber === 4 ? ALL_DAY_4_VOCABULARY   // 300+ be-verb words
+    : dayNumber === 5 ? ALL_DAY_5_VOCABULARY   // 300+ demonstrative words
+    : dayNumber === 6 ? ALL_DAY_6_VOCABULARY   // 300+ has/have words
+    : dayNumber === 7 ? ALL_DAY_7_VOCABULARY   // 300+ had/past words
+    : getVocabularyForDay(dayNumber, 60);      // Days 8-75: generated vocab
 
   // Use a slice of vocabulary relevant to this subtopic's index
   const subtopicNum = parseInt(subtopicId.split("-s").pop() || "1", 10);
