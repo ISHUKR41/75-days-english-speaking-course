@@ -56,6 +56,10 @@ export const viewport: Viewport = {
 // ─── SEO Metadata ─────────────────────────────────────────────
 // Comprehensive SEO for first Google ranking on English course queries
 export const metadata: Metadata = {
+  // Use the configured public origin so OG and Twitter image URLs resolve correctly.
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL || "https://75daysenglish.com",
+  ),
   // Title template — used across all pages
   title: {
     default: "75 Days Hard English Course | Speak English Fluently",

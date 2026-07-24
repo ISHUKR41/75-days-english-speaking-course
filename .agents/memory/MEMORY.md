@@ -12,3 +12,4 @@
 - [Vocabulary API filters](vocabulary-api-filters.md) — /api/vocabulary accepts difficulty/partOfSpeech filters for "all" case; also reads "pageSize" OR "limit" param; profile stats must use ?? not || for numeric fields that can be 0
 - [Mobile sidebar fix](mobile-sidebar-fix.md) — SidebarProvider defaultOpen=true blocks content on mobile; SidebarMobileCloser client component calls setOpen(false) if window.innerWidth < 1024 on mount
 - [Project structure doc](project-structure-doc.md) — PROJECT_STRUCTURE.md at repo root has full file tree, critical rules, and verified working pages; read it first before exploring files to save tokens
+- [Reliable workspace startup](workflow-startup.md) — install from monorepo root and fail loudly before running Prisma/Next.js

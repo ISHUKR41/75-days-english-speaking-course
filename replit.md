@@ -5,15 +5,15 @@ A full-stack gamified English learning platform that takes learners from absolut
 ## How to run on Replit
 
 The app starts automatically via the configured workflow. The workflow:
-1. Installs npm dependencies (if needed)
+1. Installs the monorepo npm dependencies from the repository root (if needed)
 2. Pushes the Prisma schema to SQLite (`apps/web/prisma/dev.db`)
 3. Seeds 75 days of course content (safe to re-run — clears and re-inserts)
 4. Starts Next.js dev server on **port 5000**
 
 To run manually from the Shell:
 ```bash
-cd apps/web
 npm install
+cd apps/web
 DATABASE_URL='file:./prisma/dev.db' npx prisma db push --accept-data-loss
 DATABASE_URL='file:./prisma/dev.db' npx tsx prisma/seed.ts
 DATABASE_URL='file:./prisma/dev.db' npm run dev
