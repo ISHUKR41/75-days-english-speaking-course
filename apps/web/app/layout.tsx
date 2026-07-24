@@ -245,7 +245,12 @@ export default function RootLayout({
       >
         {/* ── Clerk Authentication Provider ─────────────── */}
         {/* Wraps entire app to provide auth context */}
-        <ClerkProvider>
+        {/* ClerkProvider with new non-deprecated redirect props */}
+        <ClerkProvider
+          signInFallbackRedirectUrl="/dashboard"
+          signUpFallbackRedirectUrl="/dashboard"
+          signInForceRedirectUrl="/dashboard"
+        >
           {/* ── Theme Provider ─────────────────────────── */}
           {/* Handles dark/light/system theme switching */}
           <ThemeProvider

@@ -68,10 +68,13 @@ export default async function DayPage({
         estimatedMins: sub.estimatedMins,
         orderIndex: sub.orderIndex,
         _count: {
-          // All days have rich content; days 1–2 hand-written, 3–75 generator
-          practiceQs: dayNum <= 2 ? 80 : 40,
-          testQs: dayNum <= 2 ? 50 : 25,
-          vocabulary: dayNum <= 2 ? 200 : 150,
+          // Question counts per subtopic by day range:
+          // Days 1-2: hand-crafted (80+ practice, 50 test, 200 vocab)
+          // Days 3-7: expanded banks (80-100 questions per day, split across subtopics)
+          // Days 8-75: auto-generated from vocab (40+ questions per subtopic)
+          practiceQs: dayNum <= 2 ? 80 : dayNum <= 7 ? 60 : 40,
+          testQs: dayNum <= 2 ? 50 : dayNum <= 7 ? 30 : 20,
+          vocabulary: dayNum <= 2 ? 200 : dayNum <= 7 ? 180 : 150,
         },
       })),
     })),
@@ -118,7 +121,11 @@ export default async function DayPage({
   }
 
   // ── Access control ─────────────────────────────────────────
-  const hasAccess = user ? dayNum <= user.currentDay + 1 : dayNum === 1;
+  // All authenticated users can access any day — they should be able to
+  // browse ahead, review past days, or jump to any topic freely.
+  // The user's currentDay tracks their PRIMARY progress, not a hard gate.
+  // "Without sign in no day should open" is enforced by the auth check above.
+  const hasAccess = !!userId; // Any signed-in user can access any day
 
   return (
     <DayPageClient

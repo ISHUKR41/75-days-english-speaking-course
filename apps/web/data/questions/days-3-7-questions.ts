@@ -556,27 +556,43 @@ export const ALL_DAY_7_QUESTIONS: PracticeQ[] = [
   ...DAY_7_T5_QUESTIONS,
 ];
 
+// ─── Import extra questions (Days 4-7 expanded banks) ─────────
+// These add 40-60 more questions per day for a total of 80-100+ per day
+import {
+  ALL_DAY_4_EXTRA,
+  ALL_DAY_5_EXTRA,
+  ALL_DAY_6_EXTRA,
+  ALL_DAY_7_EXTRA,
+} from "./days-4-7-extra-questions";
+
+// ─── Merged question banks (original + extra) ─────────────────
+const MERGED_DAY_4 = [...ALL_DAY_4_QUESTIONS, ...ALL_DAY_4_EXTRA];
+const MERGED_DAY_5 = [...ALL_DAY_5_QUESTIONS, ...ALL_DAY_5_EXTRA];
+const MERGED_DAY_6 = [...ALL_DAY_6_QUESTIONS, ...ALL_DAY_6_EXTRA];
+const MERGED_DAY_7 = [...ALL_DAY_7_QUESTIONS, ...ALL_DAY_7_EXTRA];
+
 // ─── Master export: All Days 3-7 Questions ───────────────────
 export const ALL_DAYS_3_TO_7_QUESTIONS: PracticeQ[] = [
   ...ALL_DAY_3_QUESTIONS,
-  ...ALL_DAY_4_QUESTIONS,
-  ...ALL_DAY_5_QUESTIONS,
-  ...ALL_DAY_6_QUESTIONS,
-  ...ALL_DAY_7_QUESTIONS,
+  ...MERGED_DAY_4,
+  ...MERGED_DAY_5,
+  ...MERGED_DAY_6,
+  ...MERGED_DAY_7,
 ];
 
 // ─── Helper: Get questions for a specific day/subtopic ────────
+// Returns merged (original + extra) questions for Days 4-7
 export function getDays3to7Questions(dayNumber: number, subtopicId?: string): PracticeQ[] {
-  // Get the day's full question array
+  // Map each day to its merged question array (original + extra)
   const dayMap: Record<number, PracticeQ[]> = {
-    3: ALL_DAY_3_QUESTIONS,
-    4: ALL_DAY_4_QUESTIONS,
-    5: ALL_DAY_5_QUESTIONS,
-    6: ALL_DAY_6_QUESTIONS,
-    7: ALL_DAY_7_QUESTIONS,
+    3: ALL_DAY_3_QUESTIONS,  // Day 3 already has 80+ questions
+    4: MERGED_DAY_4,          // Day 4: ~55 + ~45 extra = ~100 questions
+    5: MERGED_DAY_5,          // Day 5: ~42 + ~40 extra = ~82 questions
+    6: MERGED_DAY_6,          // Day 6: ~36 + ~40 extra = ~76 questions
+    7: MERGED_DAY_7,          // Day 7: ~38 + ~45 extra = ~83 questions
   };
   const dayQuestions = dayMap[dayNumber] || [];
-  // Filter by subtopic if specified
+  // Filter by subtopic if specified, otherwise return all
   if (subtopicId) {
     return dayQuestions.filter(q => q.subtopicId === subtopicId);
   }

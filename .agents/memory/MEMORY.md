@@ -13,3 +13,5 @@
 - [Mobile sidebar fix](mobile-sidebar-fix.md) — SidebarProvider defaultOpen=true blocks content on mobile; SidebarMobileCloser client component calls setOpen(false) if window.innerWidth < 1024 on mount
 - [Project structure doc](project-structure-doc.md) — PROJECT_STRUCTURE.md at repo root has full file tree, critical rules, and verified working pages; read it first before exploring files to save tokens
 - [Reliable workspace startup](workflow-startup.md) — install from monorepo root and fail loudly before running Prisma/Next.js
+- [Day access control](day-access-control.md) — all authenticated users can access ALL 75 days; no progressive locking; hasAccess = !!userId; currentDay only tracks primary progress display
+- [Question expansion Days 4-7](questions-expansion.md) — days-4-7-extra-questions.ts adds ~45 extra Qs per day; getDays3to7Questions merges original + extra; Day 4:~100, Day 5:~82, Day 6:~76, Day 7:~83 total questions
