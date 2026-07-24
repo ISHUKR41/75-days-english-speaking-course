@@ -16,3 +16,4 @@
 - [Day access control](day-access-control.md) — all authenticated users can access ALL 75 days; no progressive locking; hasAccess = !!userId; currentDay only tracks primary progress display
 - [Question expansion Days 4-7](questions-expansion.md) — days-4-7-extra-questions.ts adds ~45 extra Qs per day; getDays3to7Questions merges original + extra; Day 4:~100, Day 5:~82, Day 6:~76, Day 7:~83 total questions
 - [Next dev cache and Prisma path](next-dev-cache-and-prisma-path.md) — clear .next before Replit dev, never build concurrently, and use file:./dev.db from apps/web
+- [Dev mode auth](dev-mode-auth.md) — safeAuth() returns seeded dev user when CLERK_SECRET_KEY absent; all pages work without Clerk configured; real Clerk activates automatically when key is valid
