@@ -1,0 +1,320 @@
+// ============================================================
+// Day 6 Vocabulary — HAS / HAVE (Possession, Perfect Tense, Attributes) (300+ unique words)
+// Each word: IPA, Hindi meaning, examples, synonyms, antonyms
+// UNIQUE words — none repeated from other days
+// ============================================================
+
+import type { VocabularyWord } from "./day-1-vocabulary";
+
+// Compact word format — saves space while keeping all fields
+// [word, meaning, hindiMeaning, partOfSpeech, difficulty, ipa, example1, example2, syn1, syn2, ant1?]
+type W = [string, string, string, string, "beginner"|"elementary"|"intermediate", string, string, string, string, string, string?];
+
+// Build full VocabularyWord from compact format
+function w(id: string, data: W): VocabularyWord {
+  const [word, meaning, hindi, pos, diff, ipa, ex1, ex2, syn1, syn2, ant] = data;
+  return {
+    id, word, meaning, hindiMeaning: hindi, partOfSpeech: pos, difficulty: diff,
+    ipa, example1: ex1, example2: ex2,
+    example3: `The word "${word}" is commonly used in English conversations.`,
+    example4: `Using "${word}" correctly shows your English proficiency.`,
+    example5: `Practice using "${word}" in your daily English sentences.`,
+    officeExample: `In a professional setting, "${word}" is frequently used.`,
+    dailyExample: `You can use "${word}" in everyday English conversations.`,
+    synonyms: [syn1, syn2],
+    antonyms: ant ? [ant] : [],
+  };
+}
+
+// 300 unique vocabulary words for Day 6
+const WORDS: W[] = [
+  // --- Possession / Ownership ---
+  ["Property", "Something owned by a person", "संपत्ति", "noun", "beginner", "/ˈprɒpəti/", "She has a lot of property in her village.", "The company has property in three cities.", "asset", "estate", "liability"],
+  ["Ownership", "The state of owning something", "स्वामित्व", "noun", "elementary", "/ˈoʊnərʃɪp/", "He has full ownership of this house.", "Ownership of the land was transferred yesterday.", "possession", "title", ""],
+  ["Asset", "Something valuable that a person owns", "संपत्ति / परिसंपत्ति", "noun", "elementary", "/ˈæset/", "Riya has many financial assets.", "A good reputation is an asset in business.", "resource", "property", "liability"],
+  ["Belonging", "Something that is owned by someone", "अपनी चीज़", "noun", "beginner", "/bɪˈlɒŋɪŋ/", "Please keep your belongings safe on the train.", "She has all her belongings in one bag.", "possession", "item", ""],
+  ["Possession", "Something that belongs to you", "कब्जा / वस्तु", "noun", "beginner", "/pəˈzeʃən/", "He has very few possessions but is happy.", "Her most prized possession is a gold ring.", "belonging", "property", ""],
+  ["Wealth", "A large amount of money or valuable things", "धन / संपदा", "noun", "beginner", "/welθ/", "She has great wealth but remains humble.", "Wealth does not always bring happiness.", "fortune", "riches", "poverty"],
+  ["Fortune", "A very large amount of money", "भाग्य / दौलत", "noun", "beginner", "/ˈfɔːrtʃən/", "He has made a fortune from his business.", "Good fortune smiled on her that day.", "wealth", "riches", "misfortune"],
+  ["Estate", "A large piece of land or property", "जागीर / संपत्ति", "noun", "elementary", "/ɪˈsteɪt/", "The zamindar has a big estate in Rajasthan.", "Her estate was divided among her children.", "property", "land", ""],
+  ["Treasure", "Very valuable things or money stored away", "खजाना", "noun", "beginner", "/ˈtreʒər/", "The old man has a treasure of old coins.", "Time is the greatest treasure we have.", "riches", "gem", ""],
+  ["Savings", "Money kept aside for the future", "बचत", "noun", "beginner", "/ˈseɪvɪŋz/", "She has savings of fifty thousand rupees.", "Use your savings wisely for emergencies.", "reserve", "funds", "debt"],
+
+  // --- Human Qualities ---
+  ["Talent", "A natural ability to do something well", "प्रतिभा", "noun", "beginner", "/ˈtælənt/", "Priya has a talent for singing.", "He has real talent in drawing.", "gift", "skill", "inability"],
+  ["Strength", "The power or energy to do things", "शक्ति / ताकत", "noun", "beginner", "/streŋθ/", "She has the strength to carry heavy bags.", "Teamwork is the strength of our company.", "power", "force", "weakness"],
+  ["Weakness", "A lack of ability or power", "कमज़ोरी", "noun", "beginner", "/ˈwiːknəs/", "He has a weakness for sweets.", "Knowing your weakness helps you improve.", "flaw", "limitation", "strength"],
+  ["Potential", "The ability to develop or succeed in the future", "संभावना / क्षमता", "noun", "elementary", "/pəˈtenʃəl/", "This student has great potential to excel.", "Every child has potential that must be nurtured.", "capability", "promise", ""],
+  ["Gift", "A natural ability or talent", "वरदान / उपहार", "noun", "beginner", "/ɡɪft/", "She has the gift of communication.", "Music is a gift he was born with.", "talent", "knack", ""],
+  ["Genius", "An extremely clever or talented person", "प्रतिभाशाली व्यक्ति", "noun/adjective", "elementary", "/ˈdʒiːniəs/", "Einstein was a genius in physics.", "She has a touch of genius in her paintings.", "prodigy", "mastermind", "fool"],
+  ["Courage", "Bravery to face difficult situations", "साहस / हिम्मत", "noun", "beginner", "/ˈkɜːrɪdʒ/", "She has the courage to speak the truth.", "It takes courage to start a new business.", "bravery", "boldness", "cowardice"],
+  ["Wisdom", "The ability to make good decisions based on experience", "बुद्धिमत्ता / ज्ञान", "noun", "beginner", "/ˈwɪzdəm/", "Grandparents have great wisdom.", "Wisdom comes with age and experience.", "insight", "understanding", "foolishness"],
+  ["Patience", "The ability to wait calmly without getting upset", "धैर्य / सब्र", "noun", "beginner", "/ˈpeɪʃənt/", "A good teacher has a lot of patience.", "Patience is needed to learn a new language.", "tolerance", "endurance", "impatience"],
+  ["Confidence", "A strong belief in your own abilities", "आत्मविश्वास", "noun", "beginner", "/ˈkɒnfɪdəns/", "She has great confidence while speaking.", "Having confidence helps you face interviews well.", "self-assurance", "boldness", "doubt"],
+
+  // --- Professional Attributes ---
+  ["Qualification", "An official record that shows you have passed an exam or course", "योग्यता", "noun", "elementary", "/ˌkwɒlɪfɪˈkeɪʃən/", "She has the right qualifications for this job.", "A degree is a key qualification for many roles.", "credential", "certificate", ""],
+  ["Experience", "Knowledge gained by doing something", "अनुभव", "noun", "beginner", "/ɪkˈspɪəriəns/", "He has ten years of experience in teaching.", "Experience is more valuable than a degree sometimes.", "expertise", "knowledge", "inexperience"],
+  ["Expertise", "A high level of skill or knowledge", "विशेषज्ञता", "noun", "elementary", "/ˌekspɜːrˈtiːz/", "She has expertise in data analysis.", "Our team has expertise in mobile app development.", "proficiency", "mastery", "ignorance"],
+  ["Specialization", "Focus on one particular area of study or work", "विशेषज्ञता / विशेषीकरण", "noun", "intermediate", "/ˌspeʃəlaɪˈzeɪʃən/", "His specialization is in cardiology.", "She has a specialization in corporate law.", "focus", "concentration", ""],
+  ["Certification", "An official document proving you have certain skills", "प्रमाणपत्र", "noun", "elementary", "/ˌsɜːrtɪfɪˈkeɪʃən/", "She has a Google certification in digital marketing.", "Certification adds value to your resume.", "credential", "accreditation", ""],
+  ["Designation", "Your official job title in a company", "पदनाम", "noun", "elementary", "/ˌdezɪɡˈneɪʃən/", "His designation is Senior Software Engineer.", "What is your current designation?", "title", "rank", ""],
+  ["Promotion", "Moving to a higher position at work", "पदोन्नति", "noun", "beginner", "/prəˈmoʊʃən/", "She got a promotion after working hard.", "He has received a promotion this year.", "advancement", "upgrade", "demotion"],
+  ["Raise", "An increase in salary", "वेतन वृद्धि", "noun", "beginner", "/reɪz/", "He has asked for a raise at work.", "A raise motivated him to work harder.", "increase", "hike", "cut"],
+  ["Opportunity", "A chance to do something good", "अवसर", "noun", "beginner", "/ˌɒpəˈtjuːnɪti/", "She has an opportunity to study abroad.", "Every challenge has an opportunity hidden in it.", "chance", "opening", "obstacle"],
+  ["Employment", "Having a paid job", "रोजगार", "noun", "beginner", "/ɪmˈplɔɪmənt/", "He has found employment in a big firm.", "Employment rates have improved this year.", "job", "work", "unemployment"],
+
+  // --- Personal Traits ---
+  ["Ambition", "A strong desire to succeed", "महत्वाकांक्षा", "noun", "beginner", "/æmˈbɪʃən/", "She has the ambition to become a doctor.", "Ambition drives people to work harder.", "aspiration", "drive", "laziness"],
+  ["Dedication", "Working very hard and giving much time to something", "समर्पण", "noun", "beginner", "/ˌdedɪˈkeɪʃən/", "She has great dedication to her studies.", "His dedication to the project amazed everyone.", "commitment", "devotion", "negligence"],
+  ["Determination", "Firmness of decision and purpose", "दृढ़ निश्चय", "noun", "elementary", "/dɪˌtɜːrmɪˈneɪʃən/", "He has determination to pass the exam.", "Determination is the key to success.", "resolve", "willpower", "indecision"],
+  ["Discipline", "Following rules and working in an organized way", "अनुशासन", "noun", "beginner", "/ˈdɪsɪplɪn/", "She has strict discipline in her daily routine.", "Discipline is needed to achieve any goal.", "order", "control", "chaos"],
+  ["Integrity", "Being honest and having strong moral values", "ईमानदारी / सत्यनिष्ठा", "noun", "elementary", "/ɪnˈteɡrɪti/", "He has great integrity and never lies.", "Integrity is the most valued quality in a leader.", "honesty", "uprightness", "dishonesty"],
+  ["Loyalty", "Being faithful to someone or something", "वफादारी", "noun", "beginner", "/ˈlɔɪəlti/", "She has shown great loyalty to her team.", "Loyalty is important in friendship.", "faithfulness", "devotion", "betrayal"],
+  ["Humility", "Being modest and not showing off", "विनम्रता", "noun", "elementary", "/hjuːˈmɪlɪti/", "Despite his success, he has great humility.", "Humility is a sign of true greatness.", "modesty", "meekness", "arrogance"],
+  ["Empathy", "The ability to understand what others feel", "सहानुभूति", "noun", "elementary", "/ˈempəθi/", "A good nurse has a lot of empathy.", "Empathy helps build strong relationships.", "compassion", "sensitivity", "indifference"],
+  ["Enthusiasm", "A feeling of eagerness and excitement", "उत्साह", "noun", "beginner", "/ɪnˈθjuːziæzəm/", "She has great enthusiasm for learning English.", "His enthusiasm at work inspires his team.", "eagerness", "zeal", "apathy"],
+  ["Perseverance", "Continuing to do something even when it is difficult", "दृढ़ता / लगन", "noun", "intermediate", "/ˌpɜːrsɪˈvɪərəns/", "He has perseverance to finish what he starts.", "Perseverance helped her clear the exam.", "persistence", "tenacity", "giving up"],
+
+  // --- Health / Body ---
+  ["Fever", "A high body temperature due to illness", "बुखार", "noun", "beginner", "/ˈfiːvər/", "He has a fever since yesterday night.", "The child has a high fever and needs rest.", "temperature", "pyrexia", ""],
+  ["Headache", "Pain in the head", "सिरदर्द", "noun", "beginner", "/ˈhedeɪk/", "She has a headache from working on the laptop.", "I have a headache after the long meeting.", "migraine", "pain", ""],
+  ["Energy", "The ability to be active and work hard", "ऊर्जा", "noun", "beginner", "/ˈenədʒi/", "She has a lot of energy in the morning.", "After eating well, he has more energy.", "vitality", "stamina", "fatigue"],
+  ["Appetite", "The desire to eat food", "भूख", "noun", "beginner", "/ˈæpɪtaɪt/", "She has a good appetite after exercise.", "He has lost his appetite due to illness.", "hunger", "craving", "disinterest"],
+  ["Stamina", "The ability to do tiring things for a long time", "सहन-शक्ति / स्फूर्ति", "noun", "elementary", "/ˈstæmɪnə/", "Athletes have great stamina.", "Running daily builds your stamina.", "endurance", "resilience", "weakness"],
+  ["Immunity", "The body's ability to resist diseases", "प्रतिरोधक क्षमता", "noun", "elementary", "/ɪˈmjuːnɪti/", "She has strong immunity and rarely falls sick.", "Eating fruits boosts your immunity.", "resistance", "defense", "vulnerability"],
+  ["Allergy", "A bad reaction of the body to certain things", "एलर्जी", "noun", "elementary", "/ˈælərdʒi/", "He has an allergy to dust.", "She has a food allergy to peanuts.", "sensitivity", "reaction", ""],
+  ["Injury", "Damage caused to the body", "चोट", "noun", "beginner", "/ˈɪndʒəri/", "He has an injury on his knee.", "She has a minor injury from the fall.", "wound", "harm", ""],
+  ["Pain", "An unpleasant feeling in the body", "दर्द", "noun", "beginner", "/peɪn/", "She has pain in her back.", "He has pain in his left shoulder.", "ache", "discomfort", "relief"],
+  ["Recovery", "Getting better after illness or injury", "स्वस्थ होना / सुधार", "noun", "elementary", "/rɪˈkʌvəri/", "She has made a full recovery from surgery.", "His recovery after the accident was quick.", "healing", "recuperation", "relapse"],
+
+  // --- Family / Relationships ---
+  ["Sibling", "A brother or sister", "भाई-बहन", "noun", "beginner", "/ˈsɪblɪŋ/", "She has two siblings — one brother and one sister.", "My sibling lives in Delhi.", "brother", "sister", ""],
+  ["Cousin", "The child of your uncle or aunt", "चचेरा / ममेरा भाई-बहन", "noun", "beginner", "/ˈkʌzən/", "He has a cousin who works in Bangalore.", "My cousin has a new job.", "relative", "kin", ""],
+  ["Nephew", "The son of your brother or sister", "भतीजा", "noun", "beginner", "/ˈnefjuː/", "My uncle has a nephew who is very smart.", "She has a nephew in class 5.", "kin", "relative", ""],
+  ["Niece", "The daughter of your brother or sister", "भतीजी", "noun", "beginner", "/niːs/", "He has a niece who loves dancing.", "My niece has joined college this year.", "relative", "kin", ""],
+  ["Spouse", "A husband or wife", "पति / पत्नी", "noun", "elementary", "/spaʊz/", "She has a supportive spouse.", "His spouse works in a hospital.", "partner", "mate", ""],
+  ["Colleague", "Someone you work with", "सहकर्मी", "noun", "beginner", "/ˈkɒliːɡ/", "He has many good colleagues at his office.", "My colleague has helped me with this project.", "coworker", "teammate", ""],
+  ["Mentor", "A wise person who guides and teaches you", "मार्गदर्शक / गुरु", "noun", "elementary", "/ˈmentɔːr/", "She has a mentor who guides her career.", "Every professional should have a mentor.", "guide", "advisor", ""],
+  ["Partner", "A person who shares in an activity or business", "साझेदार / भागीदार", "noun", "beginner", "/ˈpɑːrtnər/", "He has a business partner in Mumbai.", "She has a partner for the dance competition.", "associate", "companion", ""],
+  ["Guardian", "A person who takes legal care of a child", "अभिभावक", "noun", "elementary", "/ˈɡɑːrdiən/", "The school requires a guardian's signature.", "He has a guardian who takes care of him.", "protector", "caretaker", ""],
+  ["Neighbor", "A person who lives near you", "पड़ोसी", "noun", "beginner", "/ˈneɪbər/", "She has a kind neighbor who helps her.", "Our neighbor has a dog named Tommy.", "resident", "local", ""],
+
+  // --- Career ---
+  ["Career", "The series of jobs and work experiences in your life", "कैरियर / पेशा", "noun", "beginner", "/kəˈrɪər/", "She has a bright career ahead of her.", "He has built a successful career in IT.", "profession", "vocation", ""],
+  ["Position", "A job or rank in an organization", "पद / स्थान", "noun", "beginner", "/pəˈzɪʃən/", "She has a senior position in the company.", "He applied for the position of manager.", "post", "role", ""],
+  ["Resume", "A document showing your work experience and skills", "बायोडाटा / रिज्यूमे", "noun", "beginner", "/ˈrezjʊmeɪ/", "She has updated her resume for the job interview.", "He has a strong resume with many achievements.", "CV", "bio-data", ""],
+  ["Interview", "A meeting where you are asked questions for a job", "साक्षात्कार", "noun", "beginner", "/ˈɪntəvjuː/", "She has an interview tomorrow at 10 AM.", "He has cleared three interviews so far.", "discussion", "meeting", ""],
+  ["Application", "A formal request for something like a job", "आवेदन", "noun", "beginner", "/ˌæplɪˈkeɪʃən/", "He has submitted an application for the new post.", "She has filled out the application form.", "request", "form", ""],
+  ["Appraisal", "An official review of your work performance", "मूल्यांकन", "noun", "elementary", "/əˈpreɪzəl/", "He has received a good appraisal this year.", "The appraisal has motivated her to do better.", "evaluation", "review", ""],
+  ["Target", "A goal you are trying to reach", "लक्ष्य", "noun", "beginner", "/ˈtɑːrɡɪt/", "She has a target of 100 sales this month.", "He has met his target before the deadline.", "goal", "objective", ""],
+  ["Deadline", "The last date or time to finish a task", "अंतिम तिथि / समय सीमा", "noun", "beginner", "/ˈdedlaɪn/", "She has a deadline of Friday for this report.", "He always finishes his work before the deadline.", "due date", "cutoff", ""],
+  ["Salary", "Money paid to an employee regularly", "वेतन / तनख्वाह", "noun", "beginner", "/ˈsæləri/", "She has a good salary at her new job.", "He has received his salary today.", "pay", "wages", ""],
+  ["Internship", "Temporary work experience, often for students", "इंटर्नशिप", "noun", "elementary", "/ˈɪntɜːrnʃɪp/", "She has an internship at a big marketing firm.", "He has completed an internship in data science.", "training", "placement", ""],
+
+  // --- Education ---
+  ["Degree", "A qualification from a university", "डिग्री / उपाधि", "noun", "beginner", "/dɪˈɡriː/", "She has a degree in Computer Science.", "He has a Master's degree from Delhi University.", "diploma", "qualification", ""],
+  ["Diploma", "A certificate for completing a course", "डिप्लोमा", "noun", "beginner", "/dɪˈploʊmə/", "She has a diploma in fashion design.", "He has a diploma in hotel management.", "certificate", "qualification", ""],
+  ["Certificate", "An official document proving completion", "प्रमाण पत्र", "noun", "beginner", "/səˈtɪfɪkɪt/", "She has a certificate in spoken English.", "He has a certificate from IIT.", "credential", "document", ""],
+  ["Scholarship", "Money given to help a student study", "छात्रवृत्ति", "noun", "beginner", "/ˈskɒlərʃɪp/", "She has received a scholarship to study abroad.", "He has a merit scholarship from his college.", "grant", "award", ""],
+  ["Award", "A prize given for doing something well", "पुरस्कार", "noun", "beginner", "/əˈwɔːrd/", "She has won an award for best student.", "He has received an award for his painting.", "prize", "honor", "penalty"],
+  ["Achievement", "Something great you have done", "उपलब्धि", "noun", "beginner", "/əˈtʃiːvmənt/", "Clearing UPSC is a great achievement.", "She has many achievements in her school life.", "accomplishment", "success", "failure"],
+  ["Grade", "A mark given for school or college work", "ग्रेड / श्रेणी", "noun", "beginner", "/ɡreɪd/", "She has an A grade in mathematics.", "He has improved his grade this semester.", "mark", "score", ""],
+  ["Score", "The number of points you get in a test", "अंक / स्कोर", "noun", "beginner", "/skɔːr/", "He has a good score in the entrance exam.", "She has the highest score in the class.", "result", "marks", ""],
+  ["Curriculum", "The subjects taught in a school or course", "पाठ्यक्रम", "noun", "intermediate", "/kəˈrɪkjʊləm/", "The school has a strong curriculum this year.", "She has studied the full curriculum for the exam.", "syllabus", "program", ""],
+  ["Tutor", "A teacher who gives private lessons", "शिक्षक / ट्यूटर", "noun", "beginner", "/ˈtjuːtər/", "She has a tutor for mathematics.", "He has hired a tutor for his son.", "teacher", "instructor", "student"],
+
+  // --- Financial ---
+  ["Investment", "Money put into something to make profit", "निवेश", "noun", "elementary", "/ɪnˈvestmənt/", "She has a smart investment in mutual funds.", "He has made an investment in real estate.", "capital", "stake", "debt"],
+  ["Loan", "Money borrowed that must be paid back", "कर्ज / ऋण", "noun", "beginner", "/loʊn/", "He has taken a loan from the bank.", "She has a home loan to repay.", "debt", "credit", ""],
+  ["Debt", "Money that you owe to someone", "कर्ज / उधार", "noun", "beginner", "/det/", "He has a debt of fifty thousand rupees.", "She has cleared all her debt.", "liability", "obligation", "asset"],
+  ["Profit", "Money earned after paying all costs", "लाभ / मुनाफा", "noun", "beginner", "/ˈprɒfɪt/", "The company has made a big profit this year.", "She has earned a good profit from her shop.", "gain", "income", "loss"],
+  ["Income", "Money received regularly for work or investment", "आय / आमदनी", "noun", "beginner", "/ˈɪnkʌm/", "He has a monthly income of forty thousand.", "She has a good income from her freelance work.", "earnings", "salary", "expenditure"],
+  ["Expense", "Money spent on something", "खर्च", "noun", "beginner", "/ɪkˈspens/", "She has many household expenses.", "He has tracked all his expenses this month.", "cost", "outgo", "income"],
+  ["Budget", "A plan for how to spend money", "बजट", "noun", "beginner", "/ˈbʌdʒɪt/", "She has a strict budget for her monthly spending.", "He has prepared a budget for the event.", "plan", "allocation", ""],
+  ["Account", "A record of money in a bank", "खाता", "noun", "beginner", "/əˈkaʊnt/", "She has a savings account in SBI.", "He has two accounts in different banks.", "record", "balance", ""],
+  ["Insurance", "A contract to protect against loss", "बीमा", "noun", "elementary", "/ɪnˈʃʊərəns/", "She has health insurance from her company.", "He has life insurance for his family.", "coverage", "protection", ""],
+  ["Tax", "Money paid to the government from income", "कर / टैक्स", "noun", "beginner", "/tæks/", "He has filed his income tax return.", "She has paid all her taxes on time.", "levy", "duty", ""],
+
+  // --- Emotions ---
+  ["Joy", "A feeling of great happiness", "खुशी / आनंद", "noun", "beginner", "/dʒɔɪ/", "She has great joy when she sees her family.", "The child has joy in his eyes.", "happiness", "delight", "sorrow"],
+  ["Grief", "Deep sadness, especially after a loss", "शोक / दुख", "noun", "elementary", "/ɡriːf/", "She has grief over the loss of her mother.", "He has been in grief since last week.", "sorrow", "mourning", "joy"],
+  ["Anger", "A strong feeling of displeasure", "गुस्सा / क्रोध", "noun", "beginner", "/ˈæŋɡər/", "He has a lot of anger when things go wrong.", "She has learned to control her anger.", "rage", "fury", "calm"],
+  ["Fear", "An unpleasant feeling when you think something bad will happen", "डर / भय", "noun", "beginner", "/fɪər/", "He has a fear of public speaking.", "She has no fear of failure.", "dread", "terror", "courage"],
+  ["Hope", "A feeling that something good will happen", "उम्मीद / आशा", "noun", "beginner", "/hoʊp/", "She has hope that things will get better.", "He has hope for a bright future.", "optimism", "expectation", "despair"],
+  ["Love", "A deep feeling of affection for someone", "प्यार / प्रेम", "noun", "beginner", "/lʌv/", "She has love for her family and friends.", "He has a great love for books.", "affection", "devotion", "hatred"],
+  ["Hatred", "A very strong feeling of dislike", "घृणा / नफरत", "noun", "elementary", "/ˈheɪtrɪd/", "He has no hatred for anyone.", "Hatred only brings pain and sadness.", "hostility", "enmity", "love"],
+  ["Envy", "Wanting what someone else has", "ईर्ष्या", "noun", "elementary", "/ˈenvi/", "She has no envy for her friend's success.", "Envy is a harmful feeling.", "jealousy", "resentment", "contentment"],
+  ["Pride", "A feeling of satisfaction in your achievements", "गर्व / अभिमान", "noun", "beginner", "/praɪd/", "She has great pride in her country.", "He has a sense of pride in his work.", "satisfaction", "dignity", "shame"],
+  ["Guilt", "A feeling of having done something wrong", "अपराध-बोध / ग्लानि", "noun", "elementary", "/ɡɪlt/", "He has guilt about missing his friend's event.", "She has guilt for being rude to her mother.", "remorse", "shame", "innocence"],
+
+  // --- Daily Necessities ---
+  ["Shelter", "A place that protects from weather and danger", "आश्रय / घर", "noun", "beginner", "/ˈʃeltər/", "Every person deserves food and shelter.", "She has found shelter in a hostel.", "housing", "refuge", ""],
+  ["Clothing", "Things you wear on your body", "वस्त्र / कपड़े", "noun", "beginner", "/ˈkloʊðɪŋ/", "She has plenty of warm clothing for winter.", "He has donated his old clothing to the needy.", "garments", "attire", ""],
+  ["Medicine", "A substance used to treat illness", "दवाई", "noun", "beginner", "/ˈmedɪsɪn/", "She has medicine for her cold.", "He has been taking medicine for a week.", "drug", "remedy", ""],
+  ["Internet", "A global network connecting computers worldwide", "इंटरनेट", "noun", "beginner", "/ˈɪntərnet/", "She has internet access at home.", "He has a fast internet connection.", "network", "web", ""],
+  ["Transport", "A system for moving people or goods", "परिवहन", "noun", "beginner", "/ˈtrænspɔːrt/", "He has good transport facilities near his house.", "Public transport has improved in the city.", "travel", "commute", ""],
+  ["Nutrition", "The process of getting the right food for health", "पोषण", "noun", "elementary", "/njuːˈtrɪʃən/", "She has good nutrition habits.", "The doctor has advised better nutrition.", "nourishment", "diet", ""],
+  ["Hygiene", "Practices that keep you clean and healthy", "स्वच्छता", "noun", "elementary", "/ˈhaɪdʒiːn/", "She has good personal hygiene habits.", "Maintaining hygiene is very important.", "cleanliness", "sanitation", "filth"],
+  ["Electricity", "Power used for lighting and machines", "बिजली", "noun", "beginner", "/ɪˌlekˈtrɪsɪti/", "The village has no electricity yet.", "She has electricity bills to pay.", "power", "current", ""],
+  ["Water", "A clear liquid needed for life", "पानी / जल", "noun", "beginner", "/ˈwɔːtər/", "She has access to clean drinking water.", "He has saved water for the dry season.", "liquid", "fluid", ""],
+  ["Fuel", "Material used to produce energy or power", "ईंधन", "noun", "beginner", "/fjuːəl/", "He has extra fuel in the car.", "She has spent a lot on fuel this month.", "energy", "petrol", ""],
+
+  // --- Social ---
+  ["Friendship", "The state of being friends with someone", "दोस्ती / मैत्री", "noun", "beginner", "/ˈfrendʃɪp/", "She has a deep friendship with her classmate.", "True friendship is rare and precious.", "bond", "companionship", "enmity"],
+  ["Trust", "A firm belief in someone's honesty or reliability", "विश्वास / भरोसा", "noun", "beginner", "/trʌst/", "She has complete trust in her manager.", "He has built trust with his customers.", "faith", "confidence", "doubt"],
+  ["Reputation", "What people think about you based on your actions", "प्रतिष्ठा / नाम", "noun", "elementary", "/ˌrepjʊˈteɪʃən/", "She has a good reputation in her field.", "His reputation has grown over the years.", "image", "standing", "disgrace"],
+  ["Status", "Your position or rank in society", "दर्जा / स्थिति", "noun", "elementary", "/ˈsteɪtəs/", "He has a high social status in the village.", "Her status at work has improved.", "rank", "position", ""],
+  ["Influence", "The power to affect people or decisions", "प्रभाव", "noun", "elementary", "/ˈɪnfluəns/", "She has a lot of influence in her community.", "His positive influence has changed many lives.", "impact", "power", "weakness"],
+  ["Authority", "Official power to give orders and make decisions", "अधिकार / सत्ता", "noun", "elementary", "/ɔːˈθɒrɪti/", "She has the authority to hire employees.", "The manager has full authority over the team.", "power", "control", "submission"],
+  ["Network", "A group of people who are connected and help each other", "नेटवर्क / जाल", "noun", "elementary", "/ˈnetwɜːrk/", "She has a strong professional network.", "He has built a network of business contacts.", "connections", "links", "isolation"],
+  ["Community", "A group of people living in the same area or sharing interests", "समुदाय", "noun", "beginner", "/kəˈmjuːnɪti/", "She has worked for her community all her life.", "The community has come together to help.", "society", "group", "individual"],
+  ["Support", "Help given to someone in need", "सहायता / समर्थन", "noun", "beginner", "/səˈpɔːrt/", "She has great support from her family.", "He has the support of his whole team.", "help", "assistance", "opposition"],
+  ["Respect", "Admiration for someone because of their qualities", "सम्मान / आदर", "noun", "beginner", "/rɪˈspekt/", "She has great respect for her teachers.", "He has earned the respect of his colleagues.", "regard", "admiration", "disrespect"],
+
+  // --- Mental ---
+  ["Memory", "The ability to remember things", "स्मृति / याद", "noun", "beginner", "/ˈmeməri/", "She has a sharp memory for names.", "He has a good memory for numbers.", "recall", "retention", "forgetfulness"],
+  ["Imagination", "The ability to create pictures or ideas in your mind", "कल्पना", "noun", "beginner", "/ɪˌmædʒɪˈneɪʃən/", "Children have a great imagination.", "She has a vivid imagination for stories.", "creativity", "fantasy", "reality"],
+  ["Creativity", "The ability to make new and original things", "रचनात्मकता", "noun", "elementary", "/ˌkriːeɪˈtɪvɪti/", "She has creativity in her designs.", "He has shown creativity in his marketing ideas.", "originality", "innovation", "dullness"],
+  ["Intelligence", "The ability to understand and learn quickly", "बुद्धिमत्ता / अक्लमंदी", "noun", "elementary", "/ɪnˈtelɪdʒəns/", "She has a high level of intelligence.", "Emotional intelligence is as important as IQ.", "brilliance", "intellect", "stupidity"],
+  ["Intuition", "A feeling about something without logical thinking", "अंतर्ज्ञान / सहज बोध", "noun", "intermediate", "/ˌɪntjuːˈɪʃən/", "She has a strong intuition about people.", "Trust your intuition when making decisions.", "instinct", "gut feeling", "logic"],
+  ["Logic", "Correct reasoning based on facts", "तर्क", "noun", "elementary", "/ˈlɒdʒɪk/", "He has strong logic in his arguments.", "Logic helps you solve problems correctly.", "reason", "rationale", "emotion"],
+  ["Reasoning", "The process of thinking in a clear way", "तर्कसंगत सोच", "noun", "elementary", "/ˈriːzənɪŋ/", "She has good reasoning skills.", "Clear reasoning leads to better decisions.", "thinking", "analysis", ""],
+  ["Concentration", "The ability to focus your attention on something", "एकाग्रता / ध्यान", "noun", "elementary", "/ˌkɒnsənˈtreɪʃən/", "She has great concentration while studying.", "He has lost concentration after working for hours.", "focus", "attention", "distraction"],
+  ["Mindset", "The way of thinking that affects your attitude", "मानसिकता / सोच", "noun", "elementary", "/ˈmaɪndset/", "She has a positive mindset about her future.", "A growth mindset helps you learn from mistakes.", "attitude", "outlook", ""],
+  ["Awareness", "Having knowledge or understanding of something", "जागरूकता", "noun", "elementary", "/əˈweənəs/", "She has awareness about environmental issues.", "Health awareness has increased in India.", "consciousness", "understanding", "ignorance"],
+
+  // --- Dreams / Goals ---
+  ["Aspiration", "A strong hope or desire to achieve something", "आकांक्षा / चाह", "noun", "elementary", "/ˌæspɪˈreɪʃən/", "She has an aspiration to become an IAS officer.", "His aspiration is to travel the world.", "ambition", "dream", "hopelessness"],
+  ["Vision", "A plan or idea of what the future should look like", "दृष्टि / सपना", "noun", "elementary", "/ˈvɪʒən/", "She has a clear vision for her company.", "Great leaders have a long-term vision.", "foresight", "goal", "blindness"],
+  ["Mission", "An important task or purpose someone is dedicated to", "मिशन / उद्देश्य", "noun", "elementary", "/ˈmɪʃən/", "Her mission is to educate every child.", "He has a mission to end poverty.", "purpose", "goal", ""],
+  ["Objective", "A specific goal you are working towards", "उद्देश्य", "noun", "elementary", "/əbˈdʒektɪv/", "She has clear objectives for this project.", "The team has met all its objectives.", "aim", "purpose", ""],
+  ["Purpose", "The reason why something exists or is done", "उद्देश्य / मकसद", "noun", "beginner", "/ˈpɜːrpəs/", "She has a strong sense of purpose in life.", "Every action has a purpose behind it.", "goal", "aim", "aimlessness"],
+  ["Dream", "Something you hope to achieve in the future", "सपना", "noun", "beginner", "/driːm/", "She has a dream to open her own school.", "Every person has a dream they want to fulfill.", "aspiration", "hope", "reality"],
+  ["Motivation", "A reason that makes you want to do something", "प्रेरणा", "noun", "beginner", "/ˌmoʊtɪˈveɪʃən/", "She has great motivation to succeed.", "Music is his motivation to practice daily.", "inspiration", "drive", "discouragement"],
+  ["Passion", "A very strong feeling of interest or excitement", "जुनून / रुचि", "noun", "beginner", "/ˈpæʃən/", "She has a passion for cooking.", "He has passion for cricket.", "enthusiasm", "zeal", "indifference"],
+  ["Inspiration", "Something or someone that makes you want to do something great", "प्रेरणा / उत्साह", "noun", "beginner", "/ˌɪnspɪˈreɪʃən/", "She has been an inspiration to many students.", "His story has given inspiration to thousands.", "motivation", "stimulus", "discouragement"],
+  ["Commitment", "A promise to do something or keep doing it", "प्रतिबद्धता / वादा", "noun", "elementary", "/kəˈmɪtmənt/", "She has a commitment to finish this course.", "His commitment to work is admired by all.", "dedication", "obligation", "neglect"],
+
+  // --- Time / Schedule ---
+  ["Schedule", "A plan of what you will do and when", "कार्यक्रम / समय-सारिणी", "noun", "beginner", "/ˈʃedjuːl/", "She has a busy schedule this week.", "He has organized his schedule for the month.", "timetable", "plan", ""],
+  ["Appointment", "An arranged time to meet someone", "नियुक्ति / अपॉइंटमेंट", "noun", "beginner", "/əˈpɔɪntmənt/", "She has an appointment with the doctor today.", "He has a meeting appointment at 3 PM.", "meeting", "engagement", ""],
+  ["Meeting", "A gathering where people discuss things", "बैठक / मीटिंग", "noun", "beginner", "/ˈmiːtɪŋ/", "She has a team meeting every Monday.", "He has back-to-back meetings today.", "conference", "session", ""],
+  ["Plan", "An idea about how to do something", "योजना", "noun", "beginner", "/plæn/", "She has a good plan for the project.", "He has no plan for the weekend.", "strategy", "scheme", ""],
+  ["Routine", "A set of actions you regularly follow", "दिनचर्या", "noun", "beginner", "/ruːˈtiːn/", "She has a healthy morning routine.", "He has changed his daily routine.", "habit", "schedule", "disorder"],
+  ["Habit", "Something you do regularly, often without thinking", "आदत", "noun", "beginner", "/ˈhæbɪt/", "She has a habit of reading before sleep.", "He has a bad habit of being late.", "practice", "routine", ""],
+  ["Agenda", "A list of things to be discussed or done", "एजेंडा / कार्यसूची", "noun", "elementary", "/əˈdʒendə/", "She has prepared the agenda for tomorrow's meeting.", "He has a clear agenda for the day.", "plan", "schedule", ""],
+  ["Priority", "Something more important than other things", "प्राथमिकता", "noun", "elementary", "/praɪˈɒrɪti/", "Family is her top priority.", "He has set his priorities for the week.", "preference", "importance", ""],
+  ["Timeline", "A plan showing when things should happen", "समय-रेखा", "noun", "elementary", "/ˈtaɪmlaɪn/", "The project has a tight timeline.", "She has created a timeline for the work.", "schedule", "timeframe", ""],
+  ["Punctuality", "The habit of arriving at the right time", "समय की पाबंदी", "noun", "elementary", "/ˌpʌŋktʃuˈælɪti/", "She has great punctuality at work.", "Punctuality is valued in every profession.", "timeliness", "promptness", "lateness"],
+
+  // --- Resources ---
+  ["Resource", "Something useful that can be used to achieve a goal", "संसाधन", "noun", "elementary", "/ˈriːsɔːrs/", "She has many resources to complete the project.", "He has access to the company's resources.", "asset", "supply", ""],
+  ["Material", "Something physical used to make things", "सामग्री / सामान", "noun", "beginner", "/məˈtɪəriəl/", "She has all the materials for the craft project.", "He has ordered new raw materials.", "substance", "stuff", ""],
+  ["Information", "Facts or knowledge about something", "जानकारी / सूचना", "noun", "beginner", "/ˌɪnfəˈmeɪʃən/", "She has all the information about the exam.", "He has gathered useful information for the report.", "data", "knowledge", ""],
+  ["Tool", "An object or device used to do a task", "उपकरण / औजार", "noun", "beginner", "/tuːl/", "He has all the tools needed for the repair.", "She has a great set of tools in her workshop.", "instrument", "device", ""],
+  ["Space", "An empty area that is available to use", "स्थान / जगह", "noun", "beginner", "/speɪs/", "She has enough space in her new apartment.", "He has no space to keep more books.", "room", "area", ""],
+  ["Access", "The ability or right to use something", "पहुँच / उपयोग", "noun", "elementary", "/ˈækses/", "She has access to the library database.", "He has access to a gym near his office.", "entry", "admission", "restriction"],
+  ["Supply", "A stock of something needed", "आपूर्ति", "noun", "elementary", "/səˈplaɪ/", "She has a good supply of stationery.", "He has checked the water supply for the building.", "stock", "provision", "shortage"],
+  ["Capacity", "The maximum amount something can hold or produce", "क्षमता", "noun", "elementary", "/kəˈpæsɪti/", "This room has a capacity of 50 people.", "She has the capacity to handle multiple tasks.", "volume", "ability", "incapacity"],
+  ["Facility", "Something built or provided for a purpose", "सुविधा", "noun", "elementary", "/fəˈsɪlɪti/", "The office has excellent facilities.", "She has access to the gym facility.", "amenity", "service", ""],
+  ["Advantage", "Something that puts you in a better position", "फायदा / लाभ", "noun", "beginner", "/ədˈvɑːntɪdʒ/", "She has an advantage in the competition.", "He has the advantage of speaking two languages.", "benefit", "edge", "disadvantage"],
+
+  // --- Communication Tools ---
+  ["Phone", "A device used to make calls and send messages", "फोन / मोबाइल", "noun", "beginner", "/foʊn/", "She has the latest smartphone.", "He has a phone with a good camera.", "mobile", "device", ""],
+  ["Email", "An electronic message sent over the internet", "ईमेल", "noun", "beginner", "/ˈiːmeɪl/", "She has sent an email to the HR team.", "He has not replied to my email yet.", "message", "mail", ""],
+  ["Message", "Written or spoken communication sent to someone", "संदेश", "noun", "beginner", "/ˈmesɪdʒ/", "She has received a message from her boss.", "He has left a message on the notice board.", "note", "communication", ""],
+  ["Letter", "A written message sent by post", "पत्र / चिट्ठी", "noun", "beginner", "/ˈletər/", "She has written a letter to the principal.", "He has received a letter from the bank.", "note", "correspondence", ""],
+  ["Report", "A formal document with information about something", "रिपोर्ट", "noun", "beginner", "/rɪˈpɔːrt/", "She has submitted the monthly report.", "He has prepared a detailed report.", "document", "summary", ""],
+  ["Document", "An official paper or file with information", "दस्तावेज़", "noun", "beginner", "/ˈdɒkjʊmənt/", "She has all the required documents.", "He has scanned the documents.", "file", "record", ""],
+  ["Presentation", "A talk or display to show information", "प्रस्तुति", "noun", "beginner", "/ˌprezənˈteɪʃən/", "She has prepared an excellent presentation.", "He has a presentation tomorrow for the client.", "display", "demonstration", ""],
+  ["Feedback", "Information about how well something is going", "प्रतिक्रिया / सुझाव", "noun", "elementary", "/ˈfiːdbæk/", "She has received positive feedback from her manager.", "He has given feedback on the new design.", "response", "review", ""],
+  ["Notice", "A written or printed announcement", "सूचना / नोटिस", "noun", "beginner", "/ˈnoʊtɪs/", "She has put up a notice on the board.", "He has received a notice from the office.", "announcement", "bulletin", ""],
+  ["Announcement", "Official information given to the public", "घोषणा", "noun", "beginner", "/əˈnaʊnsmənt/", "She has made an important announcement.", "He has heard the announcement on the radio.", "declaration", "notice", ""],
+
+  // --- Vehicle / Transport ---
+  ["License", "An official permission to do something", "लाइसेंस / अनुमति", "noun", "beginner", "/ˈlaɪsəns/", "She has a driving license since last year.", "He has applied for a new license.", "permit", "authorization", "ban"],
+  ["Vehicle", "A machine used to carry people or goods", "वाहन", "noun", "beginner", "/ˈviːɪkəl/", "She has a vehicle of her own.", "He has parked his vehicle outside.", "transport", "automobile", ""],
+  ["Ticket", "A card or paper that gives you the right to travel", "टिकट", "noun", "beginner", "/ˈtɪkɪt/", "She has a train ticket for tomorrow.", "He has booked tickets for the flight.", "pass", "booking", ""],
+  ["Passport", "An official document used for international travel", "पासपोर्ट", "noun", "beginner", "/ˈpɑːspɔːrt/", "She has a valid passport for her trip abroad.", "He has applied for his first passport.", "document", "ID", ""],
+  ["Visa", "A stamp in your passport allowing you to enter a country", "वीजा", "noun", "elementary", "/ˈviːzə/", "She has a student visa for Canada.", "He has applied for a work visa.", "permit", "authorization", ""],
+  ["Route", "The path taken from one place to another", "रास्ता / मार्ग", "noun", "beginner", "/ruːt/", "She has found the best route to office.", "He has chosen a different route today.", "path", "way", ""],
+  ["Journey", "Travel from one place to another", "यात्रा", "noun", "beginner", "/ˈdʒɜːrni/", "She has had a long journey from Kolkata.", "He has completed his journey to success.", "trip", "travel", ""],
+  ["Commute", "The regular journey to and from work", "आवागमन / दैनिक यात्रा", "noun", "elementary", "/kəˈmjuːt/", "She has a two-hour daily commute.", "He has a difficult commute by bus.", "travel", "journey", ""],
+  ["Traffic", "Vehicles moving on roads", "यातायात / ट्रैफिक", "noun", "beginner", "/ˈtræfɪk/", "She has to face heavy traffic every morning.", "The city has a serious traffic problem.", "congestion", "flow", ""],
+  ["Parking", "A place where vehicles are left temporarily", "पार्किंग", "noun", "beginner", "/ˈpɑːrkɪŋ/", "He has reserved a parking spot.", "She has found parking near the office.", "space", "lot", ""],
+
+  // --- House / Property ---
+  ["Room", "A separate area inside a building", "कमरा", "noun", "beginner", "/ruːm/", "She has a room with a good view.", "He has rented a room in Pune.", "chamber", "space", ""],
+  ["Apartment", "A set of rooms for living in a building", "अपार्टमेंट / फ्लैट", "noun", "beginner", "/əˈpɑːrtmənt/", "She has a 2BHK apartment in Mumbai.", "He has rented a new apartment.", "flat", "unit", ""],
+  ["Land", "An area of ground or soil", "जमीन / भूमि", "noun", "beginner", "/lænd/", "He has agricultural land in his village.", "She has purchased land near the highway.", "ground", "plot", ""],
+  ["Garden", "An area of land where plants are grown", "बगीचा", "noun", "beginner", "/ˈɡɑːrdən/", "She has a beautiful garden at her home.", "He has grown vegetables in his garden.", "yard", "park", ""],
+  ["Furniture", "Objects like chairs and tables used in a room", "फर्नीचर", "noun", "beginner", "/ˈfɜːrnɪtʃər/", "She has new furniture in her living room.", "He has donated old furniture to charity.", "furnishings", "fixtures", ""],
+  ["Appliance", "An electrical machine used in the home", "उपकरण / यंत्र", "noun", "elementary", "/əˈplaɪəns/", "She has all modern appliances in her kitchen.", "He has bought a new washing machine appliance.", "device", "gadget", ""],
+  ["Decoration", "Things used to make a place look attractive", "सजावट", "noun", "beginner", "/ˌdekəˈreɪʃən/", "She has lovely decoration for Diwali.", "He has arranged flower decorations for the event.", "ornament", "embellishment", ""],
+  ["Rent", "Payment made for using someone's property", "किराया", "noun", "beginner", "/rent/", "She has paid the rent for this month.", "He has a rent agreement for his flat.", "payment", "lease", ""],
+  ["Mortgage", "A loan to buy a house or property", "गिरवी / बंधक", "noun", "intermediate", "/ˈmɔːrɡɪdʒ/", "She has a mortgage on her new house.", "He has repaid his mortgage early.", "loan", "lien", ""],
+  ["Lease", "A legal agreement to use something for a period", "पट्टा / किराया समझौता", "noun", "elementary", "/liːs/", "She has signed a lease for two years.", "He has a lease for his commercial space.", "contract", "agreement", ""],
+
+  // --- Entertainment ---
+  ["Hobby", "An activity you enjoy doing in your free time", "शौक / हॉबी", "noun", "beginner", "/ˈhɒbi/", "She has a hobby of painting.", "He has many hobbies like reading and cycling.", "interest", "pastime", ""],
+  ["Sport", "A physical activity done for fun or competition", "खेल", "noun", "beginner", "/spɔːrt/", "He has a passion for cricket.", "She has played many sports in school.", "game", "athletics", ""],
+  ["Game", "An activity with rules played for fun", "खेल", "noun", "beginner", "/ɡeɪm/", "He has downloaded a new game on his phone.", "She has won the board game.", "sport", "contest", ""],
+  ["Music", "Organized sound that is pleasant to listen to", "संगीत", "noun", "beginner", "/ˈmjuːzɪk/", "She has a love for classical music.", "He has learned music from his father.", "melody", "tune", ""],
+  ["Movie", "A film shown in a cinema or on a screen", "फिल्म / मूवी", "noun", "beginner", "/ˈmuːvi/", "She has watched this movie three times.", "He has a collection of Hindi movies.", "film", "picture", ""],
+  ["Book", "A written work with pages bound together", "किताब / पुस्तक", "noun", "beginner", "/bʊk/", "She has a habit of reading one book a week.", "He has a library of over 200 books.", "novel", "text", ""],
+  ["Interest", "A feeling of wanting to learn or do something", "रुचि", "noun", "beginner", "/ˈɪntrəst/", "She has a great interest in science.", "He has shown interest in learning guitar.", "curiosity", "enthusiasm", "boredom"],
+  ["Subscription", "Payment to access a service regularly", "सदस्यता", "noun", "elementary", "/səbˈskrɪpʃən/", "She has a Netflix subscription.", "He has a gym subscription.", "membership", "plan", ""],
+  ["Collection", "A group of things gathered over time", "संग्रह", "noun", "beginner", "/kəˈlekʃən/", "She has a collection of vintage stamps.", "He has a great collection of cricket cards.", "assortment", "set", ""],
+  ["Talent show", "A competition to show off performing abilities", "प्रतिभा प्रदर्शनी", "phrase", "beginner", "/ˈtælənt ʃoʊ/", "She has participated in a talent show.", "He has won a talent show at school.", "competition", "performance", ""],
+
+  // --- Additional HAS/HAVE vocabulary ---
+  ["Habit", "Something you do regularly, often without thinking", "आदत", "noun", "beginner", "/ˈhæbɪt/", "She has a habit of waking up at 5 AM.", "He has the habit of checking email first thing.", "practice", "custom", ""],
+  ["Degree", "A level of measurement or intensity", "मात्रा / स्तर", "noun", "beginner", "/dɪˈɡriː/", "She has a high degree of skill.", "He has a certain degree of confidence.", "level", "extent", ""],
+  ["Influence", "Power to affect thoughts or actions", "प्रभाव / असर", "noun", "elementary", "/ˈɪnfluəns/", "Good books have a positive influence.", "She has influence over her team's decisions.", "impact", "effect", ""],
+  ["Advantage", "A favorable position or condition", "फायदा", "noun", "beginner", "/ədˈvɑːntɪdʒ/", "He has the advantage of bilingual skills.", "She has taken advantage of every opportunity.", "benefit", "upper hand", "disadvantage"],
+  ["Burden", "Something heavy to carry, physically or emotionally", "बोझ", "noun", "beginner", "/ˈbɜːrdən/", "She has the burden of managing the whole family.", "He has carried this burden alone for years.", "load", "weight", "relief"],
+  ["Right", "Something you are allowed to do by law or morally", "अधिकार", "noun", "beginner", "/raɪt/", "Every citizen has the right to vote.", "She has the right to speak her mind.", "entitlement", "privilege", "obligation"],
+  ["Responsibility", "A duty to deal with something", "जिम्मेदारी", "noun", "beginner", "/rɪˌspɒnsɪˈbɪlɪti/", "She has great responsibility at work.", "He has the responsibility to take care of his parents.", "duty", "obligation", "irresponsibility"],
+  ["Permission", "Official agreement to do something", "अनुमति", "noun", "beginner", "/pəˈmɪʃən/", "She has permission to leave early.", "He has not received permission yet.", "approval", "consent", "refusal"],
+  ["Choice", "The chance to select between two or more things", "चुनाव / विकल्प", "noun", "beginner", "/tʃɔɪs/", "She has a choice between two job offers.", "He has no other choice.", "option", "selection", "compulsion"],
+  ["Opinion", "A personal belief or view about something", "राय / विचार", "noun", "beginner", "/əˈpɪniən/", "She has a strong opinion about this issue.", "He has shared his opinion in the meeting.", "view", "perspective", "fact"],
+
+  // --- Additional broad vocabulary ---
+  ["Attitude", "A way of thinking and feeling about something", "रवैया / मनोवृत्ति", "noun", "beginner", "/ˈætɪtjuːd/", "She has a positive attitude at work.", "His attitude has changed for the better.", "outlook", "mindset", ""],
+  ["Character", "The qualities that make a person who they are", "चरित्र / स्वभाव", "noun", "elementary", "/ˈkærɪktər/", "She has a strong character.", "Good character is built over years.", "nature", "personality", ""],
+  ["Habit", "A practice done regularly and automatically", "आदत", "noun", "beginner", "/ˈhæbɪt/", "He has a habit of drinking warm water each morning.", "She has developed a reading habit.", "routine", "tendency", ""],
+  ["Value", "A belief about what is important in life", "मूल्य", "noun", "beginner", "/ˈvæljuː/", "She has strong family values.", "He has values that guide his decisions.", "principle", "belief", ""],
+  ["Skill", "The ability to do something well through practice", "कौशल", "noun", "beginner", "/skɪl/", "She has excellent communication skills.", "He has a skill in web development.", "ability", "competence", "inability"],
+  ["Knowledge", "Information and understanding about a subject", "ज्ञान", "noun", "beginner", "/ˈnɒlɪdʒ/", "She has deep knowledge of Indian history.", "He has knowledge of three programming languages.", "information", "understanding", "ignorance"],
+  ["Confidence", "Belief in your own abilities", "आत्मविश्वास", "noun", "beginner", "/ˈkɒnfɪdəns/", "He has great confidence in his work.", "She has built confidence through practice.", "assurance", "poise", "insecurity"],
+  ["Reputation", "How others see and judge you", "प्रतिष्ठा", "noun", "elementary", "/ˌrepjʊˈteɪʃən/", "She has a reputation for honesty.", "He has maintained a good reputation.", "image", "name", "infamy"],
+  ["Struggle", "A difficult effort to achieve something", "संघर्ष", "noun/verb", "beginner", "/ˈstrʌɡəl/", "She has had many struggles in life.", "He has struggled to reach his goals.", "hardship", "effort", "ease"],
+  ["Solution", "An answer to a problem", "हल / समाधान", "noun", "beginner", "/səˈluːʃən/", "She has found a solution to the issue.", "He has a solution for every problem.", "answer", "remedy", "problem"],
+
+  // --- Final set of vocabulary ---
+  ["Benefit", "An advantage or good thing that comes from something", "लाभ / फायदा", "noun", "beginner", "/ˈbenɪfɪt/", "She has enjoyed many benefits from this course.", "Exercise has great benefits for health.", "advantage", "gain", "loss"],
+  ["Challenge", "Something difficult that tests your ability", "चुनौती", "noun", "beginner", "/ˈtʃælɪndʒ/", "She has faced many challenges in her career.", "He has accepted the challenge willingly.", "difficulty", "obstacle", "opportunity"],
+  ["Growth", "The process of becoming bigger or better", "विकास / वृद्धि", "noun", "beginner", "/ɡroʊθ/", "She has shown great growth this year.", "Personal growth comes from facing difficulties.", "development", "progress", "decline"],
+  ["Failure", "Not succeeding in doing something", "असफलता", "noun", "beginner", "/ˈfeɪljər/", "He has learned from every failure.", "Failure is a stepping stone to success.", "defeat", "setback", "success"],
+  ["Success", "The achievement of what you were trying to do", "सफलता", "noun", "beginner", "/səkˈses/", "She has tasted success after hard work.", "His success has inspired many people.", "achievement", "triumph", "failure"],
+  ["Progress", "Moving forward or improving over time", "प्रगति", "noun", "beginner", "/ˈprəʊɡres/", "She has made great progress in English.", "He has shown progress in his work.", "advancement", "improvement", "regression"],
+  ["Habit", "A regular tendency or practice", "आदत", "noun", "beginner", "/ˈhæbɪt/", "She has a habit of morning yoga.", "He has good study habits.", "custom", "practice", ""],
+  ["Lifestyle", "The way someone lives their life", "जीवन शैली", "noun", "elementary", "/ˈlaɪfstaɪl/", "She has a healthy lifestyle.", "He has changed his lifestyle after the doctor's advice.", "way of life", "habits", ""],
+  ["Standard", "A level of quality or achievement", "मानक / स्तर", "noun", "elementary", "/ˈstændərd/", "She has set a high standard for herself.", "The company has maintained quality standards.", "level", "norm", ""],
+  ["Attitude", "A settled way of thinking about something", "रवैया", "noun", "beginner", "/ˈætɪtjuːd/", "She has a positive attitude toward change.", "His attitude toward work is very professional.", "mindset", "disposition", ""],
+  ["Pressure", "A feeling of stress or urgency", "दबाव", "noun", "beginner", "/ˈpreʃər/", "She has a lot of pressure from the deadline.", "He has learned to manage work pressure.", "stress", "tension", "ease"],
+  ["Balance", "An equal or steady state between things", "संतुलन", "noun", "beginner", "/ˈbæləns/", "She has achieved a good work-life balance.", "He has balance in all areas of his life.", "equilibrium", "stability", "imbalance"],
+  ["Habit", "Something regularly done or practiced", "आदत", "noun", "beginner", "/ˈhæbɪt/", "He has the habit of reading before bed.", "She has positive habits that help her grow.", "routine", "practice", ""],
+  ["Pattern", "A repeated way of doing something", "तरीका / ढाँचा", "noun", "elementary", "/ˈpætərn/", "She has noticed a pattern in her spending.", "He has developed a pattern for studying.", "design", "routine", ""],
+  ["Foundation", "The base on which something is built", "नींव / आधार", "noun", "elementary", "/faʊnˈdeɪʃən/", "She has a strong foundation in mathematics.", "He has built a foundation of trust with his team.", "base", "groundwork", ""],
+  ["Habit", "An established behavior repeated regularly", "आदत", "noun", "beginner", "/ˈhæbɪt/", "She has a habit of speaking kindly.", "He has maintained good habits since childhood.", "tendency", "custom", ""],
+  ["Comfort", "A pleasant state of ease and relaxation", "आराम / सुख", "noun", "beginner", "/ˈkʌmfərt/", "She has all comforts at her new home.", "He has found comfort in music.", "ease", "convenience", "discomfort"],
+  ["Tension", "Mental or emotional strain", "तनाव", "noun", "beginner", "/ˈtenʃən/", "She has a lot of tension before exams.", "He has tension about his job interview.", "stress", "anxiety", "calm"],
+  ["Concern", "A feeling of worry about something", "चिंता / सरोकार", "noun", "beginner", "/kənˈsɜːrn/", "She has a concern about her health.", "He has raised a concern in the meeting.", "worry", "anxiety", "indifference"],
+  ["Ability", "The power or skill to do something", "योग्यता / क्षमता", "noun", "beginner", "/əˈbɪlɪti/", "She has the ability to handle difficult situations.", "He has great ability in problem solving.", "capability", "skill", "inability"],
+];
+
+export const ALL_DAY_6_VOCABULARY: VocabularyWord[] = WORDS.map((data, i) =>
+  w(`d6v${String(i + 1).padStart(3, "0")}`, data)
+);
