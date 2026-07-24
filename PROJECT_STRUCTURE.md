@@ -470,12 +470,20 @@ mobile/
 - ✅ Dev passthrough auth (no Clerk key needed in dev)
 - ✅ Sound effects (Web Audio API)
 - ✅ Dark/light theme
+- ✅ TypeScript clean (0 errors as of 2026-07-24)
+- ✅ Env vars set: NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY, Clerk URLs, app flags
+
+## 🐛 Bugs Fixed (2026-07-24)
+- **TypeScript error in `days-3-7-content-extended.ts` line 2329**: Missing closing backtick on
+  `conceptExplanation` template literal for subtopic `d7-t1-s4`. This caused 45 cascading
+  TypeScript parse errors on line 2331. Fixed by adding the closing backtick.
 
 ## ⚠️ Known Gaps / TODO
-- ❌ Real Clerk auth requires valid CLERK_SECRET_KEY (user to provide)
+- ❌ Real Clerk auth requires valid CLERK_SECRET_KEY secret (Replit Secret — starts with `sk_test_`)
 - ❌ Mobile app is skeleton only (no real screens)
 - ❌ Days 8-75 use generated questions only (no handwritten questions)
 - ❌ Offline PWA service worker not implemented
 - ❌ Push notifications not implemented
 - ❌ Writing Lab partially implemented
 - ❌ Revision page partially implemented
+- ❌ Full Day 1-75 rich content (Days 3-75 use generator fallback, not hand-written lessons)
