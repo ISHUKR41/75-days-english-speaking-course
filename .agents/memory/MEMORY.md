@@ -11,3 +11,4 @@
 - [Progress save route](progress-save-route.md) — api/progress/save uses static subtopicId from request body directly (NOT DB cuid lookup); this is essential so completedSubtopicIds match the static config IDs the day page checks against
 - [Vocabulary API filters](vocabulary-api-filters.md) — /api/vocabulary accepts difficulty/partOfSpeech filters for "all" case; also reads "pageSize" OR "limit" param; profile stats must use ?? not || for numeric fields that can be 0
 - [Mobile sidebar fix](mobile-sidebar-fix.md) — SidebarProvider defaultOpen=true blocks content on mobile; SidebarMobileCloser client component calls setOpen(false) if window.innerWidth < 1024 on mount
+- [Project structure doc](project-structure-doc.md) — PROJECT_STRUCTURE.md at repo root has full file tree, critical rules, and verified working pages; read it first before exploring files to save tokens
