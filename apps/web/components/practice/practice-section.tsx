@@ -18,6 +18,8 @@ import { ALL_DAY_1_QUESTIONS } from "@/data/questions/day-1-questions";
 import { ALL_DAY1_EXTENDED_QUESTIONS } from "@/data/questions/day-1-extended-questions";
 // Import Day 2 questions
 import { ALL_DAY_2_QUESTIONS } from "@/data/questions/day-2-questions";
+// Import Days 3-7 hand-curated questions
+import { getDays3to7Questions } from "@/data/questions/days-3-7-questions";
 // Import the PracticeQ type for type compatibility
 import type { PracticeQ } from "@/data/questions/day-1-questions";
 // Import vocabulary data for question generation
@@ -135,7 +137,19 @@ function loadQuestionsForSubtopic(dayNumber: number, subtopicId: string): Questi
     if (combined.length > 0) return combined;
     return [...ALL_DAY_2_QUESTIONS.map(mapPracticeQToQuestion), ...generated];
   }
-  // For all other days (3-75): generate topic-specific questions using day-specific vocabulary
+  // For Days 3-7: use hand-curated questions first, then supplement with vocab-generated
+  if (dayNumber >= 3 && dayNumber <= 7) {
+    const handwritten = getDays3to7Questions(dayNumber, subtopicId);
+    const generated = getVocabGeneratedQuestions(dayNumber, subtopicId);
+    const handwrittenMapped = handwritten.map(mapPracticeQToQuestion);
+    // Combine: curated questions first, then vocab-generated for variety
+    const combined = [...handwrittenMapped, ...generated];
+    if (combined.length > 0) return combined;
+    // If no subtopic-specific questions, return all day questions + generated
+    const allDayQs = getDays3to7Questions(dayNumber);
+    return [...allDayQs.map(mapPracticeQToQuestion), ...generated];
+  }
+  // For Days 8-75: generate topic-specific questions using day-specific vocabulary
   const daySpecificGenerated = getVocabGeneratedQuestions(dayNumber, subtopicId);
   if (daySpecificGenerated.length > 0) return daySpecificGenerated;
   // Ultimate fallback: Day 1 questions (should not normally happen)

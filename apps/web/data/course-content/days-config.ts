@@ -615,11 +615,22 @@ function buildTopicsForDay(meta: Omit<DayConfig, "topics">): TopicConfig[] {
   ];
 }
 
+// Import specific configs for Days 3-7
+import { SPECIFIC_DAY_CONFIGS } from "./days-3-7-config";
+
 // Build remaining days with comprehensive multi-topic structure
-const remainingDays: DayConfig[] = REMAINING_DAYS_META.map((meta) => ({
-  ...meta,
-  topics: buildTopicsForDay(meta),
-}));
+// Days 3-7 use specific hand-crafted configs; Days 8-75 use the generic builder
+const remainingDays: DayConfig[] = REMAINING_DAYS_META.map((meta) => {
+  // Use specific hand-crafted config if available (Days 3-7)
+  if (SPECIFIC_DAY_CONFIGS[meta.dayNumber]) {
+    return SPECIFIC_DAY_CONFIGS[meta.dayNumber];
+  }
+  // Fall back to generic topic builder for Days 8-75
+  return {
+    ...meta,
+    topics: buildTopicsForDay(meta),
+  };
+});
 
 // The complete array of all 75 days
 export const COURSE_DAYS_DATA: DayConfig[] = [
