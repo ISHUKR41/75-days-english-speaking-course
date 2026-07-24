@@ -31,7 +31,7 @@ bash setup.sh
 | Framework | Next.js 14 (App Router, TypeScript) |
 | Monorepo | Turborepo — main app is `apps/web/` |
 | Database | Prisma ORM + SQLite (`dev.db`) |
-| Auth | Clerk (`@clerk/nextjs` v5) — dev passthrough when key absent |
+| Auth | Clerk (`@clerk/nextjs` v5) — required for protected routes |
 | Styling | Tailwind CSS + custom design tokens |
 | Animation | Framer Motion, GSAP, Anime.js, Lottie |
 | State | Zustand (with localStorage persist) |
@@ -93,9 +93,9 @@ The `dev.db` file is in `.gitignore` so it is not committed — the workflow re-
 
 ## Auth / Clerk
 
-The app has a **dev passthrough** mode (`apps/web/lib/safe-auth.ts`):
-- When `CLERK_SECRET_KEY` is absent or not a valid `sk_test_`/`sk_live_` key → passthrough active, all pages open, seeded dev user used automatically
-- When a valid `CLERK_SECRET_KEY` is set as a Replit Secret → real Clerk auth enforced, sign-in required to access any `/day/*` or `/dashboard` route
+Dashboard, day, practice, and other `(main)` routes require an authenticated
+Clerk session. When `CLERK_SECRET_KEY` is absent or invalid, protected routes
+redirect to `/sign-in`; the app does not use a seeded user as an auth bypass.
 
 To enable real auth:
 1. Create a Clerk project at https://dashboard.clerk.com
@@ -116,7 +116,7 @@ See `apps/web/.env.example` for the full list of supported variables.
 
 ## Health check
 
-`GET /api/health` — public endpoint that confirms the app is running, DB is connected, and Clerk mode (dev passthrough vs. real auth). Used by the mobile app sync bridge to verify connectivity.
+`GET /api/health` — public endpoint that confirms the app is running, DB is connected, and Clerk configuration mode. Used by the mobile app sync bridge to verify connectivity.
 
 ## Available npm scripts (run from `apps/web/`)
 
@@ -140,4 +140,4 @@ npm run db:studio    # Open Prisma Studio UI
 - Animations via Framer Motion, GSAP, Anime.js — smooth and professional, never janky
 - Content tone: warm, encouraging, like a great teacher — not robotic
 - Both **type** and **speak** answer modes must always be available in practice sessions
-- App must work in dev passthrough mode (no Clerk key) so UI can always be previewed
+- Protected app pages must require sign-in; the landing page and auth pages remain previewable without a Clerk secret

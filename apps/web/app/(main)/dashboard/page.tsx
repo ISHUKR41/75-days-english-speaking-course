@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 async function getDashboardData(userId: string) {
   try {
     // Auto-upsert user so they always exist in DB
-    // This handles: first-time visitors, dev passthrough, and new sign-ups
+    // This handles first-time visitors and new authenticated sign-ups
     const isDevUser = userId === "dev_user_75days_english";
     const user = await db.user.upsert({
       where: { clerkId: userId },
@@ -126,9 +126,9 @@ async function getDashboardData(userId: string) {
 
     return { user, days, leaderboard, todayXp, weekXp, accuracy, questionsAnswered, wordsLearned };
   } catch (error) {
+    // Surface the failure instead of showing misleading generated data.
     console.error("Dashboard data fetch error:", error);
-    // Return safe fallback — dashboard will show with placeholder data
-    return { user: null, days: [], leaderboard: [] };
+    throw new Error("Dashboard data could not be loaded.");
   }
 }
 

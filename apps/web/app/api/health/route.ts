@@ -38,8 +38,8 @@ export async function GET() {
       userCount: dbUserCount, // Number of users in DB (0 if not seeded)
     },
     clerk: {
-      configured: IS_CLERK_CONFIGURED, // true = real auth; false = dev passthrough
-      mode: IS_CLERK_CONFIGURED ? "production" : "development", // auth mode label
+      configured: IS_CLERK_CONFIGURED, // true = a valid Clerk secret is configured
+      mode: IS_CLERK_CONFIGURED ? "production" : "authentication-required", // auth mode label
     },
     timestamp: new Date().toISOString(), // Current server time
     version: "1.0.0",                    // App version — bump on major releases

@@ -7,7 +7,7 @@ A full-stack gamified English learning platform built with Next.js 14, Clerk aut
 ### Tech Stack
 - **Framework**: Next.js 14 (App Router)
 - **Language**: TypeScript 5.6
-- **Auth**: Clerk (with dev passthrough when key is missing)
+- **Auth**: Clerk (required for protected routes)
 - **Database**: SQLite (dev) via Prisma ORM
 - **Styling**: Tailwind CSS + custom design tokens
 - **Animation**: Framer Motion + GSAP
@@ -40,12 +40,12 @@ Server runs on port 5000.
 ### Architecture
 - **Static data**: Course content lives in `data/` (vocabulary, questions, day configs, lesson content)
 - **Database**: Only tracks progress (XP, completed subtopics, streaks) — NOT course content
-- **Auth**: Clerk with dev passthrough — works without Clerk keys in development
+- **Auth**: Clerk authentication is required for dashboard and course routes. Without a valid `CLERK_SECRET_KEY`, those routes redirect to sign-in rather than opening with fake/dev data.
 - **Section pages**: Each subtopic now has 4 separate pages (learn, vocabulary, practice, test)
 
 ### Environment Variables
 - `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` — Set (dev key)
-- `CLERK_SECRET_KEY` — **Needed for production auth**. The dev passthrough works without it.
+- `CLERK_SECRET_KEY` — **Required for dashboard/course access**. Add it as a Replit Secret; never paste it into source files or chat.
 - `SESSION_SECRET` — Session secret (set as Replit secret)
 - `DATABASE_URL` — Set automatically in workflow command
 

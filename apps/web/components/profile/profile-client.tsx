@@ -2,7 +2,7 @@
 // ============================================================
 // Profile Client — Beautiful custom profile page
 // Shows user stats, progress, badges, recent activity
-// Works with dev passthrough AND real Clerk auth
+// Works with authenticated Clerk users.
 // ============================================================
 
 import { motion } from "framer-motion";

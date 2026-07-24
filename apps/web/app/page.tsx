@@ -4,7 +4,7 @@
 // Redirects ONLY when Clerk is properly configured + user is logged in
 // ============================================================
 
-// Check if Clerk is properly set up (real auth vs dev passthrough)
+// Check if Clerk is properly set up for authenticated navigation
 import { IS_CLERK_CONFIGURED, safeAuth } from "@/lib/safe-auth";
 import { redirect } from "next/navigation";
 // Import all landing page section components
@@ -21,7 +21,7 @@ import { LandingFooter } from "@/components/landing/landing-footer";
 // Authenticated users (with real Clerk) go to dashboard
 export default async function HomePage() {
   // Only redirect when Clerk is properly configured AND user is logged in
-  // In dev passthrough mode — always show the landing page
+  // The landing page remains public whether auth is configured or not.
   if (IS_CLERK_CONFIGURED) {
     // Real Clerk auth is active — check if user is already signed in
     const { userId } = await safeAuth();

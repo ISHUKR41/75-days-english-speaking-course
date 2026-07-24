@@ -62,7 +62,6 @@ interface DashboardClientProps {
   questionsAnswered?: number;
   wordsLearned?: number;
 }
-
 // Build dynamic quick actions based on user's current day
 function buildQuickActions(currentDay: number) {
   return [
@@ -142,8 +141,8 @@ export function DashboardClient({
     "all" | "in-progress" | "completed" | "locked"
   >("all");
 
-  // Use real data from database — fall back to mock only when null
-  // initialUser is the Prisma User model from the server component
+  // Use only the user record loaded by the server component.
+  // Missing data stays an honest empty state instead of becoming fake data.
   const realUser = initialUser as {
     firstName?: string; lastName?: string;
     currentDay?: number; totalXp?: number; level?: number;
@@ -181,17 +180,8 @@ export function DashboardClient({
     return true;
   });
 
-  // Use initial days or generate placeholder data
-  const daysToShow =
-    initialDays.length > 0
-      ? filteredDays
-      : generatePlaceholderDays().filter((day) => {
-          if (activeFilter === "all") return true;
-          if (activeFilter === "completed") return day.dayNumber < stats.currentDay;
-          if (activeFilter === "in-progress") return day.dayNumber === stats.currentDay;
-          if (activeFilter === "locked") return day.dayNumber > stats.currentDay;
-          return true;
-        });
+  // The database is the single source for the day grid.
+  const daysToShow = filteredDays;
 
   return (
     <motion.div
@@ -561,10 +551,7 @@ export function DashboardClient({
 
           {/* Leaderboard list */}
           <div className="space-y-3">
-            {(initialLeaderboard.length > 0
-              ? initialLeaderboard
-              : MOCK_LEADERBOARD
-            ).map((user, i) => (
+            {initialLeaderboard.map((user, i) => (
               <div
                 key={user.id}
                 className="flex items-center gap-3 rounded-xl p-3 hover:bg-accent transition-colors"
@@ -608,67 +595,14 @@ export function DashboardClient({
                 </div>
               </div>
             ))}
+            {initialLeaderboard.length === 0 && (
+              <p className="rounded-xl border border-dashed border-border p-4 text-sm text-muted-foreground">
+                No leaderboard activity yet. Complete a lesson to appear here.
+              </p>
+            )}
           </div>
         </div>
       </motion.div>
     </motion.div>
   );
 }
-
-// Generate placeholder 75 days
-function generatePlaceholderDays() {
-  const TOPICS = [
-    "Basic of English", "Self Introduction", "Imperative Sentence",
-    "Be Verb", "Demonstrative Pronoun", "Has / Have", "Had", "Will Have",
-    "Use of There", "Revision + Practice", "Use of Want", "Use of Wanted",
-    "Use of Let", "Use of Let's", "Would Like To", "Can", "Should", "May",
-    "Must", "Revision + Speaking Practice", "Used To", "Could",
-    "Should Have", "Must Have", "Could Have", "Would Have", "May Have",
-    "Might Have", "Will / Shall", "Would + Ought To + Dare", "Revision",
-    "Tenses Part 1", "Tenses Part 2", "Tenses Part 3", "Tenses Part 4",
-    "Prepositions Part 1", "Prepositions Part 2", "Has To / Have To",
-    "Had To / Will Have To", "Make / Get", "Going To", "About To",
-    "Want To / Wanted To", "Need To / Needed To", "Fond Of", "Able To",
-    "Conjunctions", "WH Words", "Passive Voice Part 1", "Passive Voice Part 2",
-    "Advance Level Sentences Part 1", "Advance Level Sentences Part 2",
-    "Verb List", "Idioms, Phrases & Proverbs", "Important Vocabulary",
-    "Miscellaneous Vocabulary", "Stationery Vocabulary",
-    "Foods Vocabulary & Tastes", "Relation & Weather Vocabulary",
-    "Professions & Occupations", "Buildings, Worms & Insects",
-    "Flowers & Fruits Vocabulary", "Maths Vocabulary",
-    "Body & Diseases Vocabulary", "Industry Vocabulary",
-    "Colours & Judiciary", "Birds & Astrology",
-    "Factory & Sports + Sound", "Application Writing", "Letter Writing",
-    "E-mail Writing", "Paragraph Writing",
-    "Notice Writing + Writing Skills", "Grammar + Vocabulary + Speaking",
-    "Complete Mock Test + Final Revision",
-  ];
-
-  const EMOJIS = ["📚", "👋", "💬", "✅", "👆", "✨", "📖", "🔮", "📍", "🔄",
-    "🎯", "⏳", "🚀", "🌟", "💫", "🎭", "🤔", "🌈", "⚡", "🎤",
-    "🕰️", "💡", "🏆", "💎", "🌺", "🎪", "🔑", "❓", "⏰", "🎲",
-    "📝", "⏱️", "📊", "🌍", "🎓", "📌", "🔗", "🛠️", "🔧", "🔨",
-    "🎯", "🚀", "💬", "🎭", "❤️", "💪", "🔄", "❓", "🗣️", "🎤",
-    "🚀", "🌟", "📋", "💡", "📚", "🌈", "📎", "🍎", "🌤️", "👔",
-    "🏗️", "🌸", "➕", "💊", "🏭", "🎨", "🦅", "⚽", "✍️", "📬",
-    "📧", "📝", "📢", "📚", "✅"];
-
-  return TOPICS.map((title, i) => ({
-    dayNumber: i + 1,
-    title,
-    description: `Master ${title.toLowerCase()} with 200+ vocabulary words and practice questions`,
-    emoji: EMOJIS[i] || "📚",
-    isRevision: title.includes("Revision"),
-    isMockTest: title.includes("Mock Test"),
-    _count: { topics: ((i * 7 + 3) % 4) + 2 }, // Deterministic: 2-5 topics
-  }));
-}
-
-// Mock leaderboard data
-const MOCK_LEADERBOARD = [
-  { id: "1", firstName: "Rahul", lastName: "Sharma", imageUrl: null, totalXp: 8450, level: 12, streak: 21 },
-  { id: "2", firstName: "Priya", lastName: "Singh", imageUrl: null, totalXp: 7820, level: 11, streak: 18 },
-  { id: "3", firstName: "Amir", lastName: "Khan", imageUrl: null, totalXp: 6900, level: 10, streak: 15 },
-  { id: "4", firstName: "Anjali", lastName: "Patel", imageUrl: null, totalXp: 5430, level: 8, streak: 12 },
-  { id: "5", firstName: "Dev", lastName: "Kumar", imageUrl: null, totalXp: 4210, level: 7, streak: 9 },
-];

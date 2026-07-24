@@ -50,7 +50,7 @@ const clerkAuth = clerkMiddleware((auth, request) => {
 });
 
 // ─── Export the correct middleware ───────────────────────────
-// Use Clerk when configured, otherwise use dev passthrough
+// Use Clerk when configured; the protected layout handles missing sessions.
 export default IS_CLERK_CONFIGURED ? clerkAuth : devMiddleware;
 
 // ─── Middleware config ────────────────────────────────────────

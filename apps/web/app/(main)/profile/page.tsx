@@ -1,7 +1,7 @@
 // ============================================================
 // Profile Page — Custom profile replacing Clerk's UserProfile
 // Shows real user stats, progress, achievements from DB
-// Works with dev passthrough AND real Clerk auth
+// Works with authenticated Clerk users.
 // ============================================================
 
 import { Metadata } from "next";

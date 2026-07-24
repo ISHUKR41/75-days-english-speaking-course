@@ -4,7 +4,7 @@
 // ============================================================
 
 import { redirect } from "next/navigation";
-import { safeAuth, IS_CLERK_CONFIGURED } from "@/lib/safe-auth";
+import { safeAuth } from "@/lib/safe-auth";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileSidebarBackdrop } from "@/components/layout/mobile-sidebar-backdrop";
@@ -20,9 +20,9 @@ export default async function MainLayout({
   // Check authentication status (safe wrapper handles invalid Clerk keys)
   const { userId } = await safeAuth();
 
-  // Redirect to sign-in if not authenticated AND Clerk is actually configured
-  // In dev mode without Clerk, we allow access so the UI can be previewed
-  if (!userId && IS_CLERK_CONFIGURED) {
+  // Never render course pages without an authenticated Clerk session.
+  // A Clerk secret must be added before dashboard/day routes can open.
+  if (!userId) {
     redirect("/sign-in");
   }
 

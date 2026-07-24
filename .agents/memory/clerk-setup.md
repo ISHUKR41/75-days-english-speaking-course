@@ -1,11 +1,12 @@
 ---
 name: Clerk Auth Setup
-description: Auth config, dev passthrough, and correct env var names for this project
+description: Auth config, protected-route behavior, and correct env var names for this project
 ---
 
-## Dev Passthrough
-`lib/safe-auth.ts` returns `dev_user_75days_english` when `CLERK_SECRET_KEY` is placeholder.
-This lets the app run without real Clerk keys — all pages work in dev mode.
+## Protected Routes
+`lib/safe-auth.ts` returns no user when `CLERK_SECRET_KEY` is missing or invalid.
+The `(main)` layout redirects unauthenticated visitors to `/sign-in`; the seeded
+dev user is for database tooling only and is not an authentication bypass.
 
 ## Correct Clerk Env Vars (use these, NOT the deprecated ones)
 ```

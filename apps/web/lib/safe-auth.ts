@@ -1,8 +1,7 @@
 // ============================================================
-// Safe Auth - Graceful wrapper around Clerk's auth()
-// When Clerk is not configured (invalid/missing secret key),
-// returns a dev user so all pages work in development mode.
-// When Clerk IS configured, uses real authentication.
+// Safe Auth - Graceful wrapper around Clerk's auth().
+// A missing Clerk secret is treated as unauthenticated. This is
+// intentional: course content must never be available without sign-in.
 // ============================================================
 
 // ─── Check if Clerk secret key is properly configured ────────
@@ -22,8 +21,8 @@ export const IS_CLERK_CONFIGURED =
   !CLERK_SECRET.includes("YOUR_SECRET") &&  // not a template variable
   !CLERK_SECRET.includes("YOUR_KEY");       // not a template variable
 
-// ─── Dev user ID used when Clerk is not configured ───────────
-// This must match a user created in the database during seeding
+// ─── Seeded user ID retained for database seed/demo tooling ───
+// It is not used as an authentication bypass.
 export const DEV_USER_CLERK_ID = "dev_user_75days_english";
 
 // ─── Safe auth function ──────────────────────────────────────
@@ -32,10 +31,10 @@ export async function safeAuth(): Promise<{
   userId: string | null;
   sessionId?: string | null;
 }> {
-  // When Clerk is not configured, return dev user
-  // This lets the app work without a real Clerk key
+  // Without a server-side Clerk secret there is no trustworthy
+  // session to identify, so protected pages must redirect to sign-in.
   if (!IS_CLERK_CONFIGURED) {
-    return { userId: DEV_USER_CLERK_ID, sessionId: "dev-session" };
+    return { userId: null, sessionId: null };
   }
 
   // When Clerk IS configured, use real auth
@@ -58,15 +57,9 @@ export const auth = safeAuth;
 // ─── Safe currentUser function ────────────────────────────────
 // Returns current user info safely
 export async function safeCurrentUser() {
-  // When Clerk is not configured, return mock user data
+  // Without Clerk there is no authenticated profile to return.
   if (!IS_CLERK_CONFIGURED) {
-    return {
-      id: DEV_USER_CLERK_ID,
-      firstName: "Dev",
-      lastName: "User",
-      emailAddresses: [{ emailAddress: "dev@75daysenglish.com" }],
-      imageUrl: null,
-    };
+    return null;
   }
 
   // When Clerk IS configured, use real currentUser

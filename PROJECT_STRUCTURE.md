@@ -9,9 +9,10 @@
 - It installs from the repository root, recreates the local Prisma SQLite schema,
   seeds the course, removes the stale Next.js development cache, and serves
   `apps/web` on port 5000.
-- Local development authentication uses the documented safe-auth passthrough
-  when a valid Clerk secret is not configured. Real Clerk authentication must
-  be enabled with a Replit Secret before production use.
+- Dashboard and course routes require a valid Clerk session. When a valid
+  Clerk secret is not configured, they redirect to sign-in rather than using
+  a seeded/fake user. Add the secret through Replit Secrets before testing
+  authenticated pages.
 - The web app is the source of truth for mobile data through the mobile API
   routes under `apps/web/app/api/mobile/`; the mobile app is currently a
   lightweight client skeleton, not a second content database.
@@ -33,7 +34,7 @@ root/
 ├── English.txt       ← User requirements & feature wishlist
 ├── intro.txt         ← Additional user requirements
 ├── README.md         ← Project overview, tech stack
-├── replit.md         ← Replit run instructions + dev passthrough info
+├── replit.md         ← Replit run instructions + auth/setup info
 ├── CONTRIBUTING.md   ← Parallel branch strategy (day-1 through day-75)
 ├── turbo.json        ← Turborepo pipeline config
 └── setup.sh          ← One-time init script
@@ -48,7 +49,7 @@ root/
 |-------|-----------|
 | Framework | Next.js 14 (App Router) |
 | Language | TypeScript 5.6 |
-| Auth | Clerk v5 (with dev passthrough when key missing) |
+| Auth | Clerk v5 (required for protected routes) |
 | Database | SQLite via Prisma ORM (dev), easily migrated to PostgreSQL |
 | Styling | Tailwind CSS + custom design tokens |
 | Animation | Framer Motion |
@@ -248,7 +249,7 @@ lib/
 ├── safe-auth.ts    ← 🔑 Auth wrapper
 │                      IS_CLERK_CONFIGURED: bool (checks if sk_test_/sk_live_ key exists)
 │                      DEV_USER_CLERK_ID: "dev_user_75days_english"
-│                      safeAuth() → { userId } — uses dev user when Clerk not configured
+│                      safeAuth() → { userId } — returns null without Clerk/session
 │                      auth = safeAuth (alias for import { auth } from "@/lib/safe-auth")
 │                      safeCurrentUser() → mock user or real Clerk user
 │
@@ -328,10 +329,10 @@ prisma/
 ## 🔑 Critical Architecture Rules
 
 ### Authentication
-- **Dev passthrough**: When `CLERK_SECRET_KEY` is missing or invalid, `IS_CLERK_CONFIGURED = false`
+- **Protected-route rule**: When `CLERK_SECRET_KEY` is missing or invalid, `safeAuth()` returns no user and protected routes redirect to `/sign-in`
 - Dev user ID: `"dev_user_75days_english"` (seeded in DB)
 - All protected pages: `import { auth } from "@/lib/safe-auth"` (NOT from `@clerk/nextjs/server` directly)
-- Layout guard: `apps/web/app/(main)/layout.tsx` redirects to /sign-in only when Clerk IS configured
+- Layout guard: `apps/web/app/(main)/layout.tsx` redirects unauthenticated users to `/sign-in`
 
 ### Static Config vs Database
 - **Day/Topic/Subtopic STRUCTURE** → static config files in `data/course-content/`
@@ -440,13 +441,13 @@ mobile/
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | For real auth | Clerk publishable key (pk_test_... or pk_live_...) |
-| `CLERK_SECRET_KEY` | For real auth | Clerk secret key (sk_test_... or sk_live_...) |
+| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Auth UI | Clerk publishable key (pk_test_... or pk_live_...) |
+| `CLERK_SECRET_KEY` | Required for protected routes | Clerk secret key (sk_test_... or sk_live_...), stored as a Replit Secret |
 | `DATABASE_URL` | Always | `file:./dev.db` from `apps/web` (SQLite file at `apps/web/prisma/dev.db`) |
 | `SESSION_SECRET` | Optional | Express session secret |
 | `NEXT_PUBLIC_APP_URL` | Optional | Production URL for SEO/OG tags |
 
-**Dev mode**: Without `CLERK_SECRET_KEY`, app runs with dev passthrough (no sign-in required)
+**Without `CLERK_SECRET_KEY`**: landing and auth pages render, while protected routes redirect to `/sign-in`.
 
 ---
 

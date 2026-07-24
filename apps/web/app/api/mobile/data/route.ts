@@ -6,7 +6,7 @@
 // ============================================================
 
 import { NextRequest, NextResponse } from "next/server"; // Next.js API types
-import { auth } from "@/lib/safe-auth"; // Auth helper (dev passthrough safe)
+import { auth } from "@/lib/safe-auth"; // Auth helper for protected mobile data
 import { db } from "@/lib/db"; // Prisma database client
 import { COURSE_DAYS_DATA } from "@/data/course-content/days-config"; // Static course structure
 
@@ -18,7 +18,7 @@ export const dynamic = "force-dynamic";
 export async function GET(req: NextRequest) {
   try {
     // ── Authenticate the request ──────────────────────────────
-    const { userId } = await auth(); // Get the user ID from Clerk or dev passthrough
+    const { userId } = await auth(); // Get the authenticated Clerk user ID
 
     // ── Build the course structure from static config ─────────
     // We use static data so mobile gets the same structure as web
