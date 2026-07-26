@@ -2,7 +2,9 @@
 // ============================================================
 // Dashboard Stats - Row of key metric cards with real data
 // Shows XP, accuracy, words learned, time spent, etc.
-// Premium design with animated counters and gradient icons
+// Premium design with animated counters, gradient icons,
+// and SVG progress rings for visual engagement.
+// ALL data comes from the real DB via the stats prop.
 // ============================================================
 
 // Framer Motion for smooth entrance animations
@@ -13,7 +15,6 @@ import CountUp from "react-countup";
 import {
   BookMarked,
   Brain,
-  Clock,
   Flame,
   Star,
   Target,
@@ -28,34 +29,91 @@ import { cn } from "@/lib/utils";
 // ─── Types ───────────────────────────────────────────────────
 interface StatsProps {
   stats: {
-    currentDay: number;       // Which day the user is on
-    completedDays: number;    // How many days finished
-    streak: number;           // Consecutive study days
-    totalXp: number;          // Total XP earned across all days
-    level: number;            // Current level (based on XP)
-    levelProgress: number;    // Progress to next level (0-100)
-    todayXp: number;          // XP earned today
-    weekXp: number;           // XP earned this week
-    accuracy: number;         // Overall answer accuracy (%)
-    wordsLearned: number;     // Total vocabulary words mastered
+    currentDay: number;        // Which day the user is on
+    completedDays: number;     // How many days finished
+    streak: number;            // Consecutive study days
+    totalXp: number;           // Total XP earned across all days
+    level: number;             // Current level (based on XP)
+    levelProgress: number;     // Progress to next level (0-100)
+    todayXp: number;           // XP earned today
+    weekXp: number;            // XP earned this week
+    accuracy: number;          // Overall answer accuracy (%)
+    wordsLearned: number;      // Total vocabulary words mastered
     questionsAnswered: number; // Total questions answered
-    practiceMinutes: number;  // Minutes spent practicing today
-    badges: number;           // Number of badges earned
-    rank: number;             // Leaderboard rank
+    practiceMinutes: number;   // Minutes spent practicing today
+    badges: number;            // Number of badges earned
+    rank: number;              // Leaderboard rank
   };
 }
 
+// ─── SVG Progress Ring ─────────────────────────────────────────
+// Small animated ring for each category stat
+function StatRing({
+  percent,
+  size = 52,
+  strokeWidth = 4,
+  color,
+  trackColor = "rgba(255,255,255,0.08)",
+}: {
+  percent: number;
+  size?: number;
+  strokeWidth?: number;
+  color: string;
+  trackColor?: string;
+}) {
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const clampedPct = Math.min(100, Math.max(0, percent));
+  const dash = (clampedPct / 100) * circumference;
+
+  return (
+    <svg
+      width={size}
+      height={size}
+      style={{ transform: "rotate(-90deg)" }}
+      aria-hidden="true"
+    >
+      {/* Track */}
+      <circle
+        cx={size / 2}
+        cy={size / 2}
+        r={radius}
+        fill="none"
+        stroke={trackColor}
+        strokeWidth={strokeWidth}
+      />
+      {/* Animated fill */}
+      <motion.circle
+        cx={size / 2}
+        cy={size / 2}
+        r={radius}
+        fill="none"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        strokeLinecap="round"
+        strokeDasharray={`${circumference}`}
+        initial={{ strokeDashoffset: circumference }}
+        animate={{ strokeDashoffset: circumference - dash }}
+        transition={{ duration: 1.4, ease: "easeOut", delay: 0.2 }}
+      />
+    </svg>
+  );
+}
+
 // ─── Card definitions ─────────────────────────────────────────
-// Each card shows one metric with icon, gradient, and sublabel
+// Each card shows one metric with icon, gradient, ring, and sublabel.
+// The ring percent shows how "full" each metric is relative to a target.
 const getStatCards = (stats: StatsProps["stats"]) => [
   {
     icon: Zap,
     label: "Total XP",
     value: stats.totalXp,
     suffix: "",
+    // Ring shows progress within current level (0-100%)
+    ringPercent: stats.levelProgress,
+    ringColor: "#f59e0b",
     subLabel: stats.todayXp > 0 ? `+${stats.todayXp} today` : "Start earning XP!",
     subColor: stats.todayXp > 0 ? "text-emerald-400" : "text-muted-foreground",
-    // Amber gradient for XP — gold/achievement feel
     gradientFrom: "#f59e0b",
     gradientTo: "#d97706",
     bgColor: "bg-amber-500/10",
@@ -68,9 +126,11 @@ const getStatCards = (stats: StatsProps["stats"]) => [
     label: "Accuracy",
     value: stats.accuracy,
     suffix: "%",
-    subLabel: "Overall score",
+    // Ring directly shows accuracy percent
+    ringPercent: stats.accuracy,
+    ringColor: "#3b82f6",
+    subLabel: stats.accuracy >= 80 ? "Excellent! 🎯" : stats.accuracy > 0 ? "Keep practicing!" : "No data yet",
     subColor: "text-muted-foreground",
-    // Blue gradient for accuracy — precision/skill feel
     gradientFrom: "#3b82f6",
     gradientTo: "#1d4ed8",
     bgColor: "bg-blue-500/10",
@@ -83,9 +143,11 @@ const getStatCards = (stats: StatsProps["stats"]) => [
     label: "Words Learned",
     value: stats.wordsLearned,
     suffix: "",
+    // Ring shows progress toward 15,000 total vocab words
+    ringPercent: Math.min(100, (stats.wordsLearned / 15000) * 100),
+    ringColor: "#8b5cf6",
     subLabel: "From 15,000 total",
     subColor: "text-muted-foreground",
-    // Purple gradient for vocabulary — knowledge feel
     gradientFrom: "#8b5cf6",
     gradientTo: "#7c3aed",
     bgColor: "bg-purple-500/10",
@@ -98,9 +160,11 @@ const getStatCards = (stats: StatsProps["stats"]) => [
     label: "Questions Done",
     value: stats.questionsAnswered,
     suffix: "",
+    // Ring shows progress toward 500 questions milestone
+    ringPercent: Math.min(100, (stats.questionsAnswered / 500) * 100),
+    ringColor: "#ec4899",
     subLabel: "Practice & tests",
     subColor: "text-muted-foreground",
-    // Pink gradient for questions — effort feel
     gradientFrom: "#ec4899",
     gradientTo: "#db2777",
     bgColor: "bg-pink-500/10",
@@ -113,9 +177,11 @@ const getStatCards = (stats: StatsProps["stats"]) => [
     label: "Day Streak",
     value: stats.streak,
     suffix: " days",
-    subLabel: "Keep it going!",
+    // Ring shows streak as fraction of 30-day goal
+    ringPercent: Math.min(100, (stats.streak / 30) * 100),
+    ringColor: "#f97316",
+    subLabel: stats.streak >= 7 ? "🔥 On fire!" : "Keep it going!",
     subColor: "text-orange-400",
-    // Orange gradient for streak — fire/motivation feel
     gradientFrom: "#f97316",
     gradientTo: "#ea580c",
     bgColor: "bg-orange-500/10",
@@ -128,9 +194,11 @@ const getStatCards = (stats: StatsProps["stats"]) => [
     label: "Week XP",
     value: stats.weekXp,
     suffix: "",
+    // Ring shows week XP as fraction of 1000 weekly target
+    ringPercent: Math.min(100, (stats.weekXp / 1000) * 100),
+    ringColor: "#10b981",
     subLabel: "This week",
     subColor: "text-emerald-400",
-    // Emerald gradient for week progress — growth feel
     gradientFrom: "#10b981",
     gradientTo: "#059669",
     bgColor: "bg-emerald-500/10",
@@ -143,9 +211,11 @@ const getStatCards = (stats: StatsProps["stats"]) => [
     label: "Badges Earned",
     value: stats.badges,
     suffix: "",
+    // Ring shows badges as fraction of 20 max badges
+    ringPercent: Math.min(100, (stats.badges / 20) * 100),
+    ringColor: "#f59e0b",
     subLabel: "Achievements",
     subColor: "text-muted-foreground",
-    // Gold gradient for badges — prestige feel
     gradientFrom: "#f59e0b",
     gradientTo: "#b45309",
     bgColor: "bg-yellow-500/10",
@@ -158,9 +228,11 @@ const getStatCards = (stats: StatsProps["stats"]) => [
     label: "Current Level",
     value: stats.level,
     suffix: "",
+    // Ring shows level progress within current level
+    ringPercent: stats.levelProgress,
+    ringColor: "#06b6d4",
     subLabel: `${stats.levelProgress.toFixed(0)}% to next level`,
     subColor: "text-cyan-400",
-    // Cyan gradient for level — clarity/rank feel
     gradientFrom: "#06b6d4",
     gradientTo: "#0891b2",
     bgColor: "bg-cyan-500/10",
@@ -193,7 +265,7 @@ const cardVariants = {
 
 // ─── DashboardStats Component ─────────────────────────────────
 export function DashboardStats({ stats }: StatsProps) {
-  // Build card definitions with current stats
+  // Build card definitions with current stats from DB
   const cards = getStatCards(stats);
 
   return (
@@ -246,14 +318,34 @@ export function DashboardStats({ stats }: StatsProps) {
 
               {/* ── Card inner layout ── */}
               <div className="relative flex flex-col gap-2">
-                {/* Icon badge */}
-                <div
-                  className={cn(
-                    "flex h-8 w-8 items-center justify-center rounded-xl",
-                    card.bgColor
-                  )}
-                >
-                  <card.icon className={cn("h-4 w-4", card.iconColor)} aria-hidden="true" />
+                {/* Top row: icon badge + progress ring */}
+                <div className="flex items-start justify-between">
+                  {/* Icon badge */}
+                  <div
+                    className={cn(
+                      "flex h-8 w-8 items-center justify-center rounded-xl",
+                      card.bgColor
+                    )}
+                  >
+                    <card.icon className={cn("h-4 w-4", card.iconColor)} aria-hidden="true" />
+                  </div>
+
+                  {/* Animated progress ring with percent label */}
+                  <div className="relative flex items-center justify-center">
+                    <StatRing
+                      percent={card.ringPercent}
+                      size={36}
+                      strokeWidth={3}
+                      color={card.ringColor}
+                    />
+                    {/* Percent label centered inside the ring */}
+                    <span
+                      className="absolute text-[8px] font-bold tabular-nums"
+                      style={{ color: card.ringColor }}
+                    >
+                      {Math.round(card.ringPercent)}%
+                    </span>
+                  </div>
                 </div>
 
                 {/* Metric value (animated count-up) */}

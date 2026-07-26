@@ -3,7 +3,8 @@
 // Landing Hero — SPECTACULAR full-screen hero section
 // Design: Apple × Linear × Vercel × Stripe
 // Features: animated gradient bg, floating word cards,
-// shimmer badge, animated stats, Lenis smooth scroll
+// shimmer badge, animated stats, vocabulary marquee ticker,
+// Lenis smooth scroll, gradient mesh background animation
 // NO Math.random() — all values are deterministic
 // ============================================================
 
@@ -11,8 +12,8 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
-  ArrowRight, Sparkles, Zap, Play, Users, BookOpen,
-  Target, Flame, Star,
+  Sparkles, Zap, Play, Users, BookOpen,
+  Target, Flame, Star, Mic, MessageSquare,
 } from "lucide-react";
 
 // ─── Floating vocabulary word cards ───────────────────────────
@@ -21,61 +22,96 @@ const FLOATING_WORDS = [
   {
     word: "Fluent",
     size: "text-sm",
-    style: { top: "18%", left: "4%", transform: "rotate(-3deg)" },
+    style: { top: "20%", left: "5%", transform: "rotate(-3deg)" },
     delay: 0,
     duration: 5,
-    color: "from-violet-500/20 to-purple-500/10",
-    border: "border-violet-500/30",
-    text: "text-violet-300",
+    color: "from-violet-500/25 to-purple-500/15",
+    border: "border-violet-500/40",
+    text: "text-violet-200",
+    glow: "shadow-[0_0_20px_rgba(139,92,246,0.2)]",
   },
   {
     word: "Confident",
     size: "text-xs",
-    style: { top: "35%", right: "3%", transform: "rotate(2deg)" },
+    style: { top: "32%", right: "4%", transform: "rotate(2deg)" },
     delay: 0.8,
     duration: 6,
-    color: "from-blue-500/20 to-indigo-500/10",
-    border: "border-blue-500/30",
-    text: "text-blue-300",
+    color: "from-blue-500/25 to-indigo-500/15",
+    border: "border-blue-500/40",
+    text: "text-blue-200",
+    glow: "shadow-[0_0_20px_rgba(59,130,246,0.2)]",
   },
   {
     word: "Professional",
     size: "text-sm",
-    style: { bottom: "28%", left: "3%", transform: "rotate(4deg)" },
+    style: { bottom: "30%", left: "4%", transform: "rotate(4deg)" },
     delay: 1.6,
     duration: 7,
-    color: "from-emerald-500/20 to-teal-500/10",
-    border: "border-emerald-500/30",
-    text: "text-emerald-300",
+    color: "from-emerald-500/25 to-teal-500/15",
+    border: "border-emerald-500/40",
+    text: "text-emerald-200",
+    glow: "shadow-[0_0_20px_rgba(16,185,129,0.2)]",
   },
   {
     word: "Grammar",
     size: "text-xs",
-    style: { top: "22%", right: "5%", transform: "rotate(-2deg)" },
+    style: { top: "24%", right: "6%", transform: "rotate(-2deg)" },
     delay: 0.4,
     duration: 5.5,
-    color: "from-amber-500/20 to-orange-500/10",
-    border: "border-amber-500/30",
-    text: "text-amber-300",
+    color: "from-amber-500/25 to-orange-500/15",
+    border: "border-amber-500/40",
+    text: "text-amber-200",
+    glow: "shadow-[0_0_20px_rgba(245,158,11,0.2)]",
   },
   {
     word: "Vocabulary",
     size: "text-sm",
-    style: { bottom: "32%", right: "4%", transform: "rotate(3deg)" },
+    style: { bottom: "34%", right: "5%", transform: "rotate(3deg)" },
     delay: 1.2,
     duration: 6.5,
-    color: "from-pink-500/20 to-rose-500/10",
-    border: "border-pink-500/30",
-    text: "text-pink-300",
+    color: "from-pink-500/25 to-rose-500/15",
+    border: "border-pink-500/40",
+    text: "text-pink-200",
+    glow: "shadow-[0_0_20px_rgba(236,72,153,0.2)]",
   },
+  {
+    word: "Speaking",
+    size: "text-xs",
+    style: { top: "55%", left: "3%", transform: "rotate(-1deg)" },
+    delay: 2.0,
+    duration: 6,
+    color: "from-cyan-500/25 to-sky-500/15",
+    border: "border-cyan-500/40",
+    text: "text-cyan-200",
+    glow: "shadow-[0_0_20px_rgba(6,182,212,0.2)]",
+  },
+];
+
+// ─── Statistics bar data — course highlights ──────────────────
+const STATS_BAR = [
+  { label: "75 Days", sublabel: "Structured Program", icon: Flame, color: "text-orange-400" },
+  { label: "300+", sublabel: "Words Daily", icon: BookOpen, color: "text-violet-400" },
+  { label: "500+", sublabel: "Practice Questions", icon: Target, color: "text-pink-400" },
+  { label: "Type & Speak", sublabel: "Dual Learning", icon: Mic, color: "text-emerald-400" },
 ];
 
 // ─── Bottom stats bar data ─────────────────────────────────────
 const HERO_STATS = [
-  { icon: Users,    value: "50,000+",    label: "Learners" },
-  { icon: Flame,    value: "75 Days",    label: "Program" },
-  { icon: BookOpen, value: "200+",       label: "Words/Day" },
-  { icon: Zap,      value: "AI-Powered", label: "Learning" },
+  { icon: Users,       value: "50,000+",    label: "Learners" },
+  { icon: Flame,       value: "75 Days",    label: "Program" },
+  { icon: BookOpen,    value: "300+",        label: "Words/Day" },
+  { icon: Zap,         value: "AI-Powered", label: "Learning" },
+];
+
+// ─── Vocabulary marquee — scrolling ticker of English words ───
+// These represent the rich vocabulary content in the course
+const MARQUEE_WORDS = [
+  "Perseverance", "Eloquent", "Tenacious", "Articulate", "Exemplary",
+  "Proficient", "Astute", "Resilient", "Innovative", "Commendable",
+  "Diligent", "Versatile", "Pragmatic", "Meticulous", "Proactive",
+  "Accomplished", "Motivated", "Dedicated", "Ambitious", "Fluent",
+  "Confident", "Enthusiastic", "Professional", "Competent", "Remarkable",
+  "Strategic", "Analytical", "Collaborative", "Insightful", "Dynamic",
 ];
 
 // ─── Social proof avatar gradient colors ──────────────────────
@@ -96,6 +132,50 @@ const fadeUpVariant = {
     transition: { duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] },
   }),
 };
+
+// ─── VocabularyMarquee Component ──────────────────────────────
+// A horizontal scrolling ticker of vocabulary words
+function VocabularyMarquee() {
+  // Duplicate words for seamless infinite scroll
+  const words = [...MARQUEE_WORDS, ...MARQUEE_WORDS];
+
+  return (
+    <div
+      className="relative w-full overflow-hidden py-3"
+      aria-hidden="true"
+    >
+      {/* Left fade edge */}
+      <div className="absolute left-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
+        style={{ background: "linear-gradient(to right, hsl(var(--background)), transparent)" }}
+      />
+      {/* Right fade edge */}
+      <div className="absolute right-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
+        style={{ background: "linear-gradient(to left, hsl(var(--background)), transparent)" }}
+      />
+
+      {/* Scrolling track */}
+      <div className="marquee-track flex gap-3 w-max">
+        {words.map((word, i) => (
+          <span
+            key={`${word}-${i}`}
+            className={`
+              inline-flex items-center gap-1.5 rounded-full px-3 py-1
+              border backdrop-blur-sm text-xs font-semibold whitespace-nowrap
+              ${i % 6 === 0 ? "border-violet-500/30 text-violet-300 bg-violet-500/10" :
+                i % 6 === 1 ? "border-blue-500/30 text-blue-300 bg-blue-500/10" :
+                i % 6 === 2 ? "border-emerald-500/30 text-emerald-300 bg-emerald-500/10" :
+                i % 6 === 3 ? "border-amber-500/30 text-amber-300 bg-amber-500/10" :
+                i % 6 === 4 ? "border-pink-500/30 text-pink-300 bg-pink-500/10" :
+                              "border-cyan-500/30 text-cyan-300 bg-cyan-500/10"}
+            `}
+          >
+            {word}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 // ─── Hero Component ────────────────────────────────────────────
 export function LandingHero() {
@@ -141,16 +221,22 @@ export function LandingHero() {
   return (
     <section
       ref={containerRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
       style={{ paddingTop: "88px", paddingBottom: "40px" }}
       aria-label="Hero section"
     >
       {/* ── Background layers ── */}
       <div className="absolute inset-0 bg-background" aria-hidden="true" />
 
-      {/* Animated gradient background */}
+      {/* Animated gradient mesh background */}
       <div
         className="absolute inset-0 hero-gradient-animated pointer-events-none"
+        aria-hidden="true"
+      />
+
+      {/* Gradient mesh overlay — creates depth */}
+      <div
+        className="absolute inset-0 pointer-events-none hero-mesh-animated"
         aria-hidden="true"
       />
 
@@ -184,6 +270,16 @@ export function LandingHero() {
         aria-hidden="true"
       />
 
+      {/* Tertiary orb — bottom center */}
+      <div
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[400px] w-[600px] rounded-full pointer-events-none"
+        style={{
+          background: "radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%)",
+          filter: "blur(80px)",
+        }}
+        aria-hidden="true"
+      />
+
       {/* ── Floating word cards (desktop only) ── */}
       {mounted && (
         <div
@@ -207,12 +303,12 @@ export function LandingHero() {
             >
               <div
                 className={`
-                  rounded-xl border backdrop-blur-sm px-4 py-2
+                  rounded-xl border backdrop-blur-sm px-4 py-2.5
                   bg-gradient-to-br ${item.color} ${item.border}
-                  shadow-lg
+                  ${item.glow}
                 `}
               >
-                <span className={`font-semibold ${item.size} ${item.text}`}>
+                <span className={`font-bold ${item.size} ${item.text}`}>
                   {item.word}
                 </span>
               </div>
@@ -222,7 +318,7 @@ export function LandingHero() {
       )}
 
       {/* ── Main content ── */}
-      <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 text-center">
+      <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 text-center w-full">
 
         {/* ── Animated shimmer badge ── */}
         <motion.div
@@ -278,13 +374,34 @@ export function LandingHero() {
           variants={fadeUpVariant}
           initial="hidden"
           animate="visible"
-          className="mx-auto mb-10 max-w-2xl text-lg md:text-xl text-muted-foreground leading-relaxed"
+          className="mx-auto mb-8 max-w-2xl text-lg md:text-xl text-muted-foreground leading-relaxed"
         >
           From absolute beginner to{" "}
           <span className="text-foreground font-semibold">confident, fluent</span>{" "}
           English speaker. Master grammar, vocabulary, speaking &amp; professional communication
           — one structured day at a time.
         </motion.p>
+
+        {/* ── Statistics bar — course highlights ── */}
+        {/* Shows the key course stats in a scannable pill row */}
+        <motion.div
+          custom={0.4}
+          variants={fadeUpVariant}
+          initial="hidden"
+          animate="visible"
+          className="flex flex-wrap items-center justify-center gap-3 mb-10"
+        >
+          {STATS_BAR.map((stat) => (
+            <div
+              key={stat.label}
+              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm px-4 py-2"
+            >
+              <stat.icon className={`h-3.5 w-3.5 ${stat.color} shrink-0`} aria-hidden="true" />
+              <span className="text-sm font-bold text-foreground">{stat.label}</span>
+              <span className="text-xs text-muted-foreground">{stat.sublabel}</span>
+            </div>
+          ))}
+        </motion.div>
 
         {/* ── CTA buttons ── */}
         <motion.div
@@ -387,6 +504,24 @@ export function LandingHero() {
           </div>
         </motion.div>
       </div>
+
+      {/* ── Vocabulary Marquee ticker ── */}
+      {/* Scrolling word strip shows depth of the vocabulary course */}
+      <motion.div
+        className="relative z-10 w-full mt-12"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.9, duration: 0.8 }}
+      >
+        {/* Section label */}
+        <div className="text-center mb-3">
+          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
+            <MessageSquare className="inline h-3 w-3 mr-1 mb-0.5" />
+            300+ words you&apos;ll master daily
+          </span>
+        </div>
+        <VocabularyMarquee />
+      </motion.div>
 
       {/* ── Scroll indicator ── */}
       {mounted && (

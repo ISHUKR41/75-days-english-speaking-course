@@ -1,10 +1,10 @@
 {
   "name": "75 Days Hard English Course",
-  "short_name": "75 Days English",
-  "description": "The World's Most Advanced Free English Learning Platform. Master fluent English in 75 structured days.",
-  "start_url": "/",
+  "short_name": "75Days English",
+  "description": "The World's Most Advanced English Learning Platform",
+  "start_url": "/dashboard",
   "display": "standalone",
-  "background_color": "#0d1117",
+  "background_color": "#0f0f1a",
   "theme_color": "#6272f1",
   "orientation": "portrait-primary",
   "categories": ["education", "productivity"],
@@ -41,15 +41,21 @@
       "purpose": "maskable any"
     },
     {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
       "src": "/icons/icon-192x192.svg",
       "sizes": "192x192",
       "type": "image/svg+xml",
       "purpose": "maskable any"
     },
     {
-      "src": "/icons/icon-384x384.svg",
-      "sizes": "384x384",
-      "type": "image/svg+xml",
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
       "purpose": "maskable any"
     },
     {
@@ -87,22 +93,6 @@
       "description": "Practice speaking English",
       "url": "/speaking",
       "icons": [{ "src": "/icons/icon-96x96.svg", "sizes": "96x96" }]
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "/screenshots/dashboard.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Dashboard with learning progress"
-    },
-    {
-      "src": "/screenshots/practice.png",
-      "sizes": "750x1334",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Practice questions with Type and Speak modes"
     }
   ],
   "related_applications": [],
