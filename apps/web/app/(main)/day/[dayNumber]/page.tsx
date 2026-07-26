@@ -72,14 +72,14 @@ export default async function DayPage({
           // Days 1-2: hand-crafted (80+ practice, 50 test, 200 vocab)
           // Days 3-7: expanded banks (80-100 questions per day, split across subtopics)
           // Days 8-75: auto-generated from vocab (40+ questions per subtopic)
-          practiceQs: dayNum <= 2 ? 80 : dayNum <= 7 ? 60 : 40,
-          testQs: dayNum <= 2 ? 50 : dayNum <= 7 ? 30 : 20,
-          vocabulary: dayNum <= 2 ? 200 : dayNum <= 7 ? 180 : 150,
+          practiceQs: dayNum <= 2 ? 80 : dayNum <= 7 ? 60 : dayNum <= 14 ? 80 : 60,
+          testQs: dayNum <= 2 ? 50 : dayNum <= 7 ? 30 : dayNum <= 14 ? 40 : 30,
+          vocabulary: dayNum <= 2 ? 200 : dayNum <= 14 ? 200 : 150,
         },
       })),
     })),
     _count: {
-      vocabulary: dayNum <= 2 ? 200 : 150,
+      vocabulary: dayNum <= 2 ? 200 : dayNum <= 14 ? 200 : 150,
     },
   };
 
