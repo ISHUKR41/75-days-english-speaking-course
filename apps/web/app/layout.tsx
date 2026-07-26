@@ -249,7 +249,6 @@ export default function RootLayout({
         <ClerkProvider
           signInFallbackRedirectUrl="/dashboard"
           signUpFallbackRedirectUrl="/dashboard"
-          signInForceRedirectUrl="/dashboard"
         >
           {/* ── Theme Provider ─────────────────────────── */}
           {/* Handles dark/light/system theme switching */}

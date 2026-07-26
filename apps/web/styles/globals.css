@@ -1326,6 +1326,119 @@ textarea:focus {
   box-shadow: 0 8px 24px rgba(0,0,0,0.2), 0 0 0 1px hsl(var(--primary)/0.1);
 }
 
+/* ─── Premium UI Additions (2025 Design System) ────────────── */
+
+/* Enhanced glassmorphism */
+.glass {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Gradient text — Apple/Linear inspired */
+.gradient-text-hero {
+  background: linear-gradient(135deg, #a78bfa, #818cf8, #60a5fa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Animated radial hero gradient */
+.hero-gradient-animated {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(139,92,246,0.15) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(59,130,246,0.1) 0%, transparent 50%);
+  animation: hero-gradient-shift 10s ease-in-out infinite alternate;
+}
+
+@keyframes hero-gradient-shift {
+  0% {
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(139,92,246,0.18) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(59,130,246,0.12) 0%, transparent 50%);
+  }
+  50% {
+    background:
+      radial-gradient(ellipse at 30% 10%, rgba(99,102,241,0.18) 0%, transparent 60%),
+      radial-gradient(ellipse at 70% 30%, rgba(139,92,246,0.14) 0%, transparent 50%);
+  }
+  100% {
+    background:
+      radial-gradient(ellipse at 60% 5%, rgba(168,85,247,0.15) 0%, transparent 60%),
+      radial-gradient(ellipse at 90% 15%, rgba(59,130,246,0.1) 0%, transparent 50%);
+  }
+}
+
+/* Card glow — Purple/indigo aura */
+.card-glow {
+  box-shadow: 0 0 0 1px rgba(139,92,246,0.1), 0 4px 24px rgba(139,92,246,0.08);
+}
+
+/* Hover lift animation */
+.hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(139,92,246,0.15);
+}
+
+/* Animated gradient border */
+@keyframes gradient-border-pulse {
+  0%, 100% { border-color: rgba(139,92,246,0.3); }
+  50% { border-color: rgba(99,102,241,0.6); }
+}
+.animate-gradient-border {
+  animation: gradient-border-pulse 2s ease-in-out infinite;
+}
+
+/* Shimmer badge effect */
+@keyframes shimmer-badge {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.badge-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(139,92,246,0.15) 0%,
+    rgba(99,102,241,0.25) 25%,
+    rgba(139,92,246,0.15) 50%,
+    rgba(99,102,241,0.25) 75%,
+    rgba(139,92,246,0.15) 100%
+  );
+  background-size: 200% auto;
+  animation: shimmer-badge 3s linear infinite;
+}
+
+/* XP bar fill animation class */
+.xp-bar-fill {
+  background: linear-gradient(90deg, hsl(var(--primary)), #a78bfa, #818cf8);
+  box-shadow: 0 0 10px hsl(var(--primary) / 0.5);
+}
+
+/* Font display for large headings */
+.font-display-hero {
+  font-family: var(--font-outfit), var(--font-inter), sans-serif;
+  font-feature-settings: "ss01", "ss02";
+  letter-spacing: -0.04em;
+}
+
+/* Sidebar gradient bg */
+.sidebar-gradient {
+  background: linear-gradient(
+    180deg,
+    hsl(var(--sidebar-background)) 0%,
+    hsl(222 30% 5%) 100%
+  );
+}
+
+/* Active nav gradient border */
+.nav-item-gradient-active {
+  border-left: 3px solid hsl(var(--primary));
+  background: linear-gradient(90deg, hsl(var(--primary)/0.12), transparent);
+}
+
 /* ─── Print Styles ────────────────────────────────────────── */
 @media print {
   .no-print { display: none !important; }

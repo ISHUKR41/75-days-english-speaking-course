@@ -78,6 +78,82 @@ function getDayGradient(dayNumber: number) {
   return gradients[Math.floor((dayNumber - 1) / 11)] ?? gradients[0];
 }
 
+// ─── Difficulty indicator ─────────────────────────────────────────────────────
+// Returns difficulty level based on subtopic index within a topic
+function getSubtopicDifficulty(subtopicIndex: number, totalSubtopics: number): {
+  label: string;
+  color: string;
+  bg: string;
+  border: string;
+} {
+  const ratio = subtopicIndex / Math.max(totalSubtopics - 1, 1);
+  if (ratio < 0.33) return {
+    label: "Beginner",
+    color: "text-emerald-600 dark:text-emerald-400",
+    bg: "bg-emerald-500/10",
+    border: "border-emerald-500/25",
+  };
+  if (ratio < 0.67) return {
+    label: "Elementary",
+    color: "text-amber-600 dark:text-amber-400",
+    bg: "bg-amber-500/10",
+    border: "border-amber-500/25",
+  };
+  return {
+    label: "Intermediate",
+    color: "text-rose-600 dark:text-rose-400",
+    bg: "bg-rose-500/10",
+    border: "border-rose-500/25",
+  };
+}
+
+// ─── SVG Progress Ring ────────────────────────────────────────────────────────
+function ProgressRing({
+  percent,
+  size = 48,
+  strokeWidth = 4,
+  color = "#6272f1",
+  trackColor = "rgba(255,255,255,0.2)",
+}: {
+  percent: number;
+  size?: number;
+  strokeWidth?: number;
+  color?: string;
+  trackColor?: string;
+}) {
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const dash = (percent / 100) * circumference;
+
+  return (
+    <svg width={size} height={size} style={{ transform: "rotate(-90deg)" }}>
+      {/* Track */}
+      <circle
+        cx={size / 2}
+        cy={size / 2}
+        r={radius}
+        fill="none"
+        stroke={trackColor}
+        strokeWidth={strokeWidth}
+      />
+      {/* Progress */}
+      <motion.circle
+        cx={size / 2}
+        cy={size / 2}
+        r={radius}
+        fill="none"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        strokeLinecap="round"
+        strokeDasharray={`${circumference}`}
+        initial={{ strokeDashoffset: circumference }}
+        animate={{ strokeDashoffset: circumference - dash }}
+        transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }}
+      />
+    </svg>
+  );
+}
+
 // ─── Animation variants ───────────────────────────────────────────────────────
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -252,11 +328,23 @@ export function DayPageClient({
               </div>
             </div>
 
-            {/* Stats pill */}
+            {/* Animated progress ring + stats */}
             <div className="flex items-center gap-3 rounded-2xl bg-white/15 backdrop-blur-sm border border-white/20 px-4 py-3 text-white shrink-0">
+              <div className="relative flex items-center justify-center">
+                <ProgressRing
+                  percent={progressPercent}
+                  size={56}
+                  strokeWidth={5}
+                  color="white"
+                  trackColor="rgba(255,255,255,0.2)"
+                />
+                <span className="absolute text-sm font-black">{progressPercent}%</span>
+              </div>
               <div className="text-center">
-                <p className="text-2xl font-black">{progressPercent}%</p>
                 <p className="text-xs text-white/70">Done</p>
+                <p className="text-xs text-white/90 font-semibold mt-0.5">
+                  {completedSubtopicsCount}/{totalSubtopics}
+                </p>
               </div>
             </div>
           </div>
@@ -368,12 +456,21 @@ export function DayPageClient({
                   className="flex w-full items-center gap-4 p-4 hover:bg-accent/50 transition-colors text-left"
                   aria-expanded={isExpanded}
                 >
-                  {/* Topic icon */}
-                  <div
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-xl"
-                    style={{ backgroundColor: `${topic.color}25` }}
-                  >
-                    {topic.emoji}
+                  {/* Topic icon + animated progress ring */}
+                  <div className="relative shrink-0">
+                    <ProgressRing
+                      percent={topicProgressPct}
+                      size={44}
+                      strokeWidth={3.5}
+                      color={topic.color || "#6272f1"}
+                      trackColor="hsl(var(--muted))"
+                    />
+                    <div
+                      className="absolute inset-0 flex items-center justify-center text-lg"
+                      style={{ transform: "none" }}
+                    >
+                      {topic.emoji}
+                    </div>
                   </div>
 
                   {/* Topic info */}
@@ -403,12 +500,12 @@ export function DayPageClient({
 
                   {/* Count + chevron */}
                   <div className="shrink-0 flex items-center gap-3">
-                    <span className="hidden sm:block text-xs text-muted-foreground">
+                    <span className="hidden sm:block text-xs font-semibold text-muted-foreground bg-muted px-2 py-1 rounded-full">
                       {completedCount}/{topic.subtopics.length} done
                     </span>
                     <ChevronDown
                       className={cn(
-                        "h-5 w-5 text-muted-foreground transition-transform duration-200",
+                        "h-5 w-5 text-muted-foreground transition-transform duration-300",
                         isExpanded && "rotate-180"
                       )}
                     />
@@ -422,7 +519,7 @@ export function DayPageClient({
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.2, ease: "easeInOut" }}
+                      transition={{ duration: 0.25, ease: "easeInOut" }}
                       className="overflow-hidden border-t border-border/50"
                     >
                       {topic.subtopics.map((subtopic, subIdx) => {
@@ -432,91 +529,133 @@ export function DayPageClient({
                           completedSubtopicsCount === topic.subtopics.findIndex(
                             (s) => s.id === subtopic.id
                           );
+                        const difficulty = getSubtopicDifficulty(subIdx, topic.subtopics.length);
+                        const subtopicLearnUrl = `/day/${dayNumber}/topic/${topic.id}/subtopic/${subtopic.id}/learn`;
+                        const subtopicPracticeUrl = `/day/${dayNumber}/topic/${topic.id}/subtopic/${subtopic.id}/practice`;
+                        const subtopicTestUrl = `/day/${dayNumber}/topic/${topic.id}/subtopic/${subtopic.id}/test`;
 
                         return (
-                          <Link
+                          <div
                             key={subtopic.id}
-                            href={`/day/${dayNumber}/topic/${topic.id}/subtopic/${subtopic.id}`}
                             className={cn(
-                              "group flex items-center gap-3 px-4 py-3.5",
-                              "border-b border-border/40 last:border-0",
-                              "transition-all duration-200",
-                              isCompleted && "hover:bg-emerald-500/5",
-                              isCurrent && "bg-primary/5 hover:bg-primary/8",
-                              !isCompleted && !isCurrent && "hover:bg-accent/50"
+                              "border-b border-border/40 last:border-0 transition-all duration-200",
+                              isCompleted && "bg-emerald-500/3",
+                              isCurrent && "bg-primary/5",
                             )}
                           >
-                            {/* Status indicator */}
-                            <div
-                              className={cn(
-                                "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-sm",
-                                isCompleted
-                                  ? "bg-emerald-500/15 text-emerald-500"
-                                  : isCurrent
-                                  ? "bg-primary/15 text-primary"
-                                  : "bg-muted text-muted-foreground"
-                              )}
-                            >
-                              {isCompleted ? (
-                                <CheckCircle2 className="h-4 w-4" />
-                              ) : (
-                                <span className="text-base">{subtopic.emoji}</span>
-                              )}
-                            </div>
+                            <div className="flex items-center gap-3 px-4 py-3.5">
+                              {/* Status indicator */}
+                              <div
+                                className={cn(
+                                  "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-sm",
+                                  isCompleted
+                                    ? "bg-emerald-500/15 text-emerald-500"
+                                    : isCurrent
+                                    ? "bg-primary/15 text-primary"
+                                    : "bg-muted text-muted-foreground"
+                                )}
+                              >
+                                {isCompleted ? (
+                                  <CheckCircle2 className="h-4 w-4" />
+                                ) : (
+                                  <span className="text-base">{subtopic.emoji}</span>
+                                )}
+                              </div>
 
-                            {/* Subtopic info */}
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2 flex-wrap">
-                                <p
-                                  className={cn(
-                                    "text-sm font-semibold",
-                                    isCompleted
-                                      ? "text-muted-foreground/70"
-                                      : "text-foreground"
+                              {/* Subtopic info */}
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <Link
+                                    href={`/day/${dayNumber}/topic/${topic.id}/subtopic/${subtopic.id}`}
+                                    className={cn(
+                                      "text-sm font-semibold hover:underline",
+                                      isCompleted
+                                        ? "text-muted-foreground/70"
+                                        : "text-foreground"
+                                    )}
+                                  >
+                                    {subtopic.title}
+                                  </Link>
+                                  {/* Difficulty chip */}
+                                  <span className={cn(
+                                    "rounded-full border px-2 py-0.5 text-xs font-medium",
+                                    difficulty.bg, difficulty.color, difficulty.border
+                                  )}>
+                                    {difficulty.label}
+                                  </span>
+                                  {isCompleted && (
+                                    <span className="rounded-full bg-emerald-500/15 border border-emerald-500/25 px-2 py-0.5 text-xs font-bold text-emerald-500">
+                                      ✓ Done
+                                    </span>
                                   )}
-                                >
-                                  {subtopic.title}
+                                  {isCurrent && (
+                                    <span className="rounded-full bg-primary/15 border border-primary/25 px-2 py-0.5 text-xs font-bold text-primary">
+                                      Continue →
+                                    </span>
+                                  )}
+                                </div>
+                                <p className="text-xs text-muted-foreground truncate mt-0.5">
+                                  {subtopic.description}
                                 </p>
-                                {isCompleted && (
-                                  <span className="rounded-full bg-emerald-500/15 border border-emerald-500/25 px-2 py-0.5 text-xs font-bold text-emerald-500">
-                                    ✓ Done
-                                  </span>
-                                )}
-                                {isCurrent && (
-                                  <span className="rounded-full bg-primary/15 border border-primary/25 px-2 py-0.5 text-xs font-bold text-primary">
-                                    Continue →
-                                  </span>
-                                )}
-                              </div>
-                              <p className="text-xs text-muted-foreground truncate">
-                                {subtopic.description}
-                              </p>
-                              {/* Mini stats */}
-                              <div className="flex items-center gap-3 mt-1">
-                                {subtopic._count?.practiceQs > 0 && (
-                                  <span className="text-xs text-muted-foreground flex items-center gap-1">
-                                    <Target className="h-3 w-3" />
-                                    {subtopic._count.practiceQs} Qs
-                                  </span>
-                                )}
-                                {subtopic._count?.vocabulary > 0 && (
-                                  <span className="text-xs text-muted-foreground flex items-center gap-1">
-                                    <BookOpen className="h-3 w-3" />
-                                    {subtopic._count.vocabulary} words
-                                  </span>
-                                )}
-                              </div>
-                            </div>
 
-                            {/* Time + arrow */}
-                            <div className="shrink-0 flex items-center gap-2">
-                              <span className="hidden sm:flex items-center gap-1 text-xs text-muted-foreground">
-                                <Clock className="h-3 w-3" />
-                                {subtopic.estimatedMins}m
-                              </span>
-                              <ChevronRight className="h-4 w-4 text-muted-foreground/50" />
+                                {/* Learn / Practice / Test colored chips */}
+                                <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                                  <Link
+                                    href={subtopicLearnUrl}
+                                    className="inline-flex items-center gap-1 rounded-full bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/20 px-2 py-0.5 text-xs font-semibold text-indigo-600 dark:text-indigo-400 transition-colors"
+                                    onClick={e => e.stopPropagation()}
+                                  >
+                                    <BookOpen className="h-2.5 w-2.5" />
+                                    Learn
+                                  </Link>
+                                  <Link
+                                    href={subtopicPracticeUrl}
+                                    className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 px-2 py-0.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400 transition-colors"
+                                    onClick={e => e.stopPropagation()}
+                                  >
+                                    <Target className="h-2.5 w-2.5" />
+                                    Practice
+                                  </Link>
+                                  <Link
+                                    href={subtopicTestUrl}
+                                    className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 px-2 py-0.5 text-xs font-semibold text-amber-600 dark:text-amber-400 transition-colors"
+                                    onClick={e => e.stopPropagation()}
+                                  >
+                                    <Trophy className="h-2.5 w-2.5" />
+                                    Test
+                                  </Link>
+
+                                  {/* Stats */}
+                                  {subtopic._count?.practiceQs > 0 && (
+                                    <span className="text-xs text-muted-foreground flex items-center gap-1">
+                                      <Target className="h-3 w-3" />
+                                      {subtopic._count.practiceQs} Qs
+                                    </span>
+                                  )}
+                                  {subtopic._count?.vocabulary > 0 && (
+                                    <span className="text-xs text-muted-foreground flex items-center gap-1">
+                                      <BookOpen className="h-3 w-3" />
+                                      {subtopic._count.vocabulary} words
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+
+                              {/* Time + arrow */}
+                              <div className="shrink-0 flex items-center gap-2">
+                                <span className="hidden sm:flex items-center gap-1 text-xs text-muted-foreground">
+                                  <Clock className="h-3 w-3" />
+                                  {subtopic.estimatedMins}m
+                                </span>
+                                <Link
+                                  href={`/day/${dayNumber}/topic/${topic.id}/subtopic/${subtopic.id}`}
+                                  className="flex items-center justify-center h-7 w-7 rounded-lg hover:bg-accent transition-colors"
+                                >
+                                  <ChevronRight className="h-4 w-4 text-muted-foreground/50" />
+                                </Link>
+                              </div>
                             </div>
-                          </Link>
+                          </div>
                         );
                       })}
                     </motion.div>

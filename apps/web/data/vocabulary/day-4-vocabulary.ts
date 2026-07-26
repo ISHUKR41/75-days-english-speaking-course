@@ -361,6 +361,20 @@ const WORDS: W[] = [
   ["wrong", "not correct; not right", "गलत", "adjective", "beginner", "/rɒŋ/", "The information given to us was wrong.", "She was wrong about the time of the meeting.", "incorrect", "mistaken", "correct"],
   ["certain", "sure; known without doubt", "निश्चित", "adjective", "beginner", "/ˈsɜːtn/", "I am certain that this is the right answer.", "Are you certain you locked the door?", "sure", "definite", "uncertain"],
   ["uncertain", "not sure; having doubts", "अनिश्चित", "adjective", "elementary", "/ʌnˈsɜːtn/", "The future is uncertain — so plan carefully.", "She was uncertain whether to accept the offer.", "unsure", "doubtful", "certain"],
+  // Additional words to reach 300+
+  ["professional", "relating to or connected with a job", "पेशेवर", "adjective", "beginner", "/prəˈfeʃənl/", "She is very professional in her approach.", "He is a professional musician.", "skilled", "expert", "amateur"],
+  ["informal", "relaxed and friendly rather than official", "अनौपचारिक", "adjective", "elementary", "/ɪnˈfɔːml/", "The meeting was informal and friendly.", "She wore informal clothes to the party.", "casual", "relaxed", "formal"],
+  ["available", "free to be used or ready to help", "उपलब्ध", "adjective", "beginner", "/əˈveɪləbl/", "Are you available for a meeting tomorrow?", "The book is available in the library.", "accessible", "free", "unavailable"],
+  ["reliable", "can be trusted to do things correctly", "विश्वसनीय", "adjective", "elementary", "/rɪˈlaɪəbl/", "She is a reliable employee.", "This information is from a reliable source.", "dependable", "trustworthy", "unreliable"],
+  ["flexible", "able to change easily to suit situations", "लचीला", "adjective", "elementary", "/ˈfleksɪbl/", "You must be flexible with your work schedule.", "She has a flexible approach to solving problems.", "adaptable", "adjustable", "rigid"],
+  ["permanent", "lasting forever or for a long time", "स्थायी", "adjective", "elementary", "/ˈpɜːmənənt/", "She has a permanent job at the bank.", "The scar is permanent.", "lasting", "enduring", "temporary"],
+  ["temporary", "lasting only for a short time", "अस्थायी", "adjective", "beginner", "/ˈtempərəri/", "This is a temporary arrangement.", "He has a temporary contract.", "short-term", "brief", "permanent"],
+  ["ordinary", "not special; normal and usual", "साधारण", "adjective", "beginner", "/ˈɔːdɪnəri/", "He was an ordinary boy with extraordinary dreams.", "This is an ordinary day at the office.", "normal", "common", "extraordinary"],
+  ["extraordinary", "very unusual or remarkable", "असाधारण", "adjective", "elementary", "/ɪkˈstrɔːdɪnəri/", "She has an extraordinary talent for music.", "The results were extraordinary.", "remarkable", "exceptional", "ordinary"],
+  ["necessary", "needed to achieve something", "आवश्यक", "adjective", "beginner", "/ˈnesəsəri/", "Practice is necessary to become fluent.", "It is necessary to carry your ID card.", "essential", "required", "unnecessary"],
+  ["impossible", "not able to happen or be done", "असंभव", "adjective", "beginner", "/ɪmˈpɒsɪbl/", "Nothing is impossible if you work hard.", "That task is impossible to finish in one day.", "unachievable", "unattainable", "possible"],
+  ["possible", "able to be done or to happen", "संभव", "adjective", "beginner", "/ˈpɒsɪbl/", "It is possible to learn English in 75 days.", "Is it possible to meet on Monday?", "feasible", "achievable", "impossible"],
+  ["qualified", "having the right skills or education", "योग्य", "adjective", "elementary", "/ˈkwɒlɪfaɪd/", "She is highly qualified for this role.", "Only qualified engineers can apply.", "certified", "skilled", "unqualified"],
 ];
 
 export const ALL_DAY_4_VOCABULARY: VocabularyWord[] = WORDS.map((data, i) =>

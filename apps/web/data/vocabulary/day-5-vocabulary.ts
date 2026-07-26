@@ -363,6 +363,25 @@ const WORDS: W[] = [
   ["diagram", "a drawing that shows how something works", "आरेख / चित्र", "noun", "elementary", "/ˈdaɪəɡræm/", "Draw a diagram for this explanation.", "Label those parts in the diagram.", "figure", "illustration", ""],
   ["image", "a picture or visual representation", "छवि / चित्र", "noun", "beginner", "/ˈɪmɪdʒ/", "This image shows the correct position.", "Those images are from the textbook.", "picture", "photo", ""],
   ["picture", "a drawing or photograph of something", "तस्वीर / चित्र", "noun", "beginner", "/ˈpɪktʃər/", "Look at this picture carefully.", "Describe those pictures in two sentences.", "image", "photo", ""],
+  // Additional words to reach 300+
+  ["arrangement", "the way things are organized or ordered", "व्यवस्था / क्रम", "noun", "elementary", "/əˈreɪndʒmənt/", "This arrangement of chairs looks neat.", "Those arrangements were made by the team.", "organization", "setup", "disorder"],
+  ["boundary", "a line that marks the limits of an area", "सीमा / हद", "noun", "elementary", "/ˈbaʊndri/", "Do not cross this boundary during the exam.", "Those boundaries are clearly marked on the map.", "border", "limit", ""],
+  ["dimension", "a measurement of length, width, or height", "आयाम / माप", "noun", "intermediate", "/daɪˈmenʃn/", "Measure this dimension accurately before cutting.", "These dimensions are given in the technical drawing.", "measurement", "size", ""],
+  ["feature", "an important or noticeable part of something", "विशेषता / लक्षण", "noun", "beginner", "/ˈfiːtʃər/", "This feature makes the product unique.", "Those features are described in the manual.", "characteristic", "quality", ""],
+  ["highlight", "to emphasize or draw attention to something", "उजागर करना / महत्व देना", "verb", "elementary", "/ˈhaɪlaɪt/", "Highlight this word in yellow so you remember it.", "Those highlighted sections are very important.", "emphasize", "mark", "ignore"],
+  ["version", "a particular form of something different from others", "संस्करण / रूप", "noun", "elementary", "/ˈvɜːʃn/", "This version of the book is very popular.", "Those versions contain different content.", "edition", "variant", "original"],
+  ["sequence", "a particular order in which things follow each other", "अनुक्रम / क्रम", "noun", "elementary", "/ˈsiːkwəns/", "Follow this sequence of steps carefully.", "These sequences are important for the experiment.", "order", "series", "disorder"],
+  ["method", "a particular way of doing something", "तरीका / विधि", "noun", "beginner", "/ˈmeθəd/", "This method of learning is very effective.", "Those methods have been proven by research.", "approach", "technique", ""],
+  ["variety", "a range of different things of the same type", "विविधता / किस्म", "noun", "beginner", "/vəˈraɪəti/", "This variety of fruit is very sweet.", "These varieties of rice are grown locally.", "range", "assortment", "uniformity"],
+  ["structure", "the arrangement of parts that make something", "संरचना / ढाँचा", "noun", "elementary", "/ˈstrʌktʃər/", "This structure needs to be repaired.", "Those structures were built centuries ago.", "framework", "form", "disorder"],
+  ["network", "a system of connected things or people", "नेटवर्क / जाल", "noun", "elementary", "/ˈnetwɜːk/", "This network of roads connects all villages.", "Those networks support thousands of users.", "system", "web", ""],
+  ["alternative", "something that can be used instead of something else", "विकल्प", "noun", "elementary", "/ɔːlˈtɜːnətɪv/", "This is a good alternative to the original plan.", "Those alternatives are cheaper and safer.", "option", "choice", ""],
+  ["quantity", "the amount or number of something", "मात्रा / संख्या", "noun", "beginner", "/ˈkwɒntɪti/", "This quantity is not enough for ten people.", "Order those quantities from the supplier.", "amount", "number", "quality"],
+  ["selection", "the process of choosing someone or something", "चयन / चुनाव", "noun", "elementary", "/sɪˈlekʃn/", "This selection of books is excellent.", "Those selections have been made by the committee.", "choice", "picking", "rejection"],
+  ["source", "the place where something comes from", "स्रोत / मूल", "noun", "beginner", "/sɔːs/", "This source of information is reliable.", "Those sources confirm the same fact.", "origin", "root", ""],
+  ["target", "an aim or goal that you are working toward", "लक्ष्य / उद्देश्य", "noun", "beginner", "/ˈtɑːɡɪt/", "This target must be achieved by Friday.", "Set those targets wisely and realistically.", "goal", "aim", ""],
+  ["aspect", "a particular part or feature of something", "पहलू / पक्ष", "noun", "elementary", "/ˈæspekt/", "Focus on this aspect of the problem.", "Consider those aspects before making a decision.", "element", "part", ""],
+  ["format", "the shape or structure in which something is presented", "प्रारूप / ढाँचा", "noun", "elementary", "/ˈfɔːmæt/", "Use this format for your assignment.", "Those formats are explained in the guide.", "layout", "structure", ""],
 ];
 
 export const ALL_DAY_5_VOCABULARY: VocabularyWord[] = WORDS.map((data, i) =>
