@@ -35,8 +35,18 @@ import { ALL_DAY_4_VOCABULARY } from "@/data/vocabulary/day-4-vocabulary";
 import { ALL_DAY_5_VOCABULARY } from "@/data/vocabulary/day-5-vocabulary";
 import { ALL_DAY_6_VOCABULARY } from "@/data/vocabulary/day-6-vocabulary";
 import { ALL_DAY_7_VOCABULARY } from "@/data/vocabulary/day-7-vocabulary";
-// Import all-days vocabulary generator for Days 8-75
+// Import Days 8-14 specific vocabulary files (200+ hand-crafted words each)
+import { ALL_DAY_8_VOCABULARY } from "@/data/vocabulary/day-8-vocabulary";
+import { ALL_DAY_9_VOCABULARY } from "@/data/vocabulary/day-9-vocabulary";
+import { ALL_DAY_10_VOCABULARY } from "@/data/vocabulary/day-10-vocabulary";
+import { ALL_DAY_11_VOCABULARY } from "@/data/vocabulary/day-11-vocabulary";
+import { ALL_DAY_12_VOCABULARY } from "@/data/vocabulary/day-12-vocabulary";
+import { ALL_DAY_13_VOCABULARY } from "@/data/vocabulary/day-13-vocabulary";
+import { ALL_DAY_14_VOCABULARY } from "@/data/vocabulary/day-14-vocabulary";
+// Import all-days vocabulary generator for Days 15-75
 import { getVocabularyForDay } from "@/data/vocabulary/all-days-vocabulary";
+// Import Days 8-14 hand-curated questions
+import { getDays8to14Questions } from "@/data/questions/days-8-14-questions";
 // Import question generator (creates 3 questions per vocabulary word)
 import { generateQuestionsFromVocab } from "@/data/questions/question-generator";
 
@@ -105,7 +115,14 @@ function getVocabGeneratedQuestions(dayNumber: number, subtopicId: string): Ques
     : dayNumber === 5 ? ALL_DAY_5_VOCABULARY   // 300+ demonstrative words
     : dayNumber === 6 ? ALL_DAY_6_VOCABULARY   // 300+ has/have words
     : dayNumber === 7 ? ALL_DAY_7_VOCABULARY   // 300+ had/past words
-    : getVocabularyForDay(dayNumber, 60);      // Days 8-75: generated vocab
+    : dayNumber === 8 ? ALL_DAY_8_VOCABULARY   // 200+ will-have words
+    : dayNumber === 9 ? ALL_DAY_9_VOCABULARY   // 200+ there is/are words
+    : dayNumber === 10 ? ALL_DAY_10_VOCABULARY // 200+ revision words
+    : dayNumber === 11 ? ALL_DAY_11_VOCABULARY // 200+ use-of-want words
+    : dayNumber === 12 ? ALL_DAY_12_VOCABULARY // 200+ use-of-wanted words
+    : dayNumber === 13 ? ALL_DAY_13_VOCABULARY // 200+ use-of-let words
+    : dayNumber === 14 ? ALL_DAY_14_VOCABULARY // 200+ use-of-lets words
+    : getVocabularyForDay(dayNumber, 60);      // Days 15-75: generated vocab
 
   // Use a slice of vocabulary relevant to this subtopic's index
   const subtopicNum = parseInt(subtopicId.split("-s").pop() || "1", 10);
@@ -165,7 +182,19 @@ function loadQuestionsForSubtopic(dayNumber: number, subtopicId: string): Questi
     const allDayQs = getDays3to7Questions(dayNumber);
     return [...allDayQs.map(mapPracticeQToQuestion), ...generated];
   }
-  // For Days 8-75: generate topic-specific questions using day-specific vocabulary
+  // For Days 8-14: use hand-curated questions first, then supplement with vocab-generated
+  if (dayNumber >= 8 && dayNumber <= 14) {
+    const handwritten = getDays8to14Questions(dayNumber, subtopicId);
+    const generated = getVocabGeneratedQuestions(dayNumber, subtopicId);
+    const handwrittenMapped = handwritten.map(pq => mapPracticeQToQuestion(pq as any));
+    // Combine: curated questions first, then vocab-generated for variety
+    const combined = [...handwrittenMapped, ...generated];
+    if (combined.length > 0) return combined;
+    // If no subtopic-specific questions, return all day questions + generated
+    const allDayQs = getDays8to14Questions(dayNumber);
+    return [...allDayQs.map(pq => mapPracticeQToQuestion(pq as any)), ...generated];
+  }
+  // For Days 15-75: generate topic-specific questions using day-specific vocabulary
   const daySpecificGenerated = getVocabGeneratedQuestions(dayNumber, subtopicId);
   if (daySpecificGenerated.length > 0) return daySpecificGenerated;
   // Ultimate fallback: Day 1 questions (should not normally happen)

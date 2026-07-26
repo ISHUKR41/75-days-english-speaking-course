@@ -15,5 +15,7 @@
 - [Reliable workspace startup](workflow-startup.md) — install from monorepo root and fail loudly before running Prisma/Next.js
 - [Day access control](day-access-control.md) — all authenticated users can access ALL 75 days; no progressive locking; hasAccess = !!userId; currentDay only tracks primary progress display
 - [Question expansion Days 4-7](questions-expansion.md) — days-4-7-extra-questions.ts adds ~45 extra Qs per day; getDays3to7Questions merges original + extra; Day 4:~100, Day 5:~82, Day 6:~76, Day 7:~83 total questions
+- [Days 8-14 wiring](days-8-14-wiring.md) — all three layers (vocab, questions, content) now wired; practice-section uses getDays8to14Questions + day-8-14 vocab; topic-content-map imports DAYS_8_TO_14_CONTENT for getSubtopicSpecificContent and days 10-14 in SPECIFIC_DAY_CONTENT
+- [TS MCQ arg order fix](ts-mcq-arg-fix.md) — d3q MCQ calls must be: answer, explanation(string), hindi(string), points(number), {options}; wrong order caused TS2345 on {options} being passed where string|number expected
 - [Next dev cache and Prisma path](next-dev-cache-and-prisma-path.md) — clear .next before Replit dev, never build concurrently, and use file:./dev.db from apps/web
 - [Dev mode auth](dev-mode-auth.md) — safeAuth() returns seeded dev user when CLERK_SECRET_KEY absent; all pages work without Clerk configured; real Clerk activates automatically when key is valid

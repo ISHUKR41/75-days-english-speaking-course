@@ -37,7 +37,7 @@ const WORDS: W[] = [
   ["perspective","a way of thinking about something","दृष्टिकोण, नज़रिया","noun","intermediate","/pəˈspɛk.tɪv/","She wanted a new perspective on English grammar.","His perspective on learning changed after Day 75.","viewpoint","outlook",""],
 
   // Past action verbs
-  ["attempted","tried to do something in the past","कोशिश की","adjective","/past tense/","elementary","/əˈtɛmpt.ɪd/","She attempted every practice question.","He attempted the difficult exercise bravely.","tried","endeavored","gave up"],
+  ["attempted","tried to do something in the past","कोशिश की","adjective","elementary","/əˈtɛmpt.ɪd/","She attempted every practice question.","He attempted the difficult exercise bravely.","tried","endeavored","gave up"],
   ["completed","finished something in the past","पूरा किया","adjective","elementary","/kəmˈpliːt.ɪd/","She completed all exercises from Day 1 to 10.","He completed the mock test in 45 minutes.","finished","done","incomplete"],
   ["studied","learned something through reading","पढ़ा, अध्ययन किया","adjective","beginner","/ˈstʌd.id/","She studied grammar rules every morning.","He studied vocabulary for two hours last night.","learned","reviewed","ignored"],
   ["practiced","did something repeatedly to improve","अभ्यास किया","adjective","beginner","/ˈpræk.tɪst/","She practiced speaking English in front of the mirror.","He practiced all 100 new words from Day 10.","trained","drilled","ignored"],

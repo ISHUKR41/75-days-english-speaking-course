@@ -21,15 +21,17 @@ const d3q = (
   questionText: string,
   questionType: "translation" | "mcq" | "fill_blank" | "error_detection",
   correctAnswer: string,
-  explanation: string,
+  explanation: string | number,
   hindiExplanationOrPoints: string | number,
   pointsOrOptions?: number | { a: string; b: string; c: string; d: string },
   optionsOrHints?: { a: string; b: string; c: string; d: string } | { word: string; meaning: string }[],
   hints?: { word: string; meaning: string }[]
 ): PracticeQ => {
   // Determine if hindiExplanation was provided or if it was skipped
+  // Support calls where number (points) is passed in explanation position
+  const explanationStr = String(explanation);
   const hasHindi = typeof hindiExplanationOrPoints === "string";
-  const hindiExplanation = hasHindi ? hindiExplanationOrPoints : explanation;
+  const hindiExplanation = hasHindi ? hindiExplanationOrPoints : explanationStr;
   const points = hasHindi
     ? (typeof pointsOrOptions === "number" ? pointsOrOptions : 5)
     : (typeof hindiExplanationOrPoints === "number" ? hindiExplanationOrPoints : 5);
@@ -47,7 +49,7 @@ const d3q = (
     questionType,
     difficulty: points <= 5 ? "beginner" : points <= 8 ? "elementary" : "intermediate",
     correctAnswer,
-    explanation,
+    explanation: explanationStr,
     hindiExplanation,
     optionA: options?.a,
     optionB: options?.b,
@@ -564,23 +566,23 @@ export const DAY_3_EXTRA_QUESTIONS: PracticeQ[] = [
   d3q("d3-ex-q02","d3-t1-s1","'Phone mat uthao.' ko English mein translate karo.","translation","Don't pick up the phone.","Don't + pick up (phrasal verb). Phone = phone. Negative imperative.",5),
   d3q("d3-ex-q03","d3-t1-s1","'Chaliye saath mein khaate hain.' ko English mein translate karo.","translation","Let's eat together.","Let's + eat (base verb) + together. Inclusive suggestion.",5),
   d3q("d3-ex-q04","d3-t1-s2","'Please thoda time dijiye.' ko English mein translate karo.","translation","Please give me some time.","Please + give me (indirect object) + some time. Polite request.",5),
-  d3q("d3-ex-q05","d3-t1-s2","Which sentence uses 'Please' correctly?","mcq","Please submit your assignment by Friday.",5,{a:"Please to submit your assignment.",b:"Please submitting your assignment.",c:"Please submit your assignment by Friday.",d:"Please submitted your assignment."},"Correct form: Please + base verb. 'Please to submit' is wrong — never add 'to' after please.","Please + base verb = sahi form. 'Please to submit' galat hai."),
+  d3q("d3-ex-q05","d3-t1-s2","Which sentence uses 'Please' correctly?","mcq","Please submit your assignment by Friday.","Correct form: Please + base verb. 'Please to submit' is wrong — never add 'to' after please.","Please + base verb = sahi form. 'Please to submit' galat hai.",5,{a:"Please to submit your assignment.",b:"Please submitting your assignment.",c:"Please submit your assignment by Friday.",d:"Please submitted your assignment."}),
   d3q("d3-ex-q06","d3-t2-s1","'Apna bag pack karo.' ko English mein translate karo.","translation","Pack your bag.","Pack = base verb. Your bag = apna bag. Simple imperative.",5),
   d3q("d3-ex-q07","d3-t2-s1","'Meeting room book karo.' ko English mein translate karo.","translation","Book the meeting room.","Book = verb (to reserve). The meeting room = object. Office command.",6),
   d3q("d3-ex-q08","d3-t2-s1","'Clients ko email karo.' ko English mein translate karo.","translation","Email the clients.","Email = verb (imperative). The clients = object. Professional command.",6),
   d3q("d3-ex-q09","d3-t2-s2","'Is meeting mein late mat aana.' ko English mein translate karo.","translation","Don't be late to this meeting.","Don't be late = negative imperative with be verb. Very professional.",6),
   d3q("d3-ex-q10","d3-t2-s2","'Office mein personal calls mat karo.' ko English mein translate karo.","translation","Don't make personal calls at the office.","Don't + make + personal calls. 'At the office' = location. Professional rule.",6),
   d3q("d3-ex-q11","d3-t2-s3","'Chaliye project start karte hain.' ko English mein translate karo.","translation","Let's start the project.","Let's + start (base verb) + the project. Inclusive suggestion.",5),
-  d3q("d3-ex-q12","d3-t2-s3","'Let's discuss this tomorrow.' ka Hindi mein matlab kya hai?","mcq","Chaliye kal is baare mein baat karte hain.",5,{a:"Woh kal discuss karega.",b:"Chaliye kal is baare mein baat karte hain.",c:"Kya hum kal baat karein?",d:"Kal discuss kiya tha."},"Let's discuss = chaliye baat karte hain. 'Let's' = suggestion for group action.","Let's = chaliye. Hum dono ya sabhi ke liye suggestion."),
+  d3q("d3-ex-q12","d3-t2-s3","'Let's discuss this tomorrow.' ka Hindi mein matlab kya hai?","mcq","Chaliye kal is baare mein baat karte hain.","Let's discuss = chaliye baat karte hain. 'Let's' = suggestion for group action.","Let's = chaliye. Hum dono ya sabhi ke liye suggestion.",5,{a:"Woh kal discuss karega.",b:"Chaliye kal is baare mein baat karte hain.",c:"Kya hum kal baat karein?",d:"Kal discuss kiya tha."}),
   d3q("d3-ex-q13","d3-t3-s1","'Roz subah 6 baje utho.' ko English mein translate karo.","translation","Wake up at 6 AM every morning.","Wake up = phrasal verb (imperative). At 6 AM = time. Every morning = frequency.",6),
   d3q("d3-ex-q14","d3-t3-s1","'Roz ek naya English word seekho.' ko English mein translate karo.","translation","Learn one new English word every day.","Learn = base verb. One new English word = object. Every day = frequency.",5),
   d3q("d3-ex-q15","d3-t3-s2","'Kindly apna ID card saath rakhein.' ko English mein translate karo.","translation","Kindly keep your ID card with you.","Kindly = formal version of please. Keep = base verb. With you = saath mein.",6),
   d3q("d3-ex-q16","d3-t3-s2","'Please apni seat pe baith jaiye.' ko English mein translate karo.","translation","Please take your seat.","Take your seat = polite way of saying 'sit down'. Very formal/professional.",6),
-  d3q("d3-ex-q17","d3-t3-s3","'No Parking.' sign ka kya matlab hai?","mcq","Yahan parking ki izajat nahi hai.",6,{a:"Parking available hai.",b:"Yahan parking ki izajat nahi hai.",c:"Free parking hai.",d:"Reserved parking hai."},"Signs use short imperatives. 'No + noun' = prohibitive sign.","No Parking = Yahan gaadi khadi mat karo. Signs short imperative use karte hain."),
+  d3q("d3-ex-q17","d3-t3-s3","'No Parking.' sign ka kya matlab hai?","mcq","Yahan parking ki izajat nahi hai.","Signs use short imperatives. 'No + noun' = prohibitive sign.","No Parking = Yahan gaadi khadi mat karo. Signs short imperative use karte hain.",6,{a:"Parking available hai.",b:"Yahan parking ki izajat nahi hai.",c:"Free parking hai.",d:"Reserved parking hai."}),
   d3q("d3-ex-q18","d3-t3-s3","'Silence please.' ka Hindi mein kya matlab hai?","translation","Kripaya chup rahiye.","Silence please = kripaya chup rahiye. Sign/request for silence.",5),
-  d3q("d3-ex-q19","d3-t4-s1","'Organize' ka kya matlab hai?","mcq","Vyavasthit karna",5,{a:"Todna",b:"Vyavasthit karna",c:"Padhna",d:"Bolna"},"Organize = to arrange things in order. Imperative: Organize your files.","Organize = vyavasthit karna. Office mein commonly use hota hai."),
+  d3q("d3-ex-q19","d3-t4-s1","'Organize' ka kya matlab hai?","mcq","Vyavasthit karna","Organize = to arrange things in order. Imperative: Organize your files.","Organize = vyavasthit karna. Office mein commonly use hota hai.",5,{a:"Todna",b:"Vyavasthit karna",c:"Padhna",d:"Bolna"}),
   d3q("d3-ex-q20","d3-t4-s1","'Apni files organize karo.' ko English mein translate karo.","translation","Organize your files.","Organize = base verb. Your files = object. Common office command.",5),
-  d3q("d3-ex-q21","d3-t4-s2","'Collaborate' ka kya matlab hai?","mcq","Milkar kaam karna",6,{a:"Akele kaam karna",b:"Milkar kaam karna",c:"Kaam band karna",d:"Kaam shuru karna"},"Collaborate = to work together with others.","Collaborate = milkar kaam karna. Team mein common word."),
+  d3q("d3-ex-q21","d3-t4-s2","'Collaborate' ka kya matlab hai?","mcq","Milkar kaam karna","Collaborate = to work together with others.","Collaborate = milkar kaam karna. Team mein common word.",6,{a:"Akele kaam karna",b:"Milkar kaam karna",c:"Kaam band karna",d:"Kaam shuru karna"}),
   d3q("d3-ex-q22","d3-t5-s1","'Apni report update karo.' ko English mein translate karo.","translation","Update your report.","Update = base verb. Your report = object. Common office command.",5),
   d3q("d3-ex-q23","d3-t5-s1","'Meeting ke liye tayaar ho jao.' ko English mein translate karo.","translation","Get ready for the meeting.","Get ready = idiom for 'prepare'. For the meeting = ke liye.",6),
   d3q("d3-ex-q24","d3-t5-s2","'Roz English mein diary likho.' ko English mein translate karo.","translation","Write a diary in English every day.","Write = imperative. A diary = object. In English = English mein. Every day = roz.",6),
@@ -593,16 +595,16 @@ export const DAY_3_EXTRA_QUESTIONS: PracticeQ[] = [
   d3q("d3-ex-q31","d3-t1-s3","'Kabhi bhi time waste mat karo.' ko English mein translate karo.","translation","Never waste your time.","Never + base verb = emphatic negative. Never = kabhi bhi nahi.",6),
   d3q("d3-ex-q32","d3-t1-s3","'Yahan mat aao.' ko English mein translate karo.","translation","Don't come here.","Don't + come = negative imperative. Here = yahan.",5),
   d3q("d3-ex-q33","d3-t1-s4","'Let's take a break.' ka Hindi mein kya matlab hai?","translation","Chaliye break lete hain.","Let's = let us = inclusive suggestion. Take a break = break lena.",5),
-  d3q("d3-ex-q34","d3-t2-s4","'Do try this method.' mein 'Do' ka kya role hai?","mcq","Emphasis ke liye",7,{a:"Negative banane ke liye",b:"Emphasis ke liye",c:"Past tense ke liye",d:"Question banana ke liye"},"'Do + base verb' in imperative = emphatic form. Shows strong encouragement.","'Do try' = zaroor try karo. 'Do' emphasis deta hai."),
+  d3q("d3-ex-q34","d3-t2-s4","'Do try this method.' mein 'Do' ka kya role hai?","mcq","Emphasis ke liye","'Do + base verb' in imperative = emphatic form. Shows strong encouragement.","'Do try' = zaroor try karo. 'Do' emphasis deta hai.",7,{a:"Negative banane ke liye",b:"Emphasis ke liye",c:"Past tense ke liye",d:"Question banana ke liye"}),
   d3q("d3-ex-q35","d3-t3-s1","'Roz 8 ghante soyo.' ko English mein translate karo.","translation","Sleep for 8 hours every day.","Sleep = base verb. For 8 hours = time duration. Every day = roz.",5),
   d3q("d3-ex-q36","d3-t3-s2","'Please project ke baare mein update dijiye.' ko English mein translate karo.","translation","Please provide an update on the project.","Please + provide (base verb) + an update + on the project. Professional phrase.",7),
-  d3q("d3-ex-q37","d3-t4-s3","'Would you mind helping me?' ka kya matlab hai?","mcq","Kya aap meri madad kar sakte hain? (bahut polite)",8,{a:"Tum meri madad karo.",b:"Woh meri madad karta hai.",c:"Kya aap meri madad kar sakte hain? (bahut polite)",d:"Maine madad ki."},"Would you mind + gerund = most polite request form.","Would you mind helping = kya aapko madad karne mein koi problem nahi hogi?"),
+  d3q("d3-ex-q37","d3-t4-s3","'Would you mind helping me?' ka kya matlab hai?","mcq","Kya aap meri madad kar sakte hain? (bahut polite)","Would you mind + gerund = most polite request form.","Would you mind helping = kya aapko madad karne mein koi problem nahi hogi?",8,{a:"Tum meri madad karo.",b:"Woh meri madad karta hai.",c:"Kya aap meri madad kar sakte hain? (bahut polite)",d:"Maine madad ki."}),
   d3q("d3-ex-q38","d3-t4-s3","'Could you please send me the report?' ka Hindi mein kya matlab hai?","translation","Kya aap mujhe report bhej sakte hain?","Could you please = very polite request. Send me the report = report bhejna.",7),
   d3q("d3-ex-q39","d3-t5-s1","'Computer shut down karo.' ko English mein translate karo.","translation","Shut down the computer.","Shut down = phrasal verb (imperative). The computer = object.",5),
   d3q("d3-ex-q40","d3-t5-s1","'Presentation prepare karo.' ko English mein translate karo.","translation","Prepare the presentation.","Prepare = base verb. The presentation = object. Professional command.",5),
   d3q("d3-ex-q41","d3-t2-s1","'Haath dhoke khaana khao.' ko English mein translate karo.","translation","Wash your hands and then eat.","Two imperatives: Wash (first) and eat (second). Joined with 'and then'.",6),
   d3q("d3-ex-q42","d3-t1-s1","Identify the imperative: 'She runs every day.' OR 'Run every day.'","mcq","Run every day.","'Run every day' starts with a base verb — it is an imperative. 'She runs' is a statement.",5,{a:"She runs every day.",b:"Run every day.",c:"Does she run?",d:"She ran every day."}),
-  d3q("d3-ex-q43","d3-t3-s3","'Add sugar and stir well.' kis context mein use hota hai?","mcq","Recipe instructions",5,{a:"Office notice",b:"Road sign",c:"Recipe instructions",d:"Emergency sign"},"Add and stir are imperatives used in cooking/recipe instructions.","Cooking recipes mein imperative use hota hai: Add, Stir, Mix, Bake."),
+  d3q("d3-ex-q43","d3-t3-s3","'Add sugar and stir well.' kis context mein use hota hai?","mcq","Recipe instructions","Add and stir are imperatives used in cooking/recipe instructions.","Cooking recipes mein imperative use hota hai: Add, Stir, Mix, Bake.",5,{a:"Office notice",b:"Road sign",c:"Recipe instructions",d:"Emergency sign"}),
   d3q("d3-ex-q44","d3-t2-s2","'Kisi bhi meeting mein interrupt mat karo.' ko English mein translate karo.","translation","Don't interrupt during any meeting.","Don't + interrupt + during any meeting. Professional etiquette rule.",7),
   d3q("d3-ex-q45","d3-t5-s1","'Apna best do.' ko English mein translate karo.","translation","Give your best.","Give = base verb. Your best = apna best. Common motivational imperative.",5),
   d3q("d3-ex-q46","d3-t1-s2","Fill: 'Kindly ___ this form and submit it.'","fill_blank","fill in","Kindly + base verb. Fill in (phrasal verb) = koi form bharna.",6),

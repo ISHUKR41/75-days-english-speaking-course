@@ -7,6 +7,8 @@
 
 // Import the shared LessonContent type from day-1 content file
 import type { LessonContent as LessonContentType } from "@/data/course-content/day-1-content";
+// Import rich handcrafted content for Days 8-14
+import { DAYS_8_TO_14_CONTENT } from "@/data/course-content/days-8-14-content";
 
 // ─── Day 3: Imperative Sentence ───────────────────────────────
 // Commands, requests, instructions, and suggestions in English
@@ -1278,8 +1280,13 @@ export const SPECIFIC_DAY_CONTENT: Record<number, Partial<LessonContentType>> = 
   5: DAY_5_CONTENT,  // Demonstrative Pronoun
   6: DAY_6_CONTENT,  // Has / Have
   7: DAY_7_CONTENT,  // Had (Past Possession & Past Perfect)
-  8: DAY_8_CONTENT,  // Will Have (Future Perfect)
-  9: DAY_9_CONTENT,  // Use of There (There is, There are, There was, There were)
+  8: DAY_8_CONTENT,   // Will Have (Future Perfect)
+  9: DAY_9_CONTENT,   // Use of There (There is, There are, There was, There were)
+  10: DAYS_8_TO_14_CONTENT["d10-t1-s1"] || {},  // Revision Day
+  11: DAYS_8_TO_14_CONTENT["d11-t1-s1"] || {},  // Use of Want
+  12: DAYS_8_TO_14_CONTENT["d12-t1-s1"] || {},  // Use of Wanted
+  13: DAYS_8_TO_14_CONTENT["d13-t1-s1"] || {},  // Use of Let
+  14: DAYS_8_TO_14_CONTENT["d14-t1-s1"] || {},  // Use of Let's
 };
 
 // ─── Helper function ──────────────────────────────────────────
@@ -1927,10 +1934,16 @@ const SUBTOPIC_CONTENT_MAP: Record<string, Partial<LessonContentType>> = {
 // ─── Export per-subtopic content function ────────────────────
 // Returns specific content for a single subtopic ID, or null if not available
 // Used by lesson-content.tsx for maximum content richness
+// Checks Days 3-9 SUBTOPIC_CONTENT_MAP first, then Days 8-14 rich content
 export function getSubtopicSpecificContent(
   subtopicId: string,
   _dayNumber: number
 ): Partial<LessonContentType> | null {
-  // Look up the subtopic in our handcrafted content map
-  return SUBTOPIC_CONTENT_MAP[subtopicId] || null;
+  // Check Days 3-9 handcrafted subtopic content first (most detailed)
+  const d3to9 = SUBTOPIC_CONTENT_MAP[subtopicId];
+  if (d3to9) return d3to9;
+  // Check Days 8-14 rich content map (covers all d8-* through d14-* subtopics)
+  const d8to14 = DAYS_8_TO_14_CONTENT[subtopicId];
+  if (d8to14) return d8to14;
+  return null;
 }
