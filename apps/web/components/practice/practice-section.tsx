@@ -16,6 +16,8 @@ import { cn, checkAnswer, playSound } from "@/lib/utils";
 import { ALL_DAY_1_QUESTIONS } from "@/data/questions/day-1-questions";
 // Import extended questions (80+ additional questions)
 import { ALL_DAY1_EXTENDED_QUESTIONS } from "@/data/questions/day-1-extended-questions";
+// Import v2 extended questions (120 additional diverse questions)
+import { ALL_DAY1_EXTENDED_V2_QUESTIONS } from "@/data/questions/day-1-extended-v2-questions";
 // Import comprehensive subtopic-specific questions for all Day 1 subtopics
 import { ALL_D1_SUBTOPIC_QUESTIONS } from "@/data/questions/day-1-subtopics-questions";
 // Import Day 2 questions
@@ -125,17 +127,20 @@ function loadQuestionsForSubtopic(dayNumber: number, subtopicId: string): Questi
   if (dayNumber === 1) {
     // Get base questions for this subtopic
     const baseQs = ALL_DAY_1_QUESTIONS.filter(q => q.subtopicId === subtopicId);
-    // Get extended questions for this subtopic
+    // Get extended questions v1 (80+) for this subtopic
     const extQs = ALL_DAY1_EXTENDED_QUESTIONS.filter(q => q.subtopicId === subtopicId);
-    // Combine handwritten questions
-    const handwritten = [...baseQs, ...extQs].map(mapPracticeQToQuestion);
-    // Always add vocab-generated questions for variety (45 more)
+    // Get extended questions v2 (120+) — diverse types including error_correction, sentence_formation
+    const extV2Qs = ALL_DAY1_EXTENDED_V2_QUESTIONS.filter(q => q.subtopicId === subtopicId);
+    // Combine all handwritten questions (100+ unique questions for Day 1)
+    const handwritten = [...baseQs, ...extQs, ...extV2Qs].map(mapPracticeQToQuestion);
+    // Always add vocab-generated questions for extra variety
     const generated = getVocabGeneratedQuestions(1, subtopicId);
     const combined = [...handwritten, ...generated];
     if (combined.length > 0) return combined;
     // Full fallback: all Day 1 questions + vocab generated
     return [
       ...ALL_DAY_1_QUESTIONS.map(mapPracticeQToQuestion),
+      ...ALL_DAY1_EXTENDED_V2_QUESTIONS.map(mapPracticeQToQuestion),
       ...getVocabGeneratedQuestions(1, subtopicId),
     ];
   }

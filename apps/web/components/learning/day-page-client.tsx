@@ -196,10 +196,10 @@ export function DayPageClient({
   // Gradient for the day header
   const gradient = getDayGradient(dayNumber);
 
-  // First subtopic URL for "Start Learning" button
+  // First subtopic URL for "Start Learning" button — goes directly to /learn
   const firstSubtopicUrl =
     day.topics[0]?.subtopics[0]
-      ? `/day/${dayNumber}/topic/${day.topics[0].id}/subtopic/${day.topics[0].subtopics[0].id}`
+      ? `/day/${dayNumber}/topic/${day.topics[0].id}/subtopic/${day.topics[0].subtopics[0].id}/learn`
       : "#";
 
   // Toggle topic accordion
