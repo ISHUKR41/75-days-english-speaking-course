@@ -62,6 +62,7 @@ interface DashboardClientProps {
   questionsAnswered?: number;
   wordsLearned?: number;
 }
+
 // Build dynamic quick actions based on user's current day
 function buildQuickActions(currentDay: number) {
   return [
@@ -104,25 +105,40 @@ function buildQuickActions(currentDay: number) {
   ];
 }
 
-// Animation variants for staggered entrance
+// ─── Animation variants ───────────────────────────────────────
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.07,
-      delayChildren: 0.1,
+      staggerChildren: 0.08,
+      delayChildren: 0.05,
     },
   },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 24 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.4, ease: "easeOut" },
+    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
   },
+};
+
+const cardHover = {
+  rest: { y: 0, scale: 1 },
+  hover: { y: -4, scale: 1.02, transition: { duration: 0.18, ease: "easeOut" } },
+};
+
+const statsCardVariants = {
+  hidden: { opacity: 0, scale: 0.92, y: 16 },
+  visible: (i: number) => ({
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1], delay: i * 0.07 },
+  }),
 };
 
 export function DashboardClient({
@@ -136,13 +152,10 @@ export function DashboardClient({
   questionsAnswered: propQuestionsAnswered = 0,
   wordsLearned: propWordsLearned = 0,
 }: DashboardClientProps) {
-  // Active tab for day list filter
   const [activeFilter, setActiveFilter] = useState<
     "all" | "in-progress" | "completed" | "locked"
   >("all");
 
-  // Use only the user record loaded by the server component.
-  // Missing data stays an honest empty state instead of becoming fake data.
   const realUser = initialUser as {
     firstName?: string; lastName?: string;
     currentDay?: number; totalXp?: number; level?: number;
@@ -189,15 +202,13 @@ export function DashboardClient({
     accuracy: propAccuracy,
     wordsLearned: propWordsLearned,
     questionsAnswered: propQuestionsAnswered,
-    practiceMinutes: 0, // Not tracked yet
+    practiceMinutes: 0,
     badges: realUser?.badges?.length ?? 0,
-    rank: 0, // Computed separately if needed
+    rank: 0,
   };
 
-  // Build dynamic quick actions based on current day
   const QUICK_ACTIONS = buildQuickActions(stats.currentDay);
 
-  // Filter days based on active tab
   const filteredDays = initialDays.filter((day) => {
     if (activeFilter === "all") return true;
     if (activeFilter === "completed") return completedDayNumbers.has(day.dayNumber);
@@ -206,7 +217,6 @@ export function DashboardClient({
     return true;
   });
 
-  // The database is the single source for the day grid.
   const daysToShow = filteredDays;
 
   return (
@@ -231,14 +241,20 @@ export function DashboardClient({
         />
 
         {/* Animated ambient orbs */}
-        <div className="pointer-events-none absolute -top-32 -right-32 h-80 w-80 rounded-full bg-primary/20 blur-[100px] animate-pulse" />
-        <div
-          className="pointer-events-none absolute -bottom-20 -left-20 h-60 w-60 rounded-full bg-purple-600/15 blur-[80px] animate-pulse"
-          style={{ animationDelay: "1.4s" }}
+        <motion.div
+          className="pointer-events-none absolute -top-32 -right-32 h-80 w-80 rounded-full bg-primary/20 blur-[100px]"
+          animate={{ scale: [1, 1.15, 1], opacity: [0.2, 0.3, 0.2] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
         />
-        <div
-          className="pointer-events-none absolute top-1/2 left-1/2 h-48 w-48 -translate-x-1/2 -translate-y-1/2 rounded-full bg-indigo-500/10 blur-[70px] animate-pulse"
-          style={{ animationDelay: "0.7s" }}
+        <motion.div
+          className="pointer-events-none absolute -bottom-20 -left-20 h-60 w-60 rounded-full bg-purple-600/15 blur-[80px]"
+          animate={{ scale: [1, 1.2, 1], opacity: [0.15, 0.25, 0.15] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1.4 }}
+        />
+        <motion.div
+          className="pointer-events-none absolute top-1/2 left-1/2 h-48 w-48 -translate-x-1/2 -translate-y-1/2 rounded-full bg-indigo-500/10 blur-[70px]"
+          animate={{ scale: [1, 1.3, 1], opacity: [0.1, 0.18, 0.1] }}
+          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 0.7 }}
         />
 
         {/* Grid dot pattern */}
@@ -249,9 +265,9 @@ export function DashboardClient({
             <div className="flex-1 min-w-0">
               {/* Day badge */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
+                initial={{ opacity: 0, scale: 0.85 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.2 }}
+                transition={{ delay: 0.25, type: "spring", stiffness: 300 }}
                 className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/15 px-3.5 py-1.5 mb-4 backdrop-blur-sm"
               >
                 <Calendar className="h-3.5 w-3.5 text-primary" />
@@ -261,14 +277,24 @@ export function DashboardClient({
               </motion.div>
 
               {/* Greeting */}
-              <h1 className="text-3xl md:text-4xl font-black text-white tracking-tight">
+              <motion.h1
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3, duration: 0.5 }}
+                className="text-3xl md:text-4xl font-black text-white tracking-tight"
+              >
                 {realUser?.firstName ? (
                   <>Welcome back, <span className="gradient-text">{realUser.firstName}</span>! 👋</>
                 ) : (
                   <>Welcome back! 👋</>
                 )}
-              </h1>
-              <p className="text-white/60 mt-2 text-sm md:text-base max-w-lg">
+              </motion.h1>
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className="text-white/60 mt-2 text-sm md:text-base max-w-lg"
+              >
                 You&apos;re on{" "}
                 <span className="font-bold text-primary">Day {stats.currentDay}</span>{" "}
                 of your{" "}
@@ -278,7 +304,7 @@ export function DashboardClient({
                   : stats.completedDays > 0
                   ? "Great progress — don't stop now!"
                   : "Your journey starts here. Let's go!"}
-              </p>
+              </motion.p>
 
               {/* Progress bar */}
               <div className="mt-5 space-y-1.5">
@@ -308,7 +334,13 @@ export function DashboardClient({
             {/* Stats pills */}
             <div className="flex gap-3 shrink-0 flex-wrap sm:flex-nowrap">
               {/* Streak */}
-              <div className="flex items-center gap-3 rounded-2xl border border-orange-500/30 bg-orange-500/10 px-5 py-4 backdrop-blur-sm min-w-[105px]">
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.35, duration: 0.45 }}
+                whileHover={{ y: -3, transition: { duration: 0.15 } }}
+                className="flex items-center gap-3 rounded-2xl border border-orange-500/30 bg-orange-500/10 px-5 py-4 backdrop-blur-sm min-w-[105px]"
+              >
                 <Flame
                   className="h-7 w-7 text-orange-400 animate-flicker shrink-0"
                   aria-hidden="true"
@@ -319,9 +351,16 @@ export function DashboardClient({
                   </p>
                   <p className="text-xs text-white/50 mt-0.5 font-medium">Day Streak</p>
                 </div>
-              </div>
+              </motion.div>
+
               {/* Level */}
-              <div className="flex items-center gap-3 rounded-2xl border border-primary/30 bg-primary/10 px-5 py-4 backdrop-blur-sm min-w-[95px]">
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.42, duration: 0.45 }}
+                whileHover={{ y: -3, transition: { duration: 0.15 } }}
+                className="flex items-center gap-3 rounded-2xl border border-primary/30 bg-primary/10 px-5 py-4 backdrop-blur-sm min-w-[95px]"
+              >
                 <Star className="h-7 w-7 text-primary shrink-0" aria-hidden="true" />
                 <div>
                   <p className="text-3xl font-black text-white leading-none tabular-nums">
@@ -329,9 +368,16 @@ export function DashboardClient({
                   </p>
                   <p className="text-xs text-white/50 mt-0.5 font-medium">Level</p>
                 </div>
-              </div>
+              </motion.div>
+
               {/* Total XP */}
-              <div className="flex items-center gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 px-5 py-4 backdrop-blur-sm min-w-[95px]">
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.49, duration: 0.45 }}
+                whileHover={{ y: -3, transition: { duration: 0.15 } }}
+                className="flex items-center gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 px-5 py-4 backdrop-blur-sm min-w-[95px]"
+              >
                 <Zap className="h-7 w-7 text-amber-400 shrink-0" aria-hidden="true" />
                 <div>
                   <p className="text-3xl font-black text-white leading-none tabular-nums">
@@ -339,7 +385,7 @@ export function DashboardClient({
                   </p>
                   <p className="text-xs text-white/50 mt-0.5 font-medium">Total XP</p>
                 </div>
-              </div>
+              </motion.div>
             </div>
           </div>
         </div>
@@ -348,16 +394,20 @@ export function DashboardClient({
       {/* ── Quick Actions ── */}
       <motion.div variants={itemVariants}>
         <div className="flex items-center gap-2 mb-5">
-          <Sparkles className="h-5 w-5 text-gold-400" />
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-500/15">
+            <Sparkles className="h-4 w-4 text-amber-400" />
+          </div>
           <h2 className="text-lg font-bold">Quick Actions</h2>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {QUICK_ACTIONS.map((action) => (
+          {QUICK_ACTIONS.map((action, i) => (
             <motion.div
               key={action.label}
-              whileHover={{ y: -5, scale: 1.02 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 + i * 0.08, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ y: -6, scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
-              transition={{ duration: 0.18, ease: "easeOut" }}
               className="card-shine"
             >
               <Link
@@ -391,9 +441,13 @@ export function DashboardClient({
                 </span>
 
                 {/* Icon */}
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/20 border border-white/20 backdrop-blur-sm">
+                <motion.div
+                  whileHover={{ rotate: [0, -10, 10, 0], scale: 1.1 }}
+                  transition={{ duration: 0.4 }}
+                  className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/20 border border-white/20 backdrop-blur-sm"
+                >
                   <action.icon className="h-5 w-5" aria-hidden="true" />
-                </div>
+                </motion.div>
 
                 {/* Text */}
                 <div className="flex-1">
@@ -403,7 +457,12 @@ export function DashboardClient({
 
                 {/* Arrow */}
                 <div className="flex items-center justify-end">
-                  <ArrowRight className="h-4 w-4 opacity-70 group-hover:translate-x-1 transition-transform" />
+                  <motion.div
+                    whileHover={{ x: 4 }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    <ArrowRight className="h-4 w-4 opacity-70" />
+                  </motion.div>
                 </div>
               </Link>
             </motion.div>
@@ -452,7 +511,7 @@ export function DashboardClient({
             </span>
           </div>
 
-          {/* Level progress bar — animated gradient */}
+          {/* Level progress bar */}
           <div className="h-3 rounded-full bg-muted/60 overflow-hidden">
             <motion.div
               className="h-full xp-bar-fill"
@@ -478,7 +537,9 @@ export function DashboardClient({
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <div>
             <h2 className="text-xl font-bold flex items-center gap-2">
-              <Calendar className="h-5 w-5 text-primary" />
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10">
+                <Calendar className="h-4 w-4 text-primary" />
+              </div>
               Your 75-Day Journey
             </h2>
             <p className="text-sm text-muted-foreground mt-1">
@@ -487,9 +548,8 @@ export function DashboardClient({
             </p>
           </div>
 
-          {/* Progress ring */}
+          {/* Progress % */}
           <div className="flex items-center gap-3">
-            {/* Overall progress */}
             <div className="text-right">
               <p className="text-2xl font-bold text-primary">
                 {Math.round((stats.completedDays / 75) * 100)}%
@@ -500,7 +560,7 @@ export function DashboardClient({
         </div>
 
         {/* Filter tabs */}
-        <div className="flex gap-2 mb-4 flex-wrap">
+        <div className="flex gap-2 mb-5 flex-wrap">
           {(
             [
               { key: "all", label: "All Days", count: 75 },
@@ -509,9 +569,11 @@ export function DashboardClient({
               { key: "locked", label: "Locked", count: 0 },
             ] as const
           ).map((filter) => (
-            <button
+            <motion.button
               key={filter.key}
               onClick={() => setActiveFilter(filter.key)}
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.97 }}
               className={cn(
                 "rounded-full px-4 py-1.5 text-sm font-medium transition-all",
                 activeFilter === filter.key
@@ -530,7 +592,7 @@ export function DashboardClient({
               >
                 {filter.count}
               </span>
-            </button>
+            </motion.button>
           ))}
         </div>
 
@@ -539,9 +601,13 @@ export function DashboardClient({
           {daysToShow.map((day, i) => (
             <motion.div
               key={`day-${day.dayNumber}`}
-              variants={itemVariants}
-              custom={i}
-              transition={{ delay: i * 0.03 }}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                delay: Math.min(i * 0.025, 0.6),
+                duration: 0.4,
+                ease: [0.22, 1, 0.36, 1],
+              }}
             >
               <DayCard
                 dayNumber={day.dayNumber}
@@ -573,44 +639,56 @@ export function DashboardClient({
       {/* ── Leaderboard Preview ── */}
       <motion.div variants={itemVariants}>
         <div className="card-base rounded-2xl">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-5">
             <h3 className="font-semibold flex items-center gap-2">
-              <Trophy className="h-5 w-5 text-gold-400" />
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-500/15">
+                <Trophy className="h-4 w-4 text-amber-400" />
+              </div>
               Top Learners
             </h3>
             <Link
               href="/leaderboard"
-              className="text-sm text-primary hover:underline flex items-center gap-1"
+              className="text-sm text-primary hover:underline flex items-center gap-1 group"
             >
-              See all <ArrowRight className="h-3.5 w-3.5" />
+              See all{" "}
+              <motion.span
+                animate={{ x: [0, 3, 0] }}
+                transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <ArrowRight className="h-3.5 w-3.5" />
+              </motion.span>
             </Link>
           </div>
 
           {/* Leaderboard list */}
-          <div className="space-y-3">
+          <div className="space-y-2">
             {initialLeaderboard.map((user, i) => (
-              <div
+              <motion.div
                 key={user.id}
-                className="flex items-center gap-3 rounded-xl p-3 hover:bg-accent transition-colors"
+                initial={{ opacity: 0, x: -12 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.1 + i * 0.07, duration: 0.35 }}
+                whileHover={{ x: 4, backgroundColor: "hsl(var(--accent))" }}
+                className="flex items-center gap-3 rounded-xl p-3 transition-colors"
               >
                 {/* Rank */}
                 <span
                   className={cn(
                     "flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm font-bold",
-                    i === 0 && "bg-gold-400/20 text-gold-500",
-                    i === 1 && "bg-slate-400/20 text-slate-400",
-                    i === 2 && "bg-amber-700/20 text-amber-700",
+                    i === 0 && "bg-amber-400/20 text-amber-500 ring-1 ring-amber-400/40",
+                    i === 1 && "bg-slate-400/20 text-slate-400 ring-1 ring-slate-400/30",
+                    i === 2 && "bg-amber-700/20 text-amber-700 ring-1 ring-amber-700/30",
                     i > 2 && "bg-muted text-muted-foreground"
                   )}
                 >
-                  {i + 1}
+                  {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : i + 1}
                 </span>
 
                 {/* Avatar */}
                 <div
-                  className="flex h-9 w-9 shrink-0 items-center justify-center 
+                  className="flex h-9 w-9 shrink-0 items-center justify-center
                              rounded-full bg-gradient-to-br from-primary to-purple-500
-                             text-white text-sm font-bold"
+                             text-white text-sm font-bold ring-2 ring-primary/20"
                 >
                   {(user.firstName || "U").charAt(0)}
                 </div>
@@ -626,11 +704,11 @@ export function DashboardClient({
                 </div>
 
                 {/* XP */}
-                <div className="flex items-center gap-1 text-sm font-semibold text-gold-500">
+                <div className="flex items-center gap-1 text-sm font-semibold text-amber-500 bg-amber-500/10 rounded-full px-2.5 py-1">
                   <Zap className="h-3.5 w-3.5" />
                   {user.totalXp.toLocaleString()}
                 </div>
-              </div>
+              </motion.div>
             ))}
             {initialLeaderboard.length === 0 && (
               <p className="rounded-xl border border-dashed border-border p-4 text-sm text-muted-foreground">

@@ -6,14 +6,10 @@
 // Replaces the old "Learn" tab in SubtopicLesson
 // ============================================================
 
-// React core imports for state, effects, and refs
 import { useState, useCallback, useRef, useEffect } from "react";
-// Next.js navigation for routing between section pages
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-// Framer Motion for smooth animations
 import { motion, AnimatePresence } from "framer-motion";
-// Lucide icons for visual UI elements
 import {
   ArrowLeft, ArrowRight, BookOpen, Brain, Lightbulb,
   MessageSquare, AlertTriangle, Star, Volume2, VolumeX,
@@ -21,34 +17,69 @@ import {
   Users, ChevronDown, ChevronUp, Mic, Home, ChevronRight,
   Play, Trophy, Target, Zap, Clock, RotateCcw,
 } from "lucide-react";
-// Utility function for conditional class names
 import { cn } from "@/lib/utils";
-// Static course configuration types
 import type { TopicConfig, SubtopicConfig } from "@/data/course-content/days-config";
-// Lesson content component (the actual teaching content)
 import { LessonContent } from "@/components/learning/lesson-content";
 
 // ─── Props Interface ──────────────────────────────────────────
-// Defines what data this component receives from the server page
 interface LearnPageClientProps {
-  dayNumber: number;           // Current day (1-75)
-  dayTitle: string;            // Day title (e.g., "Basic of English")
-  dayEmoji: string;            // Day emoji for visual appeal
-  topic: TopicConfig;          // Current topic configuration
-  subtopic: SubtopicConfig;    // Current subtopic configuration
-  prevSubtopicId?: string;     // Previous subtopic ID for navigation
-  nextSubtopicId?: string;     // Next subtopic ID for navigation
-  nextTopicId?: string;        // Next topic ID for navigation
-  nextTopicFirstSubtopicId?: string; // First subtopic of next topic
-  userId: string;              // Current user ID for progress tracking
+  dayNumber: number;
+  dayTitle: string;
+  dayEmoji: string;
+  topic: TopicConfig;
+  subtopic: SubtopicConfig;
+  prevSubtopicId?: string;
+  nextSubtopicId?: string;
+  nextTopicId?: string;
+  nextTopicFirstSubtopicId?: string;
+  userId: string;
 }
 
 // ─── Section Progress Type ────────────────────────────────────
-// Tracks which sections of the lesson the user has viewed
 interface SectionProgress {
-  content: boolean;    // Whether user has scrolled through content
-  complete: boolean;   // Whether user has clicked "I Understood"
+  content: boolean;
+  complete: boolean;
 }
+
+// ─── Section tab config ───────────────────────────────────────
+const SECTION_TABS = [
+  {
+    id: "learn" as const,
+    label: "Learn",
+    icon: BookOpen,
+    color: "text-indigo-500",
+    activeBg: "bg-indigo-500",
+    hoverBg: "hover:bg-indigo-500/10 hover:border-indigo-500/30",
+    hoverText: "hover:text-indigo-600",
+  },
+  {
+    id: "vocab" as const,
+    label: "Vocabulary",
+    icon: Star,
+    color: "text-purple-500",
+    activeBg: "bg-purple-500",
+    hoverBg: "hover:bg-purple-500/10 hover:border-purple-500/30",
+    hoverText: "hover:text-purple-600",
+  },
+  {
+    id: "practice" as const,
+    label: "Practice",
+    icon: Target,
+    color: "text-emerald-500",
+    activeBg: "bg-emerald-500",
+    hoverBg: "hover:bg-emerald-500/10 hover:border-emerald-500/30",
+    hoverText: "hover:text-emerald-600",
+  },
+  {
+    id: "test" as const,
+    label: "Test",
+    icon: Trophy,
+    color: "text-amber-500",
+    activeBg: "bg-amber-500",
+    hoverBg: "hover:bg-amber-500/10 hover:border-amber-500/30",
+    hoverText: "hover:text-amber-600",
+  },
+] as const;
 
 // ============================================================
 // Main Component: LearnPageClient
@@ -65,85 +96,53 @@ export function LearnPageClient({
   nextTopicFirstSubtopicId,
   userId,
 }: LearnPageClientProps) {
-  // ── Router for programmatic navigation ──────────────────────
   const router = useRouter();
 
-  // ── State: Track lesson completion ──────────────────────────
-  // Whether user has marked this lesson as understood
   const [isComplete, setIsComplete] = useState(false);
-  // Whether the completion animation is showing
   const [showCompleteAnim, setShowCompleteAnim] = useState(false);
-  // Text-to-speech enabled/disabled toggle
   const [ttsEnabled, setTtsEnabled] = useState(true);
-  // Whether TTS is currently speaking
   const [isSpeaking, setIsSpeaking] = useState(false);
-  // Progress through the lesson (0-100)
   const [readingProgress, setReadingProgress] = useState(0);
 
-  // ── Scroll tracking for progress bar ─────────────────────────
-  // Reference to the main content area for scroll tracking
   const contentRef = useRef<HTMLDivElement>(null);
 
   // Track reading progress based on scroll position
   useEffect(() => {
-    // Function to calculate how far user has scrolled through content
     const handleScroll = () => {
       if (!contentRef.current) return;
-      // Get scroll position and total scrollable height
       const { scrollTop, scrollHeight, clientHeight } = contentRef.current;
-      // Calculate percentage scrolled (capped at 100)
       const progress = Math.min(100, (scrollTop / (scrollHeight - clientHeight)) * 100);
-      // Update progress state
       setReadingProgress(progress);
-      // Auto-enable completion after reading 80% of content
-      if (progress >= 80 && !isComplete) {
-        // Just enable the button, don't auto-complete
-      }
     };
 
-    // Add scroll listener to the content div
     const el = contentRef.current;
     if (el) el.addEventListener("scroll", handleScroll, { passive: true });
-    // Cleanup listener on unmount
     return () => { if (el) el.removeEventListener("scroll", handleScroll); };
   }, [isComplete]);
 
-  // ── Text-to-Speech function ───────────────────────────────────
-  // Speaks the given text using Web Speech API
+  // ── Text-to-Speech ─────────────────────────────────────────
   const speak = useCallback((text: string) => {
-    // Check if TTS is enabled and browser supports it
     if (!ttsEnabled || !window.speechSynthesis) return;
-    // Cancel any ongoing speech
     window.speechSynthesis.cancel();
-    // Create utterance with the provided text
     const utterance = new SpeechSynthesisUtterance(text);
-    // Set language to English
     utterance.lang = "en-US";
-    // Set a comfortable reading speed
     utterance.rate = 0.9;
-    // Set pitch to natural sounding
     utterance.pitch = 1.0;
-    // Track speaking state
     utterance.onstart = () => setIsSpeaking(true);
     utterance.onend = () => setIsSpeaking(false);
     utterance.onerror = () => setIsSpeaking(false);
-    // Start speaking
     window.speechSynthesis.speak(utterance);
   }, [ttsEnabled]);
 
-  // ── Stop TTS on unmount ───────────────────────────────────────
+  // Stop TTS on unmount
   useEffect(() => {
     return () => { window.speechSynthesis?.cancel(); };
   }, []);
 
-  // ── Mark lesson as complete ───────────────────────────────────
-  // Saves progress and shows completion animation
+  // ── Mark lesson as complete ───────────────────────────────
   const handleComplete = useCallback(async () => {
-    // Mark as complete in local state
     setIsComplete(true);
-    // Show celebration animation
     setShowCompleteAnim(true);
-    // Save progress to API (non-blocking)
     try {
       await fetch("/api/progress/save", {
         method: "POST",
@@ -153,57 +152,48 @@ export function LearnPageClient({
           subtopicId: subtopic.id,
           type: "learn",
           score: 100,
-          xpEarned: 25, // 25 XP for completing the theory
+          xpEarned: 25,
           correct: 1,
           total: 1,
         }),
       });
     } catch (e) {
-      // Non-blocking: progress save failures don't affect user experience
       console.warn("Progress save failed:", e);
     }
-    // Hide animation after 3 seconds
     setTimeout(() => setShowCompleteAnim(false), 3000);
   }, [dayNumber, subtopic.id]);
 
-  // ── Build navigation URLs ─────────────────────────────────────
-  // Base URL for this subtopic
+  // ── Navigation URLs ───────────────────────────────────────
   const baseUrl = `/day/${dayNumber}/topic/${topic.id}/subtopic/${subtopic.id}`;
-  // URL for the vocabulary section
   const vocabUrl = `${baseUrl}/vocabulary`;
-  // URL for the practice section
   const practiceUrl = `${baseUrl}/practice`;
-  // URL for the test section
   const testUrl = `${baseUrl}/test`;
-  // URL to go back to the subtopic overview
   const subtopicUrl = baseUrl;
-  // URL to go back to the day page
   const dayUrl = `/day/${dayNumber}`;
 
-  // ── Next/Previous navigation ──────────────────────────────────
-  // URL for previous subtopic's learn page
   const prevUrl = prevSubtopicId
     ? `/day/${dayNumber}/topic/${topic.id}/subtopic/${prevSubtopicId}/learn`
     : null;
-  // URL for next subtopic or next topic
   const nextUrl = nextSubtopicId
     ? `/day/${dayNumber}/topic/${topic.id}/subtopic/${nextSubtopicId}/learn`
     : nextTopicId && nextTopicFirstSubtopicId
     ? `/day/${dayNumber}/topic/${nextTopicId}/subtopic/${nextTopicFirstSubtopicId}/learn`
     : null;
 
-  // ── Estimated reading time ─────────────────────────────────────
-  // Calculate based on subtopic's estimated minutes
   const estimatedMins = subtopic.estimatedMins || 15;
 
-  // ============================================================
-  // RENDER
-  // ============================================================
+  // ── Section tab URLs ──────────────────────────────────────
+  const tabUrls = {
+    learn: `${baseUrl}/learn`,
+    vocab: vocabUrl,
+    practice: practiceUrl,
+    test: testUrl,
+  };
+
   return (
     <div className="min-h-screen bg-background">
-      {/* ── Reading Progress Bar at top of page ─────────────── */}
-      {/* Shows how far user has scrolled through content */}
-      <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-muted">
+      {/* ── Reading Progress Bar ─────────────────────────────── */}
+      <div className="fixed top-0 left-0 right-0 z-50 h-[3px] bg-muted/50">
         <motion.div
           className="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
           style={{ width: `${readingProgress}%` }}
@@ -211,74 +201,75 @@ export function LearnPageClient({
         />
       </div>
 
-      {/* ── Top Navigation Bar ──────────────────────────────── */}
-      <div className="sticky top-0 z-40 border-b border-border/50 bg-background/80 backdrop-blur-xl">
+      {/* ── Top Navigation Bar ─────────────────────────────── */}
+      <div className="sticky top-0 z-40 border-b border-border/50 bg-background/85 backdrop-blur-xl">
         <div className="container mx-auto max-w-5xl px-4 py-3">
-          {/* Breadcrumb navigation */}
           <div className="flex items-center justify-between">
-            {/* Left: Back navigation and breadcrumb */}
-            <div className="flex items-center gap-2 text-sm text-muted-foreground overflow-hidden">
-              {/* Home link */}
-              <Link href={dayUrl} className="flex items-center gap-1 hover:text-foreground transition-colors shrink-0">
-                <Home className="h-4 w-4" />
-                <span className="hidden sm:inline">Day {dayNumber}</span>
+            {/* Left: Breadcrumb */}
+            <div className="flex items-center gap-1.5 text-sm text-muted-foreground overflow-hidden">
+              <Link
+                href={dayUrl}
+                className="flex items-center gap-1 hover:text-foreground transition-colors shrink-0 hover:bg-accent rounded-md px-1.5 py-0.5"
+              >
+                <Home className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline text-xs">Day {dayNumber}</span>
               </Link>
-              <ChevronRight className="h-3 w-3 shrink-0" />
-              {/* Topic name */}
-              <span className="hidden md:inline truncate max-w-[120px]" title={topic.title}>
+              <ChevronRight className="h-3 w-3 shrink-0 opacity-40" />
+              <span className="hidden md:inline truncate max-w-[100px] text-xs" title={topic.title}>
                 {topic.emoji} {topic.title}
               </span>
-              <ChevronRight className="h-3 w-3 shrink-0 hidden md:block" />
-              {/* Subtopic name (current) */}
-              <span className="truncate max-w-[150px] font-medium text-foreground" title={subtopic.title}>
+              <ChevronRight className="h-3 w-3 shrink-0 hidden md:block opacity-40" />
+              <span className="truncate max-w-[140px] text-xs font-semibold text-foreground" title={subtopic.title}>
                 {subtopic.emoji} {subtopic.title}
               </span>
             </div>
 
             {/* Right: Actions */}
             <div className="flex items-center gap-2 shrink-0">
-              {/* Estimated time badge */}
-              <span className="hidden sm:flex items-center gap-1 text-xs text-muted-foreground bg-muted px-2 py-1 rounded-full">
+              {/* Estimated time */}
+              <span className="hidden sm:flex items-center gap-1 text-xs text-muted-foreground bg-muted/60 px-2.5 py-1 rounded-full">
                 <Clock className="h-3 w-3" />
                 {estimatedMins} min
               </span>
 
-              {/* TTS toggle button */}
-              <button
+              {/* TTS toggle */}
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => {
                   setTtsEnabled((prev) => !prev);
                   if (isSpeaking) window.speechSynthesis?.cancel();
                 }}
                 className={cn(
-                  "flex items-center gap-1 text-xs px-2 py-1 rounded-full transition-colors",
+                  "flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full transition-all border",
                   ttsEnabled
-                    ? "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400"
-                    : "bg-muted text-muted-foreground"
+                    ? "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/20"
+                    : "bg-muted text-muted-foreground border-border/40"
                 )}
                 title={ttsEnabled ? "Turn off audio" : "Turn on audio"}
               >
                 {ttsEnabled ? (
-                  <Volume2 className={cn("h-3 w-3", isSpeaking && "animate-pulse")} />
+                  <Volume2 className={cn("h-3.5 w-3.5", isSpeaking && "animate-pulse")} />
                 ) : (
-                  <VolumeX className="h-3 w-3" />
+                  <VolumeX className="h-3.5 w-3.5" />
                 )}
                 <span className="hidden sm:inline">Audio</span>
-              </button>
+              </motion.button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* ── Main Content Area ────────────────────────────────── */}
+      {/* ── Main Content Area ─────────────────────────────── */}
       <div
         ref={contentRef}
         className="container mx-auto max-w-5xl px-4 py-6 pb-32"
       >
-        {/* ── Page Header ────────────────────────────────────── */}
+        {/* ── Page Header ──────────────────────────────────── */}
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: -16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           className="mb-8"
         >
           {/* Section indicator pill */}
@@ -287,6 +278,9 @@ export function LearnPageClient({
             <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-wide">
               Learn &amp; Understand
             </span>
+            {isComplete && (
+              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
+            )}
           </div>
 
           {/* Subtopic title */}
@@ -296,50 +290,53 @@ export function LearnPageClient({
           </h1>
 
           {/* Subtopic description */}
-          <p className="text-base text-muted-foreground leading-relaxed mb-4">
+          <p className="text-base text-muted-foreground leading-relaxed mb-5">
             {subtopic.description}
           </p>
 
-          {/* Section navigation pills */}
-          <div className="flex flex-wrap gap-2">
-            {/* Learn (current - active) */}
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-indigo-500 px-3 py-1 text-xs font-semibold text-white">
-              <BookOpen className="h-3 w-3" />
-              Learn
-            </span>
-            {/* Vocabulary link */}
-            <Link
-              href={vocabUrl}
-              className="inline-flex items-center gap-1.5 rounded-full bg-muted hover:bg-purple-500/10 border border-border hover:border-purple-500/30 px-3 py-1 text-xs font-semibold text-muted-foreground hover:text-purple-600 transition-all"
-            >
-              <Star className="h-3 w-3" />
-              Vocabulary
-            </Link>
-            {/* Practice link */}
-            <Link
-              href={practiceUrl}
-              className="inline-flex items-center gap-1.5 rounded-full bg-muted hover:bg-emerald-500/10 border border-border hover:border-emerald-500/30 px-3 py-1 text-xs font-semibold text-muted-foreground hover:text-emerald-600 transition-all"
-            >
-              <Target className="h-3 w-3" />
-              Practice
-            </Link>
-            {/* Test link */}
-            <Link
-              href={testUrl}
-              className="inline-flex items-center gap-1.5 rounded-full bg-muted hover:bg-amber-500/10 border border-border hover:border-amber-500/30 px-3 py-1 text-xs font-semibold text-muted-foreground hover:text-amber-600 transition-all"
-            >
-              <Trophy className="h-3 w-3" />
-              Test
-            </Link>
+          {/* ── Section navigation tabs ── */}
+          <div className="flex flex-wrap gap-2 p-1 bg-muted/40 rounded-xl border border-border/50 w-fit">
+            {SECTION_TABS.map((tab) => {
+              const isActive = tab.id === "learn";
+              const href = tabUrls[tab.id];
+
+              if (isActive) {
+                return (
+                  <span
+                    key={tab.id}
+                    className={cn(
+                      "inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-semibold text-white shadow-sm",
+                      tab.activeBg
+                    )}
+                  >
+                    <tab.icon className="h-3.5 w-3.5" />
+                    {tab.label}
+                  </span>
+                );
+              }
+
+              return (
+                <Link
+                  key={tab.id}
+                  href={href}
+                  className={cn(
+                    "inline-flex items-center gap-1.5 rounded-lg border border-transparent px-3.5 py-1.5 text-xs font-semibold text-muted-foreground transition-all duration-200",
+                    tab.hoverBg, tab.hoverText
+                  )}
+                >
+                  <tab.icon className="h-3.5 w-3.5" />
+                  {tab.label}
+                </Link>
+              );
+            })}
           </div>
         </motion.div>
 
-        {/* ── Lesson Content ──────────────────────────────────── */}
-        {/* This is the main rich content from lesson-content.tsx */}
+        {/* ── Lesson Content ──────────────────────────────── */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
+          transition={{ duration: 0.5, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
         >
           <LessonContent
             dayNumber={dayNumber}
@@ -351,18 +348,23 @@ export function LearnPageClient({
           />
         </motion.div>
 
-        {/* ── Completion Banner ────────────────────────────────── */}
-        {/* Shows after user marks lesson complete */}
+        {/* ── Completion Banner ───────────────────────────── */}
         <AnimatePresence>
           {showCompleteAnim && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              initial={{ opacity: 0, scale: 0.88, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: -20 }}
-              className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 rounded-2xl bg-emerald-500 px-6 py-4 text-white shadow-2xl shadow-emerald-500/30"
+              exit={{ opacity: 0, scale: 0.88, y: -20 }}
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 rounded-2xl bg-emerald-500 px-6 py-4 text-white shadow-2xl shadow-emerald-500/40"
             >
               <div className="flex items-center gap-3">
-                <CheckCircle2 className="h-6 w-6" />
+                <motion.div
+                  animate={{ rotate: [0, -10, 10, 0] }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                >
+                  <CheckCircle2 className="h-6 w-6" />
+                </motion.div>
                 <div>
                   <p className="font-bold">Lesson Complete! 🎉</p>
                   <p className="text-xs text-emerald-100">+25 XP earned. Great job!</p>
@@ -372,93 +374,129 @@ export function LearnPageClient({
           )}
         </AnimatePresence>
 
-        {/* ── What to do next ──────────────────────────────────── */}
-        {/* Section cards showing next steps */}
+        {/* ── What to do next ─────────────────────────────── */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
+          transition={{ duration: 0.5, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
           className="mt-12 mb-8"
         >
-          <h2 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
-            <Zap className="h-5 w-5 text-amber-500" />
-            Ready for more? Continue here:
-          </h2>
+          <div className="flex items-center gap-2 mb-4">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-500/15">
+              <Zap className="h-4 w-4 text-amber-500" />
+            </div>
+            <h2 className="text-lg font-bold text-foreground">Ready for more? Continue here:</h2>
+          </div>
 
           {/* Next step cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {/* Vocabulary Card */}
-            <Link href={vocabUrl} className="group block">
-              <div className="rounded-2xl border border-purple-500/20 bg-purple-500/5 p-5 transition-all duration-300 hover:border-purple-500/50 hover:bg-purple-500/10 hover:shadow-lg hover:shadow-purple-500/10 hover:-translate-y-1">
-                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/20 text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform">
-                  <Star className="h-5 w-5" />
+            <motion.div whileHover={{ y: -4, scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Link href={vocabUrl} className="group block h-full">
+                <div className="h-full rounded-2xl border border-purple-500/20 bg-purple-500/5 p-5 transition-all duration-300 hover:border-purple-500/50 hover:bg-purple-500/10 hover:shadow-lg hover:shadow-purple-500/10">
+                  <motion.div
+                    whileHover={{ rotate: [0, -8, 8, 0] }}
+                    transition={{ duration: 0.4 }}
+                    className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/20 text-purple-600 dark:text-purple-400"
+                  >
+                    <Star className="h-5 w-5" />
+                  </motion.div>
+                  <h3 className="font-bold text-foreground mb-1">Vocabulary</h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Learn 200+ unique words for this topic with Hindi meanings and audio
+                  </p>
+                  <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-purple-600 dark:text-purple-400 group-hover:gap-2 transition-all">
+                    Start <ArrowRight className="h-3 w-3" />
+                  </div>
                 </div>
-                <h3 className="font-bold text-foreground mb-1">Vocabulary</h3>
-                <p className="text-xs text-muted-foreground">Learn 200+ unique words for this topic with Hindi meanings and audio</p>
-                <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-purple-600 dark:text-purple-400">
-                  Start →
-                </div>
-              </div>
-            </Link>
+              </Link>
+            </motion.div>
 
             {/* Practice Card */}
-            <Link href={practiceUrl} className="group block">
-              <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-5 transition-all duration-300 hover:border-emerald-500/50 hover:bg-emerald-500/10 hover:shadow-lg hover:shadow-emerald-500/10 hover:-translate-y-1">
-                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform">
-                  <Target className="h-5 w-5" />
+            <motion.div whileHover={{ y: -4, scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Link href={practiceUrl} className="group block h-full">
+                <div className="h-full rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-5 transition-all duration-300 hover:border-emerald-500/50 hover:bg-emerald-500/10 hover:shadow-lg hover:shadow-emerald-500/10">
+                  <motion.div
+                    whileHover={{ rotate: [0, -8, 8, 0] }}
+                    transition={{ duration: 0.4 }}
+                    className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-600 dark:text-emerald-400"
+                  >
+                    <Target className="h-5 w-5" />
+                  </motion.div>
+                  <h3 className="font-bold text-foreground mb-1">Practice</h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Answer 80+ questions by typing or speaking — both modes supported
+                  </p>
+                  <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400 group-hover:gap-2 transition-all">
+                    Start <ArrowRight className="h-3 w-3" />
+                  </div>
                 </div>
-                <h3 className="font-bold text-foreground mb-1">Practice</h3>
-                <p className="text-xs text-muted-foreground">Answer 80+ questions by typing or speaking — both modes supported</p>
-                <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-                  Start →
-                </div>
-              </div>
-            </Link>
+              </Link>
+            </motion.div>
 
             {/* Test Card */}
-            <Link href={testUrl} className="group block">
-              <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-5 transition-all duration-300 hover:border-amber-500/50 hover:bg-amber-500/10 hover:shadow-lg hover:shadow-amber-500/10 hover:-translate-y-1">
-                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/20 text-amber-600 dark:text-amber-400 group-hover:scale-110 transition-transform">
-                  <Trophy className="h-5 w-5" />
+            <motion.div whileHover={{ y: -4, scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Link href={testUrl} className="group block h-full">
+                <div className="h-full rounded-2xl border border-amber-500/20 bg-amber-500/5 p-5 transition-all duration-300 hover:border-amber-500/50 hover:bg-amber-500/10 hover:shadow-lg hover:shadow-amber-500/10">
+                  <motion.div
+                    whileHover={{ rotate: [0, -8, 8, 0] }}
+                    transition={{ duration: 0.4 }}
+                    className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/20 text-amber-600 dark:text-amber-400"
+                  >
+                    <Trophy className="h-5 w-5" />
+                  </motion.div>
+                  <h3 className="font-bold text-foreground mb-1">Test Yourself</h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    50-question graded test — need 80%+ to pass and unlock next content
+                  </p>
+                  <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-amber-600 dark:text-amber-400 group-hover:gap-2 transition-all">
+                    Take Test <ArrowRight className="h-3 w-3" />
+                  </div>
                 </div>
-                <h3 className="font-bold text-foreground mb-1">Test Yourself</h3>
-                <p className="text-xs text-muted-foreground">50-question graded test — need 80%+ to pass and unlock next content</p>
-                <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-amber-600 dark:text-amber-400">
-                  Take Test →
-                </div>
-              </div>
-            </Link>
+              </Link>
+            </motion.div>
           </div>
         </motion.div>
       </div>
 
-      {/* ── Fixed Bottom Navigation ──────────────────────────── */}
-      {/* Prev/Next navigation fixed at bottom of screen */}
+      {/* ── Fixed Bottom Navigation ──────────────────────── */}
       <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-border/50 bg-background/90 backdrop-blur-xl">
         <div className="container mx-auto max-w-5xl px-4 py-3">
           <div className="flex items-center justify-between gap-4">
-            {/* Previous subtopic button */}
+            {/* Previous button */}
             {prevUrl ? (
-              <Link href={prevUrl} className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group">
-                <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-                <span className="hidden sm:inline">Previous</span>
+              <Link
+                href={prevUrl}
+                className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group"
+              >
+                <motion.span whileHover={{ x: -3 }} className="flex items-center gap-2">
+                  <ArrowLeft className="h-4 w-4" />
+                  <span className="hidden sm:inline">Previous</span>
+                </motion.span>
               </Link>
             ) : (
-              <Link href={dayUrl} className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group">
-                <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-                <span className="hidden sm:inline">Day {dayNumber}</span>
+              <Link
+                href={dayUrl}
+                className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group"
+              >
+                <motion.span whileHover={{ x: -3 }} className="flex items-center gap-2">
+                  <ArrowLeft className="h-4 w-4" />
+                  <span className="hidden sm:inline">Day {dayNumber}</span>
+                </motion.span>
               </Link>
             )}
 
-            {/* Center: Mark as complete button */}
-            <button
+            {/* Center: Mark as complete */}
+            <motion.button
               onClick={handleComplete}
               disabled={isComplete}
+              whileHover={isComplete ? {} : { scale: 1.04, y: -1 }}
+              whileTap={isComplete ? {} : { scale: 0.96 }}
               className={cn(
                 "flex items-center gap-2 rounded-full px-6 py-2.5 text-sm font-semibold transition-all",
                 isComplete
                   ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 cursor-default"
-                  : "bg-gradient-to-r from-indigo-500 to-purple-500 text-white hover:opacity-90 hover:shadow-lg hover:shadow-indigo-500/25 active:scale-95"
+                  : "bg-gradient-to-r from-indigo-500 to-purple-500 text-white hover:opacity-90 hover:shadow-lg hover:shadow-indigo-500/25"
               )}
             >
               {isComplete ? (
@@ -472,18 +510,28 @@ export function LearnPageClient({
                   I Understood This
                 </>
               )}
-            </button>
+            </motion.button>
 
-            {/* Next subtopic button */}
+            {/* Next button */}
             {nextUrl ? (
-              <Link href={nextUrl} className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group">
-                <span className="hidden sm:inline">Next</span>
-                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              <Link
+                href={nextUrl}
+                className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group"
+              >
+                <motion.span whileHover={{ x: 3 }} className="flex items-center gap-2">
+                  <span className="hidden sm:inline">Next</span>
+                  <ArrowRight className="h-4 w-4" />
+                </motion.span>
               </Link>
             ) : (
-              <Link href={vocabUrl} className="flex items-center gap-2 text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:opacity-80 transition-colors group">
-                <span className="hidden sm:inline">Vocabulary</span>
-                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              <Link
+                href={vocabUrl}
+                className="flex items-center gap-2 text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:opacity-80 transition-colors group"
+              >
+                <motion.span whileHover={{ x: 3 }} className="flex items-center gap-2">
+                  <span className="hidden sm:inline">Vocabulary</span>
+                  <ArrowRight className="h-4 w-4" />
+                </motion.span>
               </Link>
             )}
           </div>
