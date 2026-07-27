@@ -385,7 +385,8 @@ async function main() {
   const totalVocab = await prisma.dayVocabulary.count();
   const totalQs = await prisma.practiceQuestion.count();
 
-  // Create the dev passthrough user
+  // Create a database fixture user for local seed data.
+  // This record is never used as an authentication bypass.
   await createDevUser();
 
   console.log("\n✨ Database seeded successfully!");
@@ -400,7 +401,7 @@ main()
   .catch((e) => { console.error("❌ Seed failed:", e); process.exit(1); })
   .finally(async () => { await prisma.$disconnect(); });
 
-// ─── Create dev user (for dev passthrough mode) ───────────────
+// ─── Create seeded database fixture user ──────────────────────
 async function createDevUser() {
   const devClerkId = "dev_user_75days_english";
   await prisma.user.upsert({

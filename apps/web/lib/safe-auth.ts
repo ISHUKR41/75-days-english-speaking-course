@@ -1,8 +1,7 @@
 // ============================================================
 // Safe Auth - Graceful wrapper around Clerk's auth().
-// ── When CLERK_SECRET_KEY is valid → real Clerk auth
-// ── When key is missing/invalid → dev mode with seeded user
-//    (lets you preview all pages without a Clerk account)
+// Protected routes always require a real Clerk session.
+// Missing or invalid configuration never grants access to a seeded user.
 // ============================================================
 
 // ─── Check if Clerk secret key is properly configured ────────
@@ -21,28 +20,17 @@ export const IS_CLERK_CONFIGURED =
   !CLERK_SECRET.includes("YOUR_SECRET") &&  // not a template variable
   !CLERK_SECRET.includes("YOUR_KEY");       // not a template variable
 
-// ─── Dev user ID ─────────────────────────────────────────────
-// This user is always seeded into the database by prisma/seed.ts.
-// Used only when CLERK_SECRET_KEY is not configured.
-export const DEV_USER_CLERK_ID = "dev_user_75days_english";
-
-// ─── Dev mode flag exported for UI banners ────────────────────
-// Components can import this to show "Dev Mode" notices.
-export const IS_DEV_MODE = !IS_CLERK_CONFIGURED;
-
 // ─── Safe auth function ──────────────────────────────────────
 // Returns { userId } safely — never throws even if Clerk fails.
-// When Clerk is NOT configured, returns the seeded dev user so
-// every page in the app is previewable without a Clerk account.
+// When Clerk is NOT configured, returns null so protected routes redirect.
 export async function safeAuth(): Promise<{
   userId: string | null;
   sessionId?: string | null;
 }> {
-  // ── Dev mode: Clerk secret is absent or invalid ────────────
-  // Return the seeded dev user so all pages render immediately.
-  // The user still sees a "Dev Mode" banner until they add the key.
+  // ── Configuration guard ────────────────────────────────────
+  // The seeded database user is for database tooling only, never auth.
   if (!IS_CLERK_CONFIGURED) {
-    return { userId: DEV_USER_CLERK_ID, sessionId: "dev_session" };
+    return { userId: null, sessionId: null };
   }
 
   // ── Production mode: use real Clerk auth ───────────────────
@@ -65,17 +53,11 @@ export const auth = safeAuth;
 
 // ─── Safe currentUser function ────────────────────────────────
 // Returns the current user's profile safely.
-// In dev mode returns a mock profile matching the seeded dev user.
+// Returns null when Clerk is unavailable; never fabricates a profile.
 export async function safeCurrentUser() {
-  // ── Dev mode: return a mock user matching the seeded record ──
+  // ── Configuration guard ──────────────────────────────────────
   if (!IS_CLERK_CONFIGURED) {
-    return {
-      id: DEV_USER_CLERK_ID,
-      firstName: "Dev",
-      lastName: "Student",
-      emailAddresses: [{ emailAddress: "dev@75daysenglish.com" }],
-      imageUrl: null,
-    };
+    return null;
   }
 
   // ── Production mode: use real Clerk currentUser ────────────

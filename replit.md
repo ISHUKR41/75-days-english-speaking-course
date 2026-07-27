@@ -5,7 +5,7 @@ A full-stack gamified English learning platform that takes students from beginne
 
 ## Tech Stack
 - **Framework**: Next.js 14 (App Router), TypeScript 5.6
-- **Auth**: Clerk v5 (dev passthrough when key not configured)
+- **Auth**: Clerk v5 (protected routes require a real Clerk session)
 - **Database**: SQLite via Prisma ORM (`apps/web/prisma/dev.db`)
 - **Styling**: Tailwind CSS + custom design tokens
 - **Animation**: Framer Motion + GSAP + Anime.js
@@ -34,7 +34,7 @@ The **"Start application"** workflow handles everything automatically:
 | `CLERK_SECRET_KEY` | ❌ Needs setting | Add as Replit Secret (starts with `sk_test_`) |
 
 ## Authentication Notes
-- **Without CLERK_SECRET_KEY**: App runs in "dev passthrough mode" — all pages accessible with a seeded dev user (`dev_user_75days_english`). Great for development.
+- **Without CLERK_SECRET_KEY**: Public landing and auth pages remain available, but dashboard, course, and user APIs require sign-in and redirect/reject safely.
 - **With CLERK_SECRET_KEY**: Full Clerk auth active — users must sign up/sign in. Add the key via Replit Secrets panel.
 - Dev user is seeded with: `firstName: "Dev"`, `lastName: "Student"`, `currentDay: 1`
 
@@ -81,7 +81,7 @@ The **"Start application"** workflow handles everything automatically:
 - ✅ Production build verified with `DATABASE_URL='file:./dev.db' npm run build`
 - ✅ Offline fallback builds correctly with a client-only retry action
 - ✅ Clerk publishable key configured
-- ✅ Dev mode auth working (no Clerk secret needed for development)
+- ✅ Protected-route auth fails closed when Clerk secret is missing
 - ✅ Sound effects (Web Audio API)
 - ✅ Dark/light theme
 - ❌ CLERK_SECRET_KEY needs to be added as a Replit Secret for production auth

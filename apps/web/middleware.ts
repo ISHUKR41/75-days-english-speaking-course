@@ -1,9 +1,7 @@
 // ============================================================
 // Middleware - Smart Clerk v5 authentication
-// Conditionally applies Clerk auth based on whether the
-// secret key is properly configured.
-// When key is missing/placeholder → dev mode (all routes open)
-// When key is valid → protects all non-public routes
+// Applies Clerk auth when configured; the protected layout and APIs reject
+// access when configuration is absent instead of using a fake user.
 // ============================================================
 
 import { NextResponse } from "next/server";
@@ -29,11 +27,11 @@ const IS_CLERK_CONFIGURED =
   !CLERK_SECRET.includes("placeholder") && // Not our placeholder
   !CLERK_SECRET.includes("xxxxxxxxxxx");   // Not our placeholder
 
-// ─── Development passthrough middleware ───────────────────────
-// Used when Clerk is not configured — allows all routes without auth
-// This lets developers preview the app before adding the Clerk key
+// ─── Configuration fallback middleware ────────────────────────
+// Let requests reach the app when the secret is absent so the server layout
+// can render the normal sign-in redirect. Public routes remain available.
 function devMiddleware(_request: NextRequest): NextResponse {
-  // Allow ALL requests through — no auth required in dev mode
+  // Route-level auth is enforced by safeAuth() and protected layouts/APIs.
   return NextResponse.next();
 }
 
@@ -50,7 +48,7 @@ const clerkAuth = clerkMiddleware((auth, request) => {
 });
 
 // ─── Export the correct middleware ───────────────────────────
-// Use Clerk when configured; the protected layout handles missing sessions.
+// Use Clerk when configured; protected layouts handle missing configuration.
 export default IS_CLERK_CONFIGURED ? clerkAuth : devMiddleware;
 
 // ─── Middleware config ────────────────────────────────────────
