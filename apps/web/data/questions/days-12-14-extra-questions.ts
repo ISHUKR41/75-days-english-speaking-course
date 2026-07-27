@@ -178,7 +178,7 @@ export const DAY_12_EXTRA_QUESTIONS: PracticeQ[] = [
 
   q("d12-ex-q065","d12-t1-s3","'Woh nahi chahti thi ki koi usse judge kare.' ko English mein translate karo.","translation","She didn't want anyone to judge her.","Didn't want + anyone (object) + to judge (infinitive) + her.","She didn't want anyone to judge her = negative past + object + infinitive.",8,undefined,[{word:"she didn't want anyone to judge her",meaning:"nahi chahti thi ki koi judge kare"}]),
 
-  q("d12-ex-q066","d12-t2-s1","'Did you ___ (want) to be a teacher?' — fill in.","fill_blank","want","Past question: Did + base verb (want). Did you want = sahi.",5,undefined,[{word:"did you want to be a teacher",meaning:"kya tum teacher banna chahte the"}]),
+  q("d12-ex-q066","d12-t2-s1","'Did you ___ (want) to be a teacher?' — fill in.","fill_blank","want","Past question: Did + base verb (want). Did you want = sahi.","Did you want to be a teacher? = Kya tum teacher banna chahte the?",5,undefined,[{word:"did you want to be a teacher",meaning:"kya tum teacher banna chahte the"}]),
 
   q("d12-ex-q067","d12-t2-s2","'Woh chahta tha ki unki baat sunni jaaye.' ko English mein translate karo.","translation","He wanted his voice to be heard.","Wanted + his voice (object) + to be heard (passive infinitive). Past desire.","He wanted his voice to be heard = past + passive infinitive.",10,undefined,[{word:"he wanted his voice to be heard",meaning:"chahta tha ki baat suni jaaye"}]),
 

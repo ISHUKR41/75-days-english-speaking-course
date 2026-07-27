@@ -194,11 +194,11 @@ export async function syncUserFromAPI(): Promise<MobileSyncState> {
       lastName: (user.lastName as string) ?? cached.lastName,
       imageUrl: (user.imageUrl as string | null) ?? cached.imageUrl,
       completedSubtopics: switchedAccount
-        ? user.completedSubtopics ?? []
-        : user.completedSubtopics ?? cached.completedSubtopics,
+        ? (user.completedSubtopics as string[] | undefined) ?? []
+        : (user.completedSubtopics as string[] | undefined) ?? cached.completedSubtopics,
       completedDays: switchedAccount
-        ? user.completedDays ?? []
-        : user.completedDays ?? cached.completedDays,
+        ? (user.completedDays as number[] | undefined) ?? []
+        : (user.completedDays as number[] | undefined) ?? cached.completedDays,
       lastSyncedAt: Date.now(), // Update sync timestamp
     };
     saveMobileSyncState(updated); // Persist updated state
