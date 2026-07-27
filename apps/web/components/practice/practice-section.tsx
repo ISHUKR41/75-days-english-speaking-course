@@ -43,6 +43,11 @@ import { ALL_DAY_11_VOCABULARY } from "@/data/vocabulary/day-11-vocabulary";
 import { ALL_DAY_12_VOCABULARY } from "@/data/vocabulary/day-12-vocabulary";
 import { ALL_DAY_13_VOCABULARY } from "@/data/vocabulary/day-13-vocabulary";
 import { ALL_DAY_14_VOCABULARY } from "@/data/vocabulary/day-14-vocabulary";
+// Import expanded vocabulary for days that needed more (60+ extra words each)
+import { DAY_8_EXTRA_VOCABULARY } from "@/data/vocabulary/day-8-vocabulary-extra";
+import { DAY_12_EXTRA_VOCABULARY } from "@/data/vocabulary/day-12-vocabulary-extra";
+import { DAY_13_EXTRA_VOCABULARY } from "@/data/vocabulary/day-13-vocabulary-extra";
+import { DAY_14_EXTRA_VOCABULARY } from "@/data/vocabulary/day-14-vocabulary-extra";
 // Import all-days vocabulary generator for Days 15-75
 import { getVocabularyForDay } from "@/data/vocabulary/all-days-vocabulary";
 // Import Days 8-14 hand-curated questions
@@ -115,13 +120,13 @@ function getVocabGeneratedQuestions(dayNumber: number, subtopicId: string): Ques
     : dayNumber === 5 ? ALL_DAY_5_VOCABULARY   // 300+ demonstrative words
     : dayNumber === 6 ? ALL_DAY_6_VOCABULARY   // 300+ has/have words
     : dayNumber === 7 ? ALL_DAY_7_VOCABULARY   // 300+ had/past words
-    : dayNumber === 8 ? ALL_DAY_8_VOCABULARY   // 200+ will-have words
-    : dayNumber === 9 ? ALL_DAY_9_VOCABULARY   // 200+ there is/are words
+    : dayNumber === 8 ? [...ALL_DAY_8_VOCABULARY, ...DAY_8_EXTRA_VOCABULARY]   // 230+ will-have words
+    : dayNumber === 9 ? ALL_DAY_9_VOCABULARY   // 240+ there is/are words
     : dayNumber === 10 ? ALL_DAY_10_VOCABULARY // 200+ revision words
-    : dayNumber === 11 ? ALL_DAY_11_VOCABULARY // 200+ use-of-want words
-    : dayNumber === 12 ? ALL_DAY_12_VOCABULARY // 200+ use-of-wanted words
-    : dayNumber === 13 ? ALL_DAY_13_VOCABULARY // 200+ use-of-let words
-    : dayNumber === 14 ? ALL_DAY_14_VOCABULARY // 200+ use-of-lets words
+    : dayNumber === 11 ? ALL_DAY_11_VOCABULARY // 180+ use-of-want words
+    : dayNumber === 12 ? [...ALL_DAY_12_VOCABULARY, ...DAY_12_EXTRA_VOCABULARY] // 210+ use-of-wanted words
+    : dayNumber === 13 ? [...ALL_DAY_13_VOCABULARY, ...DAY_13_EXTRA_VOCABULARY] // 330+ use-of-let words
+    : dayNumber === 14 ? [...ALL_DAY_14_VOCABULARY, ...DAY_14_EXTRA_VOCABULARY] // 330+ use-of-lets words
     : getVocabularyForDay(dayNumber, 60);      // Days 15-75: generated vocab
 
   // Use a slice of vocabulary relevant to this subtopic's index
