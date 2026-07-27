@@ -9,7 +9,7 @@ export interface PracticeQ {
   subtopicId: string;
   questionText: string;   // Hindi question
   questionType: "fill_blank" | "mcq" | "translation" | "error_detection" | "rearrangement";
-  difficulty: "beginner" | "elementary" | "intermediate";
+  difficulty: "beginner" | "elementary" | "intermediate" | "advanced";
   correctAnswer: string;  // English answer
   explanation: string;    // Why this answer is correct
   hindiExplanation: string;

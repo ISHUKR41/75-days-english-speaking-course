@@ -12,7 +12,7 @@ export interface VocabularyWord {
   hindiMeaning: string;     // Hindi translation
   ipa: string;              // IPA pronunciation guide
   partOfSpeech: string;     // noun / verb / adjective / adverb / etc.
-  difficulty: "beginner" | "elementary" | "intermediate";
+  difficulty: "beginner" | "elementary" | "intermediate" | "advanced";
   example1: string;
   example2: string;
   example3: string;
