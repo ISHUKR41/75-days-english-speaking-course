@@ -78,6 +78,8 @@ The **"Start application"** workflow handles everything automatically:
 - ✅ App running on port 5000
 - ✅ All pages working (dashboard, day pages, learn, practice, test, vocabulary)
 - ✅ TypeScript: 0 errors
+- ✅ Production build verified with `DATABASE_URL='file:./dev.db' npm run build`
+- ✅ Offline fallback builds correctly with a client-only retry action
 - ✅ Clerk publishable key configured
 - ✅ Dev mode auth working (no Clerk secret needed for development)
 - ✅ Sound effects (Web Audio API)

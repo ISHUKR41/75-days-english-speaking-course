@@ -4,8 +4,9 @@
 // ============================================================
 
 import Link from "next/link";
-import { WifiOff, BookOpen, RefreshCw } from "lucide-react";
+import { WifiOff, BookOpen } from "lucide-react";
 import type { Metadata } from "next";
+import { OfflineRetryButton } from "./retry-button";
 
 // ─── SEO Metadata ─────────────────────────────────────────────
 export const metadata: Metadata = {
@@ -41,14 +42,7 @@ export default function OfflinePage() {
       {/* Action buttons */}
       <div className="flex flex-col sm:flex-row gap-3">
         {/* Try again */}
-        <button
-          onClick={() => window.location.reload()}
-          className="inline-flex items-center gap-2 rounded-2xl bg-primary px-6 py-3 font-semibold text-white hover:bg-primary/90 transition-all"
-          type="button"
-        >
-          <RefreshCw className="h-4 w-4" aria-hidden="true" />
-          Try Again
-        </button>
+        <OfflineRetryButton />
 
         {/* Go to cached dashboard */}
         <Link

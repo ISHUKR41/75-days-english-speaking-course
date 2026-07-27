@@ -6,9 +6,9 @@
 
 import { PrismaClient } from "@prisma/client";
 
-// Keep local CLI/build commands deterministic when DATABASE_URL was not
-// exported by the caller. Deployment environments still use their own URL.
-if (!process.env.DATABASE_URL) {
+// Keep local CLI/build commands deterministic when DATABASE_URL is missing or
+// points to a provider that this SQLite schema cannot use.
+if (!process.env.DATABASE_URL?.startsWith("file:")) {
   process.env.DATABASE_URL = "file:./dev.db";
 }
 
