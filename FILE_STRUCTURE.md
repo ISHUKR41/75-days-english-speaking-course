@@ -200,6 +200,29 @@ data/
 │   ├── day-5-vocabulary.ts   ← 300+ words (Demonstrative Pronoun vocabulary)
 │   ├── day-6-vocabulary.ts   ← 300+ words (Has/Have vocabulary)
 │   ├── day-7-vocabulary.ts   ← 300+ words (Had vocabulary)
+│   ├── day-8-vocabulary.ts   ← 200+ words (Want/Wanted vocabulary)
+│   ├── day-9-vocabulary.ts   ← 200+ words (Let/Let's vocabulary)
+│   ├── day-10-vocabulary.ts  ← 200+ words (Would Like To vocabulary)
+│   ├── day-11-vocabulary.ts  ← 200+ words (Can vocabulary)
+│   ├── day-12-vocabulary.ts  ← 200+ words (Should vocabulary)
+│   ├── day-13-vocabulary.ts  ← 200+ words (May/Must vocabulary)
+│   ├── day-14-vocabulary.ts  ← 200+ words (Revision Week 2 vocabulary)
+│   ├── day-15-vocabulary.ts  ← 200+ words (Used To vocabulary)
+│   ├── day-16-vocabulary.ts  ← 200+ words (Could vocabulary)
+│   ├── day-17-vocabulary.ts  ← 200+ words (Should Have vocabulary)
+│   ├── day-18-vocabulary.ts  ← 200+ words (Must Have vocabulary)
+│   ├── day-19-vocabulary.ts  ← 200+ words (Would Have vocabulary)
+│   ├── day-20-vocabulary.ts  ← 200+ words (May Have vocabulary)
+│   ├── day-21-vocabulary.ts  ← 200+ words (Will/Shall vocabulary)
+│   ├── day-22-vocabulary.ts  ← 200+ words (Advanced Modals vocabulary)
+│   ├── day-23-vocabulary.ts  ← 200+ words (Complete Modal Revision vocabulary)
+│   ├── day-24-vocabulary.ts  ← 200+ words (Present Simple vocabulary)
+│   ├── day-25-vocabulary.ts  ← 200+ words (Present Continuous vocabulary)
+│   ├── day-26-vocabulary.ts  ← 200+ words (Present Perfect vocabulary)
+│   ├── day-27-vocabulary.ts  ← 200+ words (Past Simple vocabulary)
+│   ├── day-28-vocabulary.ts  ← 200+ words (Past Continuous vocabulary)
+│   ├── day-29-vocabulary.ts  ← 200+ words (Past Perfect vocabulary)
+│   ├── day-30-vocabulary.ts  ← 200+ words (Future Tenses vocabulary)
 │   └── all-days-vocabulary.ts ← Generator: creates vocabulary for Days 8-75
 │
 └── questions/                ← Practice & test question banks
@@ -210,6 +233,9 @@ data/
     ├── day-2-questions.ts          ← Day 2 questions (~80+)
     ├── days-3-7-questions.ts       ← Days 3-7 base questions
     ├── days-4-7-extra-questions.ts ← Days 4-7 extra questions (~45/day)
+    ├── days-8-14-questions.ts      ← Days 8-14 questions (~60/day, Modal verbs week)
+    ├── days-15-22-questions.ts     ← Days 15-22 questions (~60/day, Advanced modals)
+    ├── days-23-30-questions.ts     ← Days 23-30 questions (~60/day, All 12 Tenses intro)
     └── question-generator.ts       ← Generates 3 questions/vocab word (Days 8-75 fallback)
 ```
 

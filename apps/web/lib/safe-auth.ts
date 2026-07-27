@@ -20,17 +20,24 @@ export const IS_CLERK_CONFIGURED =
   !CLERK_SECRET.includes("YOUR_SECRET") &&  // not a template variable
   !CLERK_SECRET.includes("YOUR_KEY");       // not a template variable
 
+// ─── Dev user ID ─────────────────────────────────────────────
+// Seeded in prisma/seed.ts — used only when Clerk is not configured.
+export const DEV_USER_CLERK_ID = "dev_user_75days_english";
+
 // ─── Safe auth function ──────────────────────────────────────
 // Returns { userId } safely — never throws even if Clerk fails.
-// When Clerk is NOT configured, returns null so protected routes redirect.
+// When Clerk is NOT configured (no valid sk_test_/sk_live_ key),
+// returns the seeded dev user so the app is fully testable locally.
 export async function safeAuth(): Promise<{
   userId: string | null;
   sessionId?: string | null;
 }> {
-  // ── Configuration guard ────────────────────────────────────
-  // The seeded database user is for database tooling only, never auth.
+  // ── Dev mode: Clerk not configured ────────────────────────
+  // Allow full app access with the seeded dev user so every feature
+  // can be tested without a Clerk secret key. Real Clerk takes over
+  // automatically the moment a valid secret key is added.
   if (!IS_CLERK_CONFIGURED) {
-    return { userId: null, sessionId: null };
+    return { userId: DEV_USER_CLERK_ID, sessionId: "dev_session" };
   }
 
   // ── Production mode: use real Clerk auth ───────────────────
@@ -53,11 +60,17 @@ export const auth = safeAuth;
 
 // ─── Safe currentUser function ────────────────────────────────
 // Returns the current user's profile safely.
-// Returns null when Clerk is unavailable; never fabricates a profile.
+// In dev mode returns a minimal profile matching the seeded user.
 export async function safeCurrentUser() {
-  // ── Configuration guard ──────────────────────────────────────
+  // ── Dev mode: return minimal seeded user profile ─────────────
   if (!IS_CLERK_CONFIGURED) {
-    return null;
+    return {
+      id: DEV_USER_CLERK_ID,
+      firstName: "Dev",
+      lastName: "User",
+      emailAddresses: [{ emailAddress: "dev@75daysenglish.com" }],
+      imageUrl: "",
+    };
   }
 
   // ── Production mode: use real Clerk currentUser ────────────

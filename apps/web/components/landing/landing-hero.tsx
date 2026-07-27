@@ -144,32 +144,14 @@ const AVATAR_COLORS = [
   "from-yellow-400 to-amber-500",
 ];
 
-// ─── Animation variants ────────────────────────────────────────
-const fadeUpVariant = {
-  hidden: { opacity: 0, y: 30 },
-  visible: (delay: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] },
-  }),
-};
-
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1, delayChildren: 0.4 },
-  },
-};
-
-const statBarItem = {
-  hidden: { opacity: 0, scale: 0.85 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] },
-  },
-};
+// ─── Animation helpers (direct props, not named variants) ────────
+// Using direct animate props instead of named variants for reliability
+// in iframe/SSR environments where variant animations can stay at opacity:0
+const fadeUp = (delay: number, y = 24) => ({
+  initial: { opacity: 0, y },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
+});
 
 // ─── Animated count-up number ─────────────────────────────────
 function CountUp({ target, suffix = "" }: { target: number; suffix?: string }) {
@@ -429,10 +411,7 @@ export function LandingHero() {
 
         {/* ── Animated shimmer badge ── */}
         <motion.div
-          custom={0}
-          variants={fadeUpVariant}
-          initial="hidden"
-          animate="visible"
+          {...fadeUp(0, 20)}
           className="mb-8 flex justify-center"
         >
           <motion.div
@@ -460,10 +439,7 @@ export function LandingHero() {
         {/* ── Headline ── */}
         <div className="mb-6 space-y-1">
           <motion.h1
-            custom={0.1}
-            variants={fadeUpVariant}
-            initial="hidden"
-            animate="visible"
+            {...fadeUp(0.1, 24)}
             className="font-black text-foreground leading-[0.92] tracking-tighter font-display-hero"
             style={{ fontSize: "clamp(3.5rem, 9vw, 8rem)" }}
           >
@@ -471,10 +447,7 @@ export function LandingHero() {
           </motion.h1>
 
           <motion.h1
-            custom={0.2}
-            variants={fadeUpVariant}
-            initial="hidden"
-            animate="visible"
+            {...fadeUp(0.2, 24)}
             className="font-black leading-[0.92] tracking-tighter font-display-hero"
             style={{
               fontSize: "clamp(3.5rem, 9vw, 8rem)",
@@ -492,10 +465,7 @@ export function LandingHero() {
 
         {/* ── Subtitle ── */}
         <motion.p
-          custom={0.35}
-          variants={fadeUpVariant}
-          initial="hidden"
-          animate="visible"
+          {...fadeUp(0.35, 20)}
           className="mx-auto mb-8 max-w-2xl text-lg md:text-xl text-muted-foreground leading-relaxed"
         >
           From absolute beginner to{" "}
@@ -506,15 +476,17 @@ export function LandingHero() {
 
         {/* ── Statistics bar — course highlights ── */}
         <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          animate="visible"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
           className="flex flex-wrap items-center justify-center gap-3 mb-10"
         >
-          {STATS_BAR.map((stat) => (
+          {STATS_BAR.map((stat, idx) => (
             <motion.div
               key={stat.label}
-              variants={statBarItem}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4, delay: 0.4 + idx * 0.08 }}
               whileHover={{ scale: 1.06, y: -2 }}
               className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm px-4 py-2 cursor-default"
             >
@@ -527,10 +499,7 @@ export function LandingHero() {
 
         {/* ── CTA buttons ── */}
         <motion.div
-          custom={0.45}
-          variants={fadeUpVariant}
-          initial="hidden"
-          animate="visible"
+          {...fadeUp(0.45, 16)}
           className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12"
         >
           {/* Primary CTA */}
@@ -596,10 +565,7 @@ export function LandingHero() {
 
         {/* ── Social proof row ── */}
         <motion.div
-          custom={0.55}
-          variants={fadeUpVariant}
-          initial="hidden"
-          animate="visible"
+          {...fadeUp(0.55, 12)}
           className="flex items-center justify-center gap-4 mb-10"
         >
           <div className="flex -space-x-2.5">
@@ -634,10 +600,7 @@ export function LandingHero() {
 
         {/* ── Bottom stats bar — glassmorphism card ── */}
         <motion.div
-          custom={0.65}
-          variants={fadeUpVariant}
-          initial="hidden"
-          animate="visible"
+          {...fadeUp(0.65, 12)}
         >
           <div
             className="inline-grid grid-cols-2 sm:grid-cols-4 gap-px rounded-2xl overflow-hidden
