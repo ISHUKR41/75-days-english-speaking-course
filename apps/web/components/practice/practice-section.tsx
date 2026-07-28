@@ -4,7 +4,7 @@
 // 80-100 questions per subtopic, real scoring, sound effects
 // ============================================================
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, useMemo, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   CheckCircle2, Mic, MicOff, Send, SkipForward,
@@ -12,48 +12,10 @@ import {
   ChevronRight, Eye,
 } from "lucide-react";
 import { cn, checkAnswer, playSound } from "@/lib/utils";
-// Import real question data for Day 1
-import { ALL_DAY_1_QUESTIONS } from "@/data/questions/day-1-questions";
-// Import extended questions (80+ additional questions)
-import { ALL_DAY1_EXTENDED_QUESTIONS } from "@/data/questions/day-1-extended-questions";
-// Import v2 extended questions (120 additional diverse questions)
-import { ALL_DAY1_EXTENDED_V2_QUESTIONS } from "@/data/questions/day-1-extended-v2-questions";
-// Import comprehensive subtopic-specific questions for all Day 1 subtopics
-import { ALL_D1_SUBTOPIC_QUESTIONS } from "@/data/questions/day-1-subtopics-questions";
-// Import Day 2 questions
-import { ALL_DAY_2_QUESTIONS } from "@/data/questions/day-2-questions";
-// Import Days 3-7 hand-curated questions
-import { getDays3to7Questions } from "@/data/questions/days-3-7-questions";
 // Import the PracticeQ type for type compatibility
 import type { PracticeQ } from "@/data/questions/day-1-questions";
-// Import vocabulary data for question generation
-import { ALL_DAY_1_VOCABULARY } from "@/data/vocabulary/day-1-vocabulary";
-import { ALL_DAY_2_VOCABULARY } from "@/data/vocabulary/day-2-vocabulary";
-// Import Days 3-7 specific vocabulary files (300+ hand-crafted words each)
-import { ALL_DAY_3_VOCABULARY } from "@/data/vocabulary/day-3-vocabulary";
-import { ALL_DAY_4_VOCABULARY } from "@/data/vocabulary/day-4-vocabulary";
-import { ALL_DAY_5_VOCABULARY } from "@/data/vocabulary/day-5-vocabulary";
-import { ALL_DAY_6_VOCABULARY } from "@/data/vocabulary/day-6-vocabulary";
-import { ALL_DAY_7_VOCABULARY } from "@/data/vocabulary/day-7-vocabulary";
-// Import Days 8-14 specific vocabulary files (200+ hand-crafted words each)
-import { ALL_DAY_8_VOCABULARY } from "@/data/vocabulary/day-8-vocabulary";
-import { ALL_DAY_9_VOCABULARY } from "@/data/vocabulary/day-9-vocabulary";
-import { ALL_DAY_10_VOCABULARY } from "@/data/vocabulary/day-10-vocabulary";
-import { ALL_DAY_11_VOCABULARY } from "@/data/vocabulary/day-11-vocabulary";
-import { ALL_DAY_12_VOCABULARY } from "@/data/vocabulary/day-12-vocabulary";
-import { ALL_DAY_13_VOCABULARY } from "@/data/vocabulary/day-13-vocabulary";
-import { ALL_DAY_14_VOCABULARY } from "@/data/vocabulary/day-14-vocabulary";
-// Import expanded vocabulary for days that needed more (60+ extra words each)
-import { DAY_8_EXTRA_VOCABULARY } from "@/data/vocabulary/day-8-vocabulary-extra";
-import { DAY_12_EXTRA_VOCABULARY } from "@/data/vocabulary/day-12-vocabulary-extra";
-import { DAY_13_EXTRA_VOCABULARY } from "@/data/vocabulary/day-13-vocabulary-extra";
-import { DAY_14_EXTRA_VOCABULARY } from "@/data/vocabulary/day-14-vocabulary-extra";
-// Import all-days vocabulary generator for Days 15-75
-import { getVocabularyForDay } from "@/data/vocabulary/all-days-vocabulary";
-// Import Days 8-14 hand-curated questions
-import { getDays8to14Questions } from "@/data/questions/days-8-14-questions";
-// Import question generator (creates 3 questions per vocabulary word)
-import { generateQuestionsFromVocab } from "@/data/questions/question-generator";
+// Unified question loader — single entry point for all 75 days
+import { getQuestionsForDayAndSubtopic } from "@/data/questions/questions-loader";
 
 // ─── Types ───────────────────────────────────────────────────
 // Question interface used by the practice UI
@@ -109,106 +71,15 @@ function mapPracticeQToQuestion(pq: PracticeQ): Question {
   };
 }
 
-// ─── Helper: Generate vocab-based questions as rich fallback ──
-// Generates 3 questions per vocabulary word (600 per day)
-function getVocabGeneratedQuestions(dayNumber: number, subtopicId: string): Question[] {
-  // Get vocabulary for this specific day — use hand-crafted files for Days 1-7
-  const vocab = dayNumber === 1 ? ALL_DAY_1_VOCABULARY
-    : dayNumber === 2 ? ALL_DAY_2_VOCABULARY
-    : dayNumber === 3 ? ALL_DAY_3_VOCABULARY   // 300+ imperative words
-    : dayNumber === 4 ? ALL_DAY_4_VOCABULARY   // 300+ be-verb words
-    : dayNumber === 5 ? ALL_DAY_5_VOCABULARY   // 300+ demonstrative words
-    : dayNumber === 6 ? ALL_DAY_6_VOCABULARY   // 300+ has/have words
-    : dayNumber === 7 ? ALL_DAY_7_VOCABULARY   // 300+ had/past words
-    : dayNumber === 8 ? [...ALL_DAY_8_VOCABULARY, ...DAY_8_EXTRA_VOCABULARY]   // 230+ will-have words
-    : dayNumber === 9 ? ALL_DAY_9_VOCABULARY   // 240+ there is/are words
-    : dayNumber === 10 ? ALL_DAY_10_VOCABULARY // 200+ revision words
-    : dayNumber === 11 ? ALL_DAY_11_VOCABULARY // 180+ use-of-want words
-    : dayNumber === 12 ? [...ALL_DAY_12_VOCABULARY, ...DAY_12_EXTRA_VOCABULARY] // 210+ use-of-wanted words
-    : dayNumber === 13 ? [...ALL_DAY_13_VOCABULARY, ...DAY_13_EXTRA_VOCABULARY] // 330+ use-of-let words
-    : dayNumber === 14 ? [...ALL_DAY_14_VOCABULARY, ...DAY_14_EXTRA_VOCABULARY] // 330+ use-of-lets words
-    : getVocabularyForDay(dayNumber, 60);      // Days 15-75: generated vocab
-
-  // Use a slice of vocabulary relevant to this subtopic's index
-  const subtopicNum = parseInt(subtopicId.split("-s").pop() || "1", 10);
-  const wordsPerSubtopic = 20; // 20 words × 3 questions = 60 questions per subtopic
-  const startIdx = ((subtopicNum - 1) * wordsPerSubtopic) % vocab.length;
-  const slicedVocab = vocab.slice(startIdx, startIdx + wordsPerSubtopic);
-  // If slice is too short, wrap around
-  const finalVocab = slicedVocab.length >= 10
-    ? slicedVocab
-    : [...slicedVocab, ...vocab.slice(0, wordsPerSubtopic - slicedVocab.length)];
-  const generated = generateQuestionsFromVocab(finalVocab, subtopicId, dayNumber, subtopicNum);
-  return generated.map(pq => mapPracticeQToQuestion(pq as any));
-}
-
-// ─── Helper: Load questions for a specific day and subtopic ──
-// Combines base questions + extended questions + vocab-generated questions
-function loadQuestionsForSubtopic(dayNumber: number, subtopicId: string): Question[] {
-  // For Day 1, combine both question banks
-  if (dayNumber === 1) {
-    // Get base questions for this subtopic
-    const baseQs = ALL_DAY_1_QUESTIONS.filter(q => q.subtopicId === subtopicId);
-    // Get extended questions v1 (80+) for this subtopic
-    const extQs = ALL_DAY1_EXTENDED_QUESTIONS.filter(q => q.subtopicId === subtopicId);
-    // Get extended questions v2 (120+) — diverse types including error_correction, sentence_formation
-    const extV2Qs = ALL_DAY1_EXTENDED_V2_QUESTIONS.filter(q => q.subtopicId === subtopicId);
-    // Combine all handwritten questions (100+ unique questions for Day 1)
-    const handwritten = [...baseQs, ...extQs, ...extV2Qs].map(mapPracticeQToQuestion);
-    // Always add vocab-generated questions for extra variety
-    const generated = getVocabGeneratedQuestions(1, subtopicId);
-    const combined = [...handwritten, ...generated];
-    if (combined.length > 0) return combined;
-    // Full fallback: all Day 1 questions + vocab generated
-    return [
-      ...ALL_DAY_1_QUESTIONS.map(mapPracticeQToQuestion),
-      ...ALL_DAY1_EXTENDED_V2_QUESTIONS.map(mapPracticeQToQuestion),
-      ...getVocabGeneratedQuestions(1, subtopicId),
-    ];
-  }
-  // For Day 2, use the Day 2 question bank + vocab generated
-  if (dayNumber === 2) {
-    const d2Qs = ALL_DAY_2_QUESTIONS.filter(q => q.subtopicId === subtopicId);
-    const generated = getVocabGeneratedQuestions(2, subtopicId);
-    const handwritten = d2Qs.map(mapPracticeQToQuestion);
-    const combined = [...handwritten, ...generated];
-    if (combined.length > 0) return combined;
-    return [...ALL_DAY_2_QUESTIONS.map(mapPracticeQToQuestion), ...generated];
-  }
-  // For Days 3-7: use hand-curated questions first, then supplement with vocab-generated
-  if (dayNumber >= 3 && dayNumber <= 7) {
-    const handwritten = getDays3to7Questions(dayNumber, subtopicId);
-    const generated = getVocabGeneratedQuestions(dayNumber, subtopicId);
-    const handwrittenMapped = handwritten.map(mapPracticeQToQuestion);
-    // Combine: curated questions first, then vocab-generated for variety
-    const combined = [...handwrittenMapped, ...generated];
-    if (combined.length > 0) return combined;
-    // If no subtopic-specific questions, return all day questions + generated
-    const allDayQs = getDays3to7Questions(dayNumber);
-    return [...allDayQs.map(mapPracticeQToQuestion), ...generated];
-  }
-  // For Days 8-14: use hand-curated questions first, then supplement with vocab-generated
-  if (dayNumber >= 8 && dayNumber <= 14) {
-    const handwritten = getDays8to14Questions(dayNumber, subtopicId);
-    const generated = getVocabGeneratedQuestions(dayNumber, subtopicId);
-    const handwrittenMapped = handwritten.map(pq => mapPracticeQToQuestion(pq as any));
-    // Combine: curated questions first, then vocab-generated for variety
-    const combined = [...handwrittenMapped, ...generated];
-    if (combined.length > 0) return combined;
-    // If no subtopic-specific questions, return all day questions + generated
-    const allDayQs = getDays8to14Questions(dayNumber);
-    return [...allDayQs.map(pq => mapPracticeQToQuestion(pq as any)), ...generated];
-  }
-  // For Days 15-75: generate topic-specific questions using day-specific vocabulary
-  const daySpecificGenerated = getVocabGeneratedQuestions(dayNumber, subtopicId);
-  if (daySpecificGenerated.length > 0) return daySpecificGenerated;
-  // Ultimate fallback: Day 1 questions (should not normally happen)
-  return ALL_DAY_1_QUESTIONS.map(mapPracticeQToQuestion);
-}
-
-export function PracticeSection({ dayNumber, subtopicId, subtopicTitle, topicColor, userId, onComplete }: PracticeSectionProps) {
-  // Load real questions dynamically based on day and subtopic
-  const [questions] = useState<Question[]>(() => loadQuestionsForSubtopic(dayNumber, subtopicId));
+// ─── Memoized PracticeSection to avoid unnecessary re-renders ──
+// React.memo ensures the component only re-renders when props change
+export const PracticeSection = memo(function PracticeSection({ dayNumber, subtopicId, subtopicTitle, topicColor, userId, onComplete }: PracticeSectionProps) {
+  // Load questions via the unified loader — memoized so they don't regenerate on re-renders
+  // useMemo caches the result until dayNumber or subtopicId changes
+  const questions = useMemo<Question[]>(
+    () => getQuestionsForDayAndSubtopic(dayNumber, subtopicId).map(mapPracticeQToQuestion),
+    [dayNumber, subtopicId]
+  );
   const [currentQIndex, setCurrentQIndex] = useState(0);
   const [answerMode, setAnswerMode] = useState<AnswerMode>("type");
   const [typedAnswer, setTypedAnswer] = useState("");
@@ -829,4 +700,5 @@ export function PracticeSection({ dayNumber, subtopicId, subtopicTitle, topicCol
       </div>
     </div>
   );
-}
+// Close the memo() wrapper
+});

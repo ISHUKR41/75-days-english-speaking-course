@@ -1,6 +1,7 @@
 // ============================================================
 // Main App Layout - For all authenticated pages
 // Includes sidebar navigation, header, and content area
+// SmoothScrollProvider adds Lenis smooth scrolling to all pages
 // ============================================================
 
 import { redirect } from "next/navigation";
@@ -10,6 +11,7 @@ import { AppHeader } from "@/components/layout/app-header";
 import { MobileSidebarBackdrop } from "@/components/layout/mobile-sidebar-backdrop";
 import { SidebarMobileCloser } from "@/components/layout/sidebar-mobile-closer";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { SmoothScrollProvider } from "@/components/layout/smooth-scroll-provider";
 
 // Ensure user is authenticated for all pages inside (main)
 export default async function MainLayout({
@@ -27,42 +29,45 @@ export default async function MainLayout({
   }
 
   return (
-    // SidebarProvider manages sidebar open/close state
-    <SidebarProvider
-      defaultOpen={true}
-      style={
-        {
-          // CSS variable for sidebar width
-          "--sidebar-width": "280px",
-          "--sidebar-width-mobile": "100vw",
-        } as React.CSSProperties
-      }
-    >
-      {/* Main layout grid */}
-      <div className="flex min-h-screen w-full bg-background">
-        {/* Left sidebar navigation */}
-        <AppSidebar />
+    // SmoothScrollProvider wraps Lenis for buttery smooth scrolling
+    <SmoothScrollProvider>
+      {/* SidebarProvider manages sidebar open/close state */}
+      <SidebarProvider
+        defaultOpen={true}
+        style={
+          {
+            // CSS variable for sidebar width
+            "--sidebar-width": "280px",
+            "--sidebar-width-mobile": "100vw",
+          } as React.CSSProperties
+        }
+      >
+        {/* Main layout grid */}
+        <div className="flex min-h-screen w-full bg-background">
+          {/* Left sidebar navigation */}
+          <AppSidebar />
 
-        {/* Close sidebar on mobile immediately after mount */}
-        <SidebarMobileCloser />
+          {/* Close sidebar on mobile immediately after mount */}
+          <SidebarMobileCloser />
 
-        {/* Mobile backdrop overlay — tapping outside closes sidebar */}
-        <MobileSidebarBackdrop />
+          {/* Mobile backdrop overlay — tapping outside closes sidebar */}
+          <MobileSidebarBackdrop />
 
-        {/* Main content area */}
-        <div className="flex flex-1 flex-col min-w-0">
-          {/* Top header bar */}
-          <AppHeader />
+          {/* Main content area */}
+          <div className="flex flex-1 flex-col min-w-0">
+            {/* Top header bar */}
+            <AppHeader />
 
-          {/* Page content */}
-          <main
-            className="flex-1 overflow-auto p-4 md:p-6 lg:p-8"
-            id="main-content"
-          >
-            {children}
-          </main>
+            {/* Page content */}
+            <main
+              className="flex-1 overflow-auto p-4 md:p-6 lg:p-8"
+              id="main-content"
+            >
+              {children}
+            </main>
+          </div>
         </div>
-      </div>
-    </SidebarProvider>
+      </SidebarProvider>
+    </SmoothScrollProvider>
   );
 }

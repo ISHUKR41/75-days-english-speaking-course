@@ -2,11 +2,13 @@
 // ============================================================
 // App Header - Top navigation bar for authenticated pages
 // Shows: menu toggle, search, notifications, user menu
+// Enhanced: animated XP bar, prominent streak with fire emoji,
+// Day-in-progress notification bar
 // ============================================================
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
 import { useUserStats } from "@/hooks/use-user-stats";
 import {
   Bell,
@@ -190,6 +192,26 @@ export function AppHeader() {
   const { stats: userStats } = useUserStats();
   const userXp = userStats.totalXp;
   const userStreak = userStats.streak;
+  const userLevel = userStats.level ?? 1;
+  const userCurrentDay = userStats.currentDay ?? 1;
+
+  // XP within current level (each level needs 1000 XP)
+  const xpInLevel = userXp % 1000;
+  const xpProgressPct = Math.min(100, Math.round((xpInLevel / 1000) * 100));
+
+  // Track previous XP so we can pulse when it increases
+  const prevXpRef = useRef(userXp);
+  const [xpPulse, setXpPulse] = useState(false);
+
+  useEffect(() => {
+    // Trigger pulse animation when XP increases
+    if (userXp > prevXpRef.current) {
+      setXpPulse(true);
+      const timer = setTimeout(() => setXpPulse(false), 800);
+      prevXpRef.current = userXp;
+      return () => clearTimeout(timer);
+    }
+  }, [userXp]);
 
   // Search results — computed from query
   const searchResults = useMemo(() => {
@@ -222,8 +244,32 @@ export function AppHeader() {
   };
 
   return (
+    <div className="sticky top-0 z-20">
+      {/* ── Day-in-progress notification bar ── */}
+      <div
+        className="hidden sm:flex items-center justify-center gap-3 px-4 py-1.5 text-xs font-semibold"
+        style={{
+          background: "linear-gradient(90deg, rgba(99,102,241,0.15) 0%, rgba(139,92,246,0.1) 50%, rgba(99,102,241,0.15) 100%)",
+          borderBottom: "1px solid rgba(99,102,241,0.2)",
+        }}
+      >
+        {/* Animated pulsing dot */}
+        <motion.div
+          className="h-1.5 w-1.5 rounded-full bg-violet-400"
+          animate={{ opacity: [1, 0.3, 1], scale: [1, 0.8, 1] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <span className="text-violet-300">
+          📅 Day {userCurrentDay} of 75 in progress
+        </span>
+        <span className="text-muted-foreground">·</span>
+        <span className="text-muted-foreground">
+          Keep your {userStreak > 0 ? `${userStreak}-day streak alive` : "streak going"}!
+        </span>
+      </div>
+
     <header
-      className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-border
+      className="flex h-14 items-center gap-3 border-b border-border
                  bg-background/95 backdrop-blur-xl px-4 md:px-6"
     >
       {/* Mobile menu toggle */}
@@ -251,25 +297,73 @@ export function AppHeader() {
 
       {/* Right side actions */}
       <div className="flex items-center gap-2">
-        {/* XP display */}
-        <div
-          className="hidden sm:flex items-center gap-1.5 rounded-full 
-                     border border-border/60 bg-card px-3 py-1.5 text-sm"
+        {/* ── XP display with animated progress bar ── */}
+        <motion.div
+          animate={xpPulse ? { scale: [1, 1.08, 1] } : {}}
+          transition={{ duration: 0.4 }}
+          className={cn(
+            "hidden sm:flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm transition-all duration-300",
+            xpPulse
+              ? "border-amber-400/60 bg-amber-500/15 shadow-[0_0_12px_rgba(251,191,36,0.3)]"
+              : "border-border/60 bg-card"
+          )}
         >
-          <Zap className="h-3.5 w-3.5 text-gold-400" aria-hidden="true" />
-          <span className="font-semibold text-foreground">{userXp.toLocaleString()}</span>
-          <span className="text-muted-foreground text-xs">XP</span>
-        </div>
+          {/* Zap icon pulses on XP gain */}
+          <motion.div
+            animate={xpPulse ? { rotate: [0, -15, 15, 0], scale: [1, 1.3, 1] } : {}}
+            transition={{ duration: 0.4 }}
+          >
+            <Zap className="h-3.5 w-3.5 text-amber-400" aria-hidden="true" />
+          </motion.div>
+          <div className="flex flex-col gap-0.5">
+            <div className="flex items-center gap-1">
+              <span className="font-bold text-foreground text-xs tabular-nums">{userXp.toLocaleString()}</span>
+              <span className="text-muted-foreground text-[10px]">XP · Lv {userLevel}</span>
+            </div>
+            {/* Mini XP bar */}
+            <div className="h-1 w-20 rounded-full bg-muted overflow-hidden">
+              <motion.div
+                className="h-full rounded-full bg-gradient-to-r from-amber-400 to-amber-500"
+                initial={{ width: 0 }}
+                animate={{ width: `${xpProgressPct}%` }}
+                transition={{ duration: 1, ease: "easeOut" }}
+                style={xpPulse ? { boxShadow: "0 0 6px rgba(251,191,36,0.7)" } : {}}
+              />
+            </div>
+          </div>
+        </motion.div>
 
-        {/* Streak display */}
-        <div
-          className="hidden sm:flex items-center gap-1.5 rounded-full 
-                     border border-border/60 bg-card px-3 py-1.5 text-sm"
+        {/* ── Streak display — prominent with fire emoji ── */}
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          className={cn(
+            "hidden sm:flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm cursor-default",
+            userStreak >= 7
+              ? "border-orange-500/40 bg-orange-500/10"
+              : "border-border/60 bg-card"
+          )}
         >
-          <Flame className="h-3.5 w-3.5 text-orange-400 animate-flicker" aria-hidden="true" />
-          <span className="font-semibold text-foreground">{userStreak}</span>
-          <span className="text-muted-foreground text-xs">days</span>
-        </div>
+          {/* Animated flame for streaks ≥ 1 */}
+          {userStreak > 0 ? (
+            <motion.span
+              animate={{ rotate: [0, -8, 8, 0], scale: [1, 1.1, 1] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+              aria-hidden="true"
+              className="text-sm leading-none"
+            >
+              🔥
+            </motion.span>
+          ) : (
+            <Flame className="h-3.5 w-3.5 text-orange-400" aria-hidden="true" />
+          )}
+          <span className={cn(
+            "font-black text-base tabular-nums leading-none",
+            userStreak >= 7 ? "text-orange-400" : "text-foreground"
+          )}>
+            {userStreak}
+          </span>
+          <span className="text-muted-foreground text-xs">day{userStreak !== 1 ? "s" : ""}</span>
+        </motion.div>
 
         {/* Search button */}
         <button
@@ -534,5 +628,6 @@ export function AppHeader() {
         )}
       </AnimatePresence>
     </header>
+    </div>
   );
 }

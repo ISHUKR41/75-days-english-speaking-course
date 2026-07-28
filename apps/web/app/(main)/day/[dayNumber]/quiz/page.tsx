@@ -39,16 +39,13 @@ async function getQuestionsForDay(dayNum: number) {
     if (dayNum === 2) {
       const mod = await import("@/data/questions/day-2-questions");
       // day-2 may export different names — look for any array export
-      const allArrays = Object.values(mod).filter(
-        (v): v is unknown[] => Array.isArray(v)
-      );
+      // Using Array.isArray without type predicate to avoid TS strict-mode issue
+      const allArrays = (Object.values(mod) as unknown[]).filter(Array.isArray) as unknown[][];
       return allArrays.flat() as import("@/data/questions/day-1-questions").PracticeQ[];
     }
     if (dayNum >= 3 && dayNum <= 7) {
       const mod = await import("@/data/questions/days-3-7-questions");
-      const allArrays = Object.values(mod).filter(
-        (v): v is unknown[] => Array.isArray(v)
-      );
+      const allArrays = (Object.values(mod) as unknown[]).filter(Array.isArray) as unknown[][];
       const all = allArrays.flat() as import("@/data/questions/day-1-questions").PracticeQ[];
       // Filter to questions whose subtopicId matches this day (d3-*, d4-*, etc.)
       const dayPrefix = `d${dayNum}-`;
@@ -59,9 +56,7 @@ async function getQuestionsForDay(dayNum: number) {
     }
     if (dayNum >= 8 && dayNum <= 14) {
       const mod = await import("@/data/questions/days-8-14-questions");
-      const allArrays = Object.values(mod).filter(
-        (v): v is unknown[] => Array.isArray(v)
-      );
+      const allArrays = (Object.values(mod) as unknown[]).filter(Array.isArray) as unknown[][];
       return allArrays.flat() as import("@/data/questions/day-1-questions").PracticeQ[];
     }
   } catch {
