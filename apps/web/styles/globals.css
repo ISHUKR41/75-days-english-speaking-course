@@ -1492,6 +1492,317 @@ textarea:focus {
   }
 }
 
+/* ─── Premium 2025 Design System Extensions ──────────────── */
+
+/* ── Additional CSS Custom Properties ── */
+:root {
+  /* Premium gradient presets */
+  --brand-gradient: linear-gradient(135deg, #6272f1 0%, #8b5cf6 50%, #ec4899 100%);
+  --gold-gradient: linear-gradient(135deg, #f59e0b 0%, #f97316 50%, #ef4444 100%);
+  --success-gradient: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+
+  /* Glassmorphism tokens */
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-bg-light: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-border-strong: rgba(255, 255, 255, 0.18);
+  --glass-blur: blur(20px) saturate(180%);
+
+  /* Glow tokens */
+  --glow-brand: 0 0 30px rgba(98, 114, 241, 0.5), 0 0 60px rgba(98, 114, 241, 0.2);
+  --glow-gold: 0 0 30px rgba(245, 158, 11, 0.5), 0 0 60px rgba(245, 158, 11, 0.2);
+  --glow-green: 0 0 30px rgba(16, 185, 129, 0.5), 0 0 60px rgba(16, 185, 129, 0.2);
+  --glow-purple: 0 0 30px rgba(139, 92, 246, 0.5), 0 0 60px rgba(139, 92, 246, 0.2);
+
+  /* Premium border gradients */
+  --border-gradient-brand: linear-gradient(135deg, #6272f1, #8b5cf6, #ec4899);
+  --border-gradient-gold: linear-gradient(135deg, #f59e0b, #f97316);
+  --border-gradient-success: linear-gradient(135deg, #10b981, #06b6d4);
+}
+
+/* ── Enhanced Text Selection ── */
+::selection {
+  background-color: rgba(98, 114, 241, 0.3);
+  color: #fff;
+}
+::-moz-selection {
+  background-color: rgba(98, 114, 241, 0.3);
+  color: #fff;
+}
+
+/* ── Premium Custom Scrollbar ── */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #6272f1, #8b5cf6);
+  border-radius: 9999px;
+  transition: background 0.2s;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #4f52e4, #7c3aed);
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* ── Additional Glassmorphism Classes ── */
+.glass-nav {
+  background: rgba(10, 10, 20, 0.7);
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(32px) saturate(160%);
+  -webkit-backdrop-filter: blur(32px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 1.5rem;
+}
+
+/* ── Gradient Text Utilities ── */
+.gradient-text-brand {
+  background: linear-gradient(135deg, #6272f1 0%, #a78bfa 50%, #ec4899 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-success {
+  background: linear-gradient(135deg, #10b981 0%, #06b6d4 60%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Neon Glow Classes ── */
+.glow-purple {
+  box-shadow: var(--glow-purple);
+}
+.glow-gold {
+  box-shadow: var(--glow-gold);
+}
+.glow-green {
+  box-shadow: var(--glow-green);
+}
+
+/* ── Text Shimmer Animation ── */
+.text-shimmer {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--foreground)) 0%,
+    rgba(255, 255, 255, 0.9) 40%,
+    hsl(var(--foreground)) 60%,
+    hsl(var(--foreground)) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: text-shimmer 3s linear infinite;
+}
+
+@keyframes text-shimmer {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+/* ── Floating Animation Classes ── */
+.animate-float-1 { animation: float 5s ease-in-out infinite; }
+.animate-float-2 { animation: float 6s ease-in-out 0.5s infinite; }
+.animate-float-3 { animation: float 7s ease-in-out 1s infinite; }
+
+/* ── 3D Card Tilt Classes ── */
+.tilt-card {
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.4s ease;
+  will-change: transform;
+}
+.tilt-card:hover {
+  transform: perspective(800px) rotateX(-3deg) rotateY(3deg) translateZ(12px);
+}
+.tilt-card-inner {
+  transform: translateZ(20px);
+}
+
+/* ── Premium Border Gradient Classes ── */
+.border-gradient-brand {
+  position: relative;
+  border-radius: 1rem;
+  background: hsl(var(--card));
+}
+.border-gradient-brand::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: var(--border-gradient-brand);
+  z-index: -1;
+  transition: opacity 0.3s ease;
+  opacity: 0.6;
+}
+.border-gradient-brand:hover::before {
+  opacity: 1;
+}
+
+.border-gradient-gold {
+  position: relative;
+  border-radius: 1rem;
+  background: hsl(var(--card));
+}
+.border-gradient-gold::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: var(--border-gradient-gold);
+  z-index: -1;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+.border-gradient-gold:hover::before { opacity: 1; }
+
+.border-gradient-success {
+  position: relative;
+  border-radius: 1rem;
+  background: hsl(var(--card));
+}
+.border-gradient-success::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: var(--border-gradient-success);
+  z-index: -1;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+.border-gradient-success:hover::before { opacity: 1; }
+
+/* ── Loading Skeleton Improved ── */
+.skeleton-pulse {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    90deg,
+    hsl(var(--muted)) 25%,
+    hsl(var(--muted-foreground) / 0.1) 50%,
+    hsl(var(--muted)) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-wave 1.5s ease-in-out infinite;
+  border-radius: var(--radius);
+}
+
+@keyframes skeleton-wave {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ── XP Pulse Glow (for badges/XP indicators) ── */
+.xp-pulse {
+  animation: xp-pulse-glow 2.5s ease-in-out infinite;
+}
+
+@keyframes xp-pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(245, 158, 11, 0.3), 0 0 10px rgba(245, 158, 11, 0.15);
+    border-color: rgba(245, 158, 11, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.6), 0 0 40px rgba(245, 158, 11, 0.3);
+    border-color: rgba(245, 158, 11, 0.6);
+  }
+}
+
+/* ── Streak Badge Pulse ── */
+.streak-pulse {
+  animation: streak-pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes streak-pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(249, 115, 22, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(249, 115, 22, 0.7), 0 0 50px rgba(249, 115, 22, 0.3);
+  }
+}
+
+/* ── Level-up Celebration ── */
+@keyframes level-up {
+  0%   { transform: scale(1); }
+  25%  { transform: scale(1.15) rotate(-2deg); filter: brightness(1.4); }
+  50%  { transform: scale(1.1) rotate(2deg); filter: brightness(1.2); }
+  75%  { transform: scale(1.12) rotate(-1deg); filter: brightness(1.3); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+.animate-level-up {
+  animation: level-up 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ── Day Card Status Gradients ── */
+.day-card-gradient-locked {
+  background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--muted)) 100%);
+  border: 1px solid hsl(var(--border));
+  opacity: 0.6;
+}
+.day-card-gradient-active {
+  background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(238 84% 67% / 0.08) 100%);
+  border: 1px solid hsl(238 84% 67% / 0.4);
+  box-shadow: 0 0 0 1px hsl(238 84% 67% / 0.1), 0 4px 20px hsl(238 84% 67% / 0.1);
+}
+.day-card-gradient-completed {
+  background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(160 60% 45% / 0.07) 100%);
+  border: 1px solid hsl(160 60% 45% / 0.35);
+  box-shadow: 0 0 0 1px hsl(160 60% 45% / 0.1), 0 4px 20px hsl(160 60% 45% / 0.08);
+}
+
+/* ── Motivational Quote Styling ── */
+.quote-card {
+  position: relative;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  background: linear-gradient(135deg,
+    hsl(var(--card)) 0%,
+    hsl(238 84% 67% / 0.06) 50%,
+    hsl(270 60% 60% / 0.06) 100%
+  );
+  border: 1px solid hsl(var(--border) / 0.7);
+}
+.quote-card::before {
+  content: "\201C";
+  position: absolute;
+  top: -10px;
+  left: 16px;
+  font-size: 8rem;
+  font-family: Georgia, serif;
+  color: hsl(var(--primary) / 0.08);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── Activity Heatmap ── */
+.heatmap-cell-0 { background: hsl(var(--muted)); opacity: 0.4; }
+.heatmap-cell-1 { background: hsl(238 84% 67% / 0.25); }
+.heatmap-cell-2 { background: hsl(238 84% 67% / 0.45); }
+.heatmap-cell-3 { background: hsl(238 84% 67% / 0.65); }
+.heatmap-cell-4 { background: hsl(238 84% 67% / 0.85); }
+
+/* ── Shimmer Slide for Button Hover ── */
+@keyframes shimmer-slide {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
 /* ─── Print Styles ────────────────────────────────────────── */
 @media print {
   .no-print { display: none !important; }

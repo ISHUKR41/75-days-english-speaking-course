@@ -77,27 +77,43 @@ export const metadata: Metadata = {
     "learn English in 75 days",
     "English fluency program",
     "speak English fluently",
+    // Hindi audience keywords
+    "English bolna kaise sikhe",
+    "English sikhne ka tarika",
+    "English grammar for beginners Hindi",
+    "English course Hindi me",
+    "Hindi medium English course",
+    "English speaking course free India",
     // Secondary keywords
     "English for beginners",
     "English grammar course",
     "English vocabulary builder",
     "English speaking practice",
     "daily English lessons",
+    "English vocabulary daily",
+    "spoken English course",
+    "daily use English sentences",
     // Long-tail keywords
     "how to speak English fluently in 75 days",
     "best English learning app India",
     "English course for Hindi speakers",
     "business English online",
     "English for job interviews",
+    "English for interview",
+    "English for office",
     "professional English course",
     "English grammar for beginners",
     "gamified English learning",
     "English with XP points",
     "English course with certificates",
+    "fluent English in 75 days",
+    "English speaking course online free",
     // Location-based keywords
     "English course India",
     "English learning Hindi medium",
-    "English bolna kaise sikhe",
+    "learn English online free India",
+    "English speaking practice online",
+    "English course for beginners India",
   ],
   // Author information
   authors: [{ name: "75 Days Hard English Team" }],
@@ -184,28 +200,41 @@ const courseSchema = {
   "@type": "Course",
   "name": "75 Days Hard English Course",
   "description": "Master fluent English in 75 structured days with AI-powered lessons, 200+ daily vocabulary, voice practice, and gamified learning.",
+  "url": process.env.NEXT_PUBLIC_APP_URL || "https://75daysenglish.com",
   "provider": {
-    "@type": "Organization",
+    "@type": "EducationalOrganization",
     "name": "75 Days Hard English",
-    "sameAs": process.env.NEXT_PUBLIC_APP_URL || "https://75daysenglish.com",
+    "url": process.env.NEXT_PUBLIC_APP_URL || "https://75daysenglish.com",
+    "sameAs": [
+      process.env.NEXT_PUBLIC_APP_URL || "https://75daysenglish.com",
+    ],
+    "description": "India's most advanced online English learning platform for Hindi speakers",
   },
   "educationalLevel": "Beginner to Advanced",
+  "inLanguage": ["en", "hi"],
   "teaches": [
     "English Speaking",
     "English Grammar",
     "English Vocabulary",
     "Business English",
     "Professional Communication",
+    "English for Job Interviews",
+    "Daily Use English Sentences",
+    "Spoken English",
   ],
   "timeRequired": "PT75D",
+  "numberOfCredits": 75,
   "hasCourseInstance": {
     "@type": "CourseInstance",
-    "courseMode": "online",
+    "courseMode": ["online", "asynchronous"],
     "courseWorkload": "PT1H",
+    "inLanguage": "en",
   },
   "aggregateRating": {
     "@type": "AggregateRating",
     "ratingValue": "4.9",
+    "bestRating": "5",
+    "worstRating": "1",
     "reviewCount": "1250",
   },
   "offers": {
@@ -213,7 +242,64 @@ const courseSchema = {
     "price": "0",
     "priceCurrency": "INR",
     "availability": "https://schema.org/InStock",
+    "category": "Free",
   },
+  "audience": {
+    "@type": "Audience",
+    "audienceType": "Hindi speakers learning English",
+    "geographicArea": {
+      "@type": "Country",
+      "name": "India",
+    },
+  },
+};
+
+// FAQ Schema for rich search results
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "75 Days Hard English Course kya hai? (What is the 75 Days Hard English Course?)",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "75 Days Hard English Course ek structured online program hai jo aapko 75 dinon mein fluent English sikhata hai. Isme daily vocabulary, grammar lessons, speaking practice, writing lab, aur gamified learning system hai.",
+      },
+    },
+    {
+      "@type": "Question",
+      "name": "Is the course free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes! The 75 Days Hard English Course is completely free. You get access to all 75 days of structured lessons, vocabulary, grammar practice, writing lab, speaking exercises, and more.",
+      },
+    },
+    {
+      "@type": "Question",
+      "name": "How to speak English fluently in 75 days?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Follow the 75 Days Hard English Course: complete one day's lesson daily (1 hour), practice vocabulary with flashcards, do writing exercises, practice speaking aloud, and track your progress with the XP system. Consistency for 75 days guarantees fluency.",
+      },
+    },
+    {
+      "@type": "Question",
+      "name": "English grammar for beginners — kahan se shuru karein?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Day 1 of 75 Days Hard English Course is specifically designed for absolute beginners. It covers English alphabet, parts of speech, basic sentence structure (SVO), and daily use phrases — all explained in Hindi.",
+      },
+    },
+    {
+      "@type": "Question",
+      "name": "What makes this different from other English courses?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "75 Days Hard English is unique because: (1) Hindi explanations for all grammar rules, (2) Gamified XP system to keep you motivated, (3) 200+ vocabulary words per day with context, (4) Writing lab with real feedback, (5) Voice practice with speech recognition, (6) Structured 75-day plan with daily targets.",
+      },
+    },
+  ],
 };
 
 // ─── Root Layout Component ────────────────────────────────────
@@ -227,10 +313,15 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         {/* ── Structured Data / JSON-LD ─────────────────── */}
-        {/* Helps Google understand this is an English course */}
+        {/* Course schema — helps Google show rich course cards */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(courseSchema) }}
+        />
+        {/* FAQ schema — helps Google show rich FAQ dropdowns in search */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
         />
         {/* Preconnect to external font servers for performance */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />

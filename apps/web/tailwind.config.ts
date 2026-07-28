@@ -234,6 +234,8 @@ const config: Config = {
         "3xl": "1.5rem",
         "4xl": "2rem",
         "5xl": "2.5rem",
+        "6xl": "3rem",
+        "7xl": "4rem",
       },
 
       // ─── Box Shadow ───────────────────────────────────────
@@ -247,9 +249,18 @@ const config: Config = {
           "0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1)",
         // Glow effects for interactive elements
         "glow-brand": "0 0 20px rgba(98, 114, 241, 0.4)",
+        "glow-brand-lg": "0 0 40px rgba(98, 114, 241, 0.5), 0 0 80px rgba(98, 114, 241, 0.2)",
         "glow-gold": "0 0 20px rgba(245, 158, 11, 0.4)",
+        "glow-gold-lg": "0 0 40px rgba(245, 158, 11, 0.5), 0 0 80px rgba(245, 158, 11, 0.2)",
         "glow-emerald": "0 0 20px rgba(16, 185, 129, 0.4)",
+        "glow-emerald-lg": "0 0 40px rgba(16, 185, 129, 0.5), 0 0 80px rgba(16, 185, 129, 0.2)",
         "glow-rose": "0 0 20px rgba(244, 63, 94, 0.4)",
+        "glow-purple": "0 0 20px rgba(139, 92, 246, 0.4)",
+        "glow-purple-lg": "0 0 40px rgba(139, 92, 246, 0.5), 0 0 80px rgba(139, 92, 246, 0.2)",
+        // Colored card shadows
+        "card-brand": "0 4px 24px rgba(98, 114, 241, 0.15), 0 1px 4px rgba(98, 114, 241, 0.1)",
+        "card-gold": "0 4px 24px rgba(245, 158, 11, 0.15), 0 1px 4px rgba(245, 158, 11, 0.1)",
+        "card-emerald": "0 4px 24px rgba(16, 185, 129, 0.15), 0 1px 4px rgba(16, 185, 129, 0.1)",
         // Inner shadows
         "inner-sm": "inset 0 1px 2px rgba(0,0,0,0.1)",
         inner: "inset 0 2px 4px rgba(0,0,0,0.1)",
@@ -356,6 +367,45 @@ const config: Config = {
           "50%": { transform: "rotate(-2deg)" },
           "75%": { transform: "rotate(2deg)" },
         },
+        // Pulse glow (gold) for XP / achievements
+        "pulse-glow-gold": {
+          "0%, 100%": {
+            boxShadow: "0 0 5px rgba(245, 158, 11, 0.3), 0 0 10px rgba(245, 158, 11, 0.1)",
+          },
+          "50%": {
+            boxShadow: "0 0 20px rgba(245, 158, 11, 0.6), 0 0 40px rgba(245, 158, 11, 0.3)",
+          },
+        },
+        // Tilt - subtle 3D tilt keyframe
+        "tilt-in": {
+          "0%": { transform: "perspective(800px) rotateX(6deg) rotateY(-6deg) scale(0.96)", opacity: "0" },
+          "100%": { transform: "perspective(800px) rotateX(0deg) rotateY(0deg) scale(1)", opacity: "1" },
+        },
+        // Shimmer slide for button hover
+        "shimmer-slide": {
+          "0%": { backgroundPosition: "-200% center" },
+          "100%": { backgroundPosition: "200% center" },
+        },
+        // Float slow for background decorations
+        "float-slow": {
+          "0%, 100%": { transform: "translateY(0px) rotate(0deg)" },
+          "33%": { transform: "translateY(-12px) rotate(-1deg)" },
+          "66%": { transform: "translateY(-6px) rotate(1deg)" },
+        },
+        // Level up celebration
+        "level-up": {
+          "0%": { transform: "scale(1)", filter: "brightness(1)" },
+          "25%": { transform: "scale(1.15) rotate(-2deg)", filter: "brightness(1.4)" },
+          "50%": { transform: "scale(1.1) rotate(2deg)", filter: "brightness(1.2)" },
+          "75%": { transform: "scale(1.12) rotate(-1deg)", filter: "brightness(1.3)" },
+          "100%": { transform: "scale(1)", filter: "brightness(1)" },
+        },
+        // Gradient rotate for animated borders
+        "gradient-rotate": {
+          "0%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+          "100%": { backgroundPosition: "0% 50%" },
+        },
       },
 
       // Animation utility classes
@@ -367,8 +417,10 @@ const config: Config = {
         "scale-in": "scale-in 0.3s ease-out",
         shimmer: "shimmer 2s linear infinite",
         "pulse-glow": "pulse-glow 2s ease-in-out infinite",
+        "pulse-glow-gold": "pulse-glow-gold 2.5s ease-in-out infinite",
         "bounce-in": "bounce-in 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97)",
         float: "float 3s ease-in-out infinite",
+        "float-slow": "float-slow 6s ease-in-out infinite",
         blink: "blink 1s ease-in-out infinite",
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
@@ -376,6 +428,10 @@ const config: Config = {
         "confetti-fall": "confetti-fall 3s ease-in forwards",
         flicker: "flicker 0.5s ease-in-out infinite alternate",
         wiggle: "wiggle 0.3s ease-in-out",
+        "tilt-in": "tilt-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards",
+        "shimmer-slide": "shimmer-slide 1.5s ease-in-out infinite",
+        "level-up": "level-up 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards",
+        "gradient-rotate": "gradient-rotate 4s ease infinite",
       },
 
       // ─── Background Images ────────────────────────────────
@@ -389,15 +445,26 @@ const config: Config = {
           "linear-gradient(135deg, #10b981 0%, #06b6d4 50%, #3b82f6 100%)",
         "gradient-dark":
           "linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #0f0f23 100%)",
+        "gradient-purple":
+          "linear-gradient(135deg, #7c3aed 0%, #6272f1 50%, #4f46e5 100%)",
+        "gradient-rose":
+          "linear-gradient(135deg, #f43f5e 0%, #ec4899 50%, #db2777 100%)",
+        "gradient-cyan":
+          "linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #6272f1 100%)",
         // Mesh gradients (modern design)
         "mesh-brand":
           "radial-gradient(at 40% 20%, rgba(98, 114, 241, 0.3) 0px, transparent 50%), radial-gradient(at 80% 0%, rgba(139, 92, 246, 0.3) 0px, transparent 50%), radial-gradient(at 0% 50%, rgba(236, 72, 153, 0.2) 0px, transparent 50%)",
+        "mesh-dark":
+          "radial-gradient(at 20% 30%, rgba(98, 114, 241, 0.15) 0px, transparent 50%), radial-gradient(at 80% 70%, rgba(139, 92, 246, 0.12) 0px, transparent 50%)",
         // Grid pattern for cards
         "grid-pattern":
           "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)",
         // Shimmer gradient
         "shimmer-gradient":
           "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%)",
+        // Hero gradient preset
+        "hero-brand":
+          "radial-gradient(ellipse at 20% 50%, rgba(98, 114, 241, 0.2) 0%, transparent 55%), radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 55%)",
       },
 
       // ─── Backdrop Blur ────────────────────────────────────
@@ -492,6 +559,32 @@ const config: Config = {
           "&::-webkit-scrollbar": {
             width: "4px",
           },
+        },
+        // Premium glow variants
+        ".glow-brand-hover:hover": {
+          boxShadow: "0 0 30px rgba(98, 114, 241, 0.45), 0 0 60px rgba(98, 114, 241, 0.2)",
+        },
+        ".glow-gold-hover:hover": {
+          boxShadow: "0 0 30px rgba(245, 158, 11, 0.45), 0 0 60px rgba(245, 158, 11, 0.2)",
+        },
+        // Gradient text utilities (JS plugin for more complex classes)
+        ".text-gradient-purple": {
+          background: "linear-gradient(135deg, #7c3aed 0%, #6272f1 50%, #a78bfa 100%)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          backgroundClip: "text",
+        },
+        ".text-gradient-success": {
+          background: "linear-gradient(135deg, #10b981 0%, #06b6d4 60%, #3b82f6 100%)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          backgroundClip: "text",
+        },
+        // 3D card effect
+        ".card-3d-hover:hover": {
+          transform: "perspective(800px) rotateX(-2deg) rotateY(3deg) translateZ(10px)",
+          boxShadow: "0 25px 50px -12px rgba(0,0,0,0.4), 0 0 0 1px rgba(98,114,241,0.15)",
+          transition: "transform 0.3s ease, box-shadow 0.3s ease",
         },
       };
       addUtilities(newUtilities);
