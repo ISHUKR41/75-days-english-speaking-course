@@ -22,7 +22,9 @@ import {
 import { DAY_8_EXTRA_QUESTIONS, DAY_9_EXTRA_QUESTIONS } from "./days-8-9-extra-questions";
 import { DAY_10_EXTRA_QUESTIONS, DAY_11_EXTRA_QUESTIONS } from "./days-10-11-extra-questions";
 import { DAY_12_EXTRA_QUESTIONS, DAY_13_EXTRA_QUESTIONS, DAY_14_EXTRA_QUESTIONS } from "./days-12-14-extra-questions";
-// Vocabulary-based auto-generator for days 15-75
+// Days 15-21 comprehensive hand-crafted questions
+import { getDays15to21Questions } from "./days-15-21-comprehensive";
+// Vocabulary-based auto-generator for days 22-75
 import { getVocabularyForDay } from "@/data/vocabulary/all-days-vocabulary";
 import { generateQuestionsFromVocab } from "./question-generator";
 
@@ -102,9 +104,13 @@ export function getQuestionsForDayAndSubtopic(
     return filterBySubtopic(merged, subtopicId);
   }
 
-  // ── Days 15-21: Vocabulary-generated questions (no dedicated files yet) ──
-  // When days-15-21-questions.ts is added, import it here
+  // ── Days 15-21: Hand-crafted comprehensive questions ─────────
+  // 600+ questions covering Would Like To, Can, Should, May, Must, Revision, Used To
   if (dayNumber >= 15 && dayNumber <= 21) {
+    // Get hand-crafted questions from the comprehensive file
+    const handCrafted = getDays15to21Questions(dayNumber, subtopicId);
+    if (handCrafted.length > 0) return handCrafted;
+    // Fallback to vocab-generated if no hand-crafted found
     const vocab = getVocabularyForDay(dayNumber, 40);
     return generateQuestionsFromVocab(vocab, subtopicId ?? "", dayNumber, 1);
   }

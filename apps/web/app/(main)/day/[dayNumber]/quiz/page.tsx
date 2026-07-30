@@ -59,6 +59,13 @@ async function getQuestionsForDay(dayNum: number) {
       const allArrays = (Object.values(mod) as unknown[]).filter(Array.isArray) as unknown[][];
       return allArrays.flat() as import("@/data/questions/day-1-questions").PracticeQ[];
     }
+    // Days 15-21: hand-crafted comprehensive questions (600+ total)
+    if (dayNum >= 15 && dayNum <= 21) {
+      const mod = await import("@/data/questions/days-15-21-comprehensive");
+      const dayKey = `ALL_DAY_${dayNum}_QUESTIONS` as keyof typeof mod;
+      const dayQuestions = mod[dayKey];
+      if (Array.isArray(dayQuestions)) return dayQuestions as import("@/data/questions/day-1-questions").PracticeQ[];
+    }
   } catch {
     // Fall through to fallback below
   }

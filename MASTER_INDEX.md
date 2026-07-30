@@ -1,6 +1,6 @@
 # 📁 MASTER INDEX — 75 Days Hard English Course
 > **Purpose:** Save AI tokens — read this FIRST before exploring individual files.
-> **Last Updated:** 2026-07-24
+> **Last Updated:** 2026-07-30
 > **Rule:** Update this file whenever a new folder, route, component, or data file is added.
 
 ---
@@ -42,7 +42,7 @@ root/
 - **Auth:** Clerk v5 — dev passthrough without CLERK_SECRET_KEY; full auth when key is set
 - **Database:** SQLite via Prisma at `apps/web/prisma/dev.db`
 - **Run:** `npm run dev` from `apps/web/`
-- **TypeScript:** 0 errors (verified 2026-07-24)
+- **TypeScript:** 0 errors (verified 2026-07-30)
 
 ---
 
@@ -65,6 +65,7 @@ root/
 | `app/(main)/dashboard/page.tsx` | `/dashboard` | Main hub: stats, day grid, quick actions, leaderboard |
 | `app/(main)/day/[dayNumber]/page.tsx` | `/day/1` … `/day/75` | Day overview with topics/subtopics accordion |
 | `app/(main)/day/[dayNumber]/vocabulary/page.tsx` | `/day/1/vocabulary` | Day-specific vocabulary list |
+| `app/(main)/day/[dayNumber]/quiz/page.tsx` | `/day/1/quiz` | 10-question daily quiz (MCQ, deterministic shuffle) |
 | `app/(main)/day/[dayNumber]/topic/[topicId]/subtopic/[subtopicId]/page.tsx` | `.../subtopic/d1-t1-s1` | Subtopic hub: 4 section cards (Learn/Vocab/Practice/Test) |
 | `app/(main)/day/[dayNumber]/topic/[topicId]/subtopic/[subtopicId]/learn/page.tsx` | `.../learn` | Full theory lesson with TTS |
 | `app/(main)/day/[dayNumber]/topic/[topicId]/subtopic/[subtopicId]/practice/page.tsx` | `.../practice` | 80+ questions, TYPE or SPEAK mode |
@@ -134,6 +135,7 @@ root/
 | `app-header.tsx` | Top header: search, XP display, theme toggle, user avatar |
 | `mobile-sidebar-backdrop.tsx` | Dark overlay when sidebar is open on mobile |
 | `sidebar-mobile-closer.tsx` | Client component: auto-closes sidebar on mobile (<1024px) |
+| `smooth-scroll-provider.tsx` | Lenis smooth scrolling wrapper |
 | `theme-provider.tsx` | next-themes ThemeProvider wrapper |
 | `theme-toggle.tsx` | Sun/Moon toggle button |
 | `query-provider.tsx` | React Query (TanStack) provider |
@@ -152,6 +154,11 @@ root/
 |------|-------------|
 | `practice-section.tsx` | Core practice component: TYPE or SPEAK mode, 80-140+ Qs, XP, scoring |
 | `test-section.tsx` | 50-question timed test with grade (A+/A/B/C/D), requires 80%+ to pass |
+
+### Quiz (`components/quiz/`)
+| File | Description |
+|------|-------------|
+| `day-quiz-client.tsx` | 10-question daily quiz UI (MCQ format, score, explanation) |
 
 ### Other Page Components
 | File | Description |
@@ -185,13 +192,17 @@ root/
 | `day-1-content.ts` | Full lesson content for Day 1 (all subtopics): why/concept/rules/examples/story/dialogue |
 | `day-2-content.ts` | Full lesson content for Day 2 (Self Introduction subtopics) |
 | `days-3-7-content-extended.ts` | Extended lesson content for Days 3-7 |
+| `days-8-14-content.ts` | Lesson content for Days 8-14 (Want, Let, Would Like To, Can, Should, etc.) |
+| `days-15-21-content.ts` | Lesson content for Days 15-21 (Used To, Could, Should Have, etc.) |
 | `topic-content-map.ts` | Content lookup map: getSpecificDayContent(), getSubtopicSpecificContent() |
 
 ### Questions (`data/questions/`)
 | File | Description |
 |------|-------------|
+| `questions-loader.ts` | ⭐ UNIFIED ENTRY POINT: getQuestionsForDayAndSubtopic(day, subtopicId) |
 | `day-1-questions.ts` | 187+ hand-crafted questions for Day 1 (PracticeQ type) |
 | `day-1-extended-questions.ts` | 80+ additional questions for Day 1 subtopics |
+| `day-1-extended-v2-questions.ts` | Further extended Day 1 questions |
 | `day-1-subtopics-questions.ts` | Subtopic-specific questions for all Day 1 subtopics |
 | `day-1-all-subtopics-questions.ts` | Comprehensive Day 1 question bank |
 | `day-1-comprehensive.ts` | Additional comprehensive Day 1 questions |
@@ -200,7 +211,14 @@ root/
 | `days-3-7-questions.ts` | Questions for Days 3-7: getDays3to7Questions() merges all |
 | `days-3-7-comprehensive.ts` | Additional comprehensive Days 3-7 questions |
 | `days-4-7-extra-questions.ts` | 45+ extra questions per day for Days 4-7 |
-| `question-generator.ts` | generateQuestionsFromVocab(): creates 3 Qs per vocab word (Days 8-75) |
+| `days-8-14-questions.ts` | Questions for Days 8-14: getDays8to14Questions() |
+| `days-8-14-questions-enhanced.ts` | Enhanced Days 8-14 questions |
+| `days-8-14-comprehensive.ts` | Comprehensive Days 8-14 questions |
+| `days-8-9-extra-questions.ts` | Extra questions for Days 8-9 |
+| `days-10-11-extra-questions.ts` | Extra questions for Days 10-11 |
+| `days-12-14-extra-questions.ts` | Extra questions for Days 12-14 |
+| `days-15-21-comprehensive.ts` | ⭐ 600+ hand-crafted questions for Days 15-21 (Would Like To → Used To) |
+| `question-generator.ts` | generateQuestionsFromVocab(): creates 3 Qs per vocab word (Days 22-75) |
 
 ### Vocabulary (`data/vocabulary/`)
 | File | Description |
@@ -208,11 +226,31 @@ root/
 | `day-1-vocabulary.ts` | 300+ hand-crafted words for Day 1 with IPA, Hindi meaning, examples |
 | `day-2-vocabulary.ts` | 300+ words for Day 2 (Self Introduction vocabulary) |
 | `day-3-vocabulary.ts` | 300+ words for Day 3 (Imperative vocabulary) |
+| `day-3-vocabulary-extended.ts` | Extended Day 3 vocabulary |
 | `day-4-vocabulary.ts` | 300+ words for Day 4 (Be Verbs vocabulary) |
 | `day-5-vocabulary.ts` | 300+ words for Day 5 (Demonstrative vocabulary) |
 | `day-6-vocabulary.ts` | 300+ words for Day 6 (Has/Have vocabulary) |
 | `day-7-vocabulary.ts` | 300+ words for Day 7 (Had vocabulary) |
-| `all-days-vocabulary.ts` | getVocabularyForDay(day, count): generates vocab for Days 8-75 |
+| `day-8-vocabulary.ts` | 200+ words for Day 8 (Will Have vocabulary) |
+| `day-8-vocabulary-extra.ts` | Extra vocabulary for Day 8 |
+| `day-9-vocabulary.ts` | 200+ words for Day 9 (Use of There vocabulary) |
+| `day-10-vocabulary.ts` | 200+ words for Day 10 (Revision vocabulary) |
+| `day-11-vocabulary.ts` | 200+ words for Day 11 (Use of Want vocabulary) |
+| `day-12-vocabulary.ts` | 200+ words for Day 12 (Use of Wanted vocabulary) |
+| `day-12-vocabulary-extra.ts` | Extra Day 12 vocabulary |
+| `day-13-vocabulary.ts` | 200+ words for Day 13 (Use of Let vocabulary) |
+| `day-13-vocabulary-extra.ts` | Extra Day 13 vocabulary |
+| `day-14-vocabulary.ts` | 200+ words for Day 14 (Use of Let's vocabulary) |
+| `day-14-vocabulary-extra.ts` | Extra Day 14 vocabulary |
+| `day-15-vocabulary.ts` | 200+ words for Day 15 (Would Like To vocabulary) |
+| `day-16-vocabulary.ts` | 200+ words for Day 16 (Can vocabulary) |
+| `day-17-vocabulary.ts` | 200+ words for Day 17 (Should vocabulary) |
+| `day-18-vocabulary.ts` | 200+ words for Day 18 (May vocabulary) |
+| `day-19-vocabulary.ts` | 200+ words for Day 19 (Must vocabulary) |
+| `day-20-vocabulary.ts` | 200+ words for Day 20 (Revision vocabulary) |
+| `day-21-vocabulary.ts` | 200+ words for Day 21 (Used To vocabulary) |
+| `day-22-vocabulary.ts` → `day-30-vocabulary.ts` | Advanced modals & tenses vocabulary |
+| `all-days-vocabulary.ts` | getVocabularyForDay(day, count): generates vocab for Days 22-75 |
 
 ---
 
@@ -335,25 +373,40 @@ Or use the **"Start application"** workflow in Replit (port 5000).
 
 ---
 
-## 📊 Content Coverage (Verified 2026-07-24)
+## 📊 Content Coverage (Updated 2026-07-30)
 
-| Day | Topic | Subtopics | Vocabulary | Questions |
-|-----|-------|-----------|------------|-----------|
-| 1 | Basic of English | 18 | 300+ | 880+ (hand-crafted + vocab-gen) |
-| 2 | Self Introduction | 17 | 300+ | 900+ |
-| 3 | Imperative Sentence | 17 | 300+ | 900+ |
-| 4 | Be Verb | 17 | 300+ | ~1000 |
-| 5 | Demonstrative Pronoun | 17 | 300+ | ~900 |
-| 6 | Has / Have | 17 | 300+ | ~900 |
-| 7 | Had | 17 | 300+ | ~900 |
-| 8-75 | Various | ~6/day | Auto-gen | Auto-gen (~180/subtopic) |
+| Day | Topic | Content Status | Questions | Vocabulary |
+|-----|-------|---------------|-----------|------------|
+| 1 | Basic of English | ✅ Full hand-crafted | 880+ | 300+ |
+| 2 | Self Introduction | ✅ Full hand-crafted | 900+ | 300+ |
+| 3 | Imperative Sentence | ✅ Full content | 900+ | 300+ |
+| 4 | Be Verb | ✅ Full content | ~1000 | 300+ |
+| 5 | Demonstrative Pronoun | ✅ Full content | ~900 | 300+ |
+| 6 | Has / Have | ✅ Full content | ~900 | 300+ |
+| 7 | Had | ✅ Full content | ~900 | 300+ |
+| 8 | Will Have | ✅ Hand-crafted content + questions | 1040 | 200+ |
+| 9 | Use of There | ✅ Hand-crafted content + questions | 900+ | 200+ |
+| 10 | Revision + Practice | ✅ Hand-crafted | 900+ | 200+ |
+| 11 | Use of Want | ✅ Hand-crafted | 900+ | 200+ |
+| 12 | Use of Wanted | ✅ Hand-crafted | 900+ | 200+ |
+| 13 | Use of Let | ✅ Hand-crafted | 900+ | 200+ |
+| 14 | Use of Let's | ✅ Hand-crafted | 900+ | 200+ |
+| 15 | Would Like To | ✅ 600+ questions wired | 780+ | 200+ |
+| 16 | Can | ✅ 600+ questions wired | 780+ | 200+ |
+| 17 | Should | ✅ comprehensive | 780+ | 200+ |
+| 18 | May | ✅ comprehensive | 780+ | 200+ |
+| 19 | Must | ✅ comprehensive | 780+ | 200+ |
+| 20 | Revision + Speaking | ✅ comprehensive | 780+ | 200+ |
+| 21 | Used To | ✅ comprehensive | 780+ | 200+ |
+| 22-75 | Various | Auto-generated from vocab | ~180/day | 150+ |
 
 ---
 
-## ✅ Verified Working (2026-07-24)
+## ✅ Verified Working (2026-07-30)
 - Landing page (/, /sign-in, /sign-up)
 - Dashboard with real user data from DB
 - All 75 day pages (/day/1 through /day/75)
+- Day quiz pages (/day/N/quiz) — now wired for Days 15-21
 - Learn pages (full lesson with 10 sections)
 - Practice pages (140+ questions, TYPE + SPEAK modes)
 - Test pages (timed tests with TYPE + SPEAK modes)
@@ -361,17 +414,14 @@ Or use the **"Start application"** workflow in Replit (port 5000).
 - Mock Test (50 questions, TYPE + SPEAK modes)
 - Speaking Lab (Reading, Shadowing, Free Talk)
 - Progress page (XP chart, streak heatmap, stats)
-- Leaderboard
-- Profile page
-- Settings page
-- Sound effects
-- Dark/light theme
+- Leaderboard, Profile, Settings
+- Sound effects, Dark/light theme
 - 0 TypeScript errors
 
 ## ❌ Known Gaps
-- CLERK_SECRET_KEY not set (needs Replit Secret for real auth)
-- Mobile app is a skeleton (needs full React Native implementation)
-- Days 8-75 use auto-generated content (no hand-crafted lessons)
+- CLERK_SECRET_KEY not set (needs Replit Secret for real user accounts)
+- Mobile app is a skeleton (no full React Native implementation)
+- Days 22-75 use auto-generated content (no hand-crafted lessons)
 - Offline PWA service worker not active
 - Writing Lab partially implemented
 - Revision page partially implemented

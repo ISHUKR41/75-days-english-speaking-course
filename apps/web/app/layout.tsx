@@ -194,6 +194,62 @@ export const metadata: Metadata = {
 };
 
 // ─── Structured Data for Rich Results ─────────────────────────
+
+// WebSite schema with SearchAction — enables Google Sitelinks Search Box
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "75 Days Hard English Course",
+  "alternateName": ["75Days English", "75 Days Hard English"],
+  "url": process.env.NEXT_PUBLIC_APP_URL || "https://75daysenglish.com",
+  "description":
+    "The World's Most Advanced English Learning Platform. Master fluent English in 75 structured days with AI-powered lessons, daily vocabulary, voice practice, and gamified XP rewards.",
+  "inLanguage": ["en", "hi"],
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": `${process.env.NEXT_PUBLIC_APP_URL || "https://75daysenglish.com"}/vocabulary?q={search_term_string}`,
+    },
+    "query-input": "required name=search_term_string",
+  },
+};
+
+// Standalone EducationalOrganization schema
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "EducationalOrganization",
+  "name": "75 Days Hard English",
+  "url": process.env.NEXT_PUBLIC_APP_URL || "https://75daysenglish.com",
+  "logo": `${process.env.NEXT_PUBLIC_APP_URL || "https://75daysenglish.com"}/icons/icon-512x512.svg`,
+  "description":
+    "India's most advanced online English learning platform for Hindi speakers. Free structured 75-day course covering grammar, vocabulary, speaking, writing, and mock tests.",
+  "sameAs": [
+    "https://twitter.com/75DaysEnglish",
+  ],
+  "foundingDate": "2024",
+  "areaServed": {
+    "@type": "Country",
+    "name": "India",
+  },
+  "knowsLanguage": ["English", "Hindi"],
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "English Learning Courses",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Course",
+          "name": "75 Days Hard English Course",
+          "description":
+            "Complete English fluency program: 75 structured days covering grammar, 15,000+ vocabulary words, speaking practice, writing lab, and mock tests.",
+        },
+      },
+    ],
+  },
+};
+
 // JSON-LD schema for Google rich results (Course schema)
 const courseSchema = {
   "@context": "https://schema.org",

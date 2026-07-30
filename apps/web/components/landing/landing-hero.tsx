@@ -2,7 +2,7 @@
 // ============================================================
 // Landing Hero — SPECTACULAR full-screen hero section
 // Design: Apple × Linear × Vercel × Stripe
-// Features: animated gradient bg, floating word cards,
+// Features: aurora gradient bg, floating word cards,
 // shimmer badge, animated stats, vocabulary marquee ticker,
 // Lenis smooth scroll, gradient mesh background animation
 // NO Math.random() — all values are deterministic
@@ -14,7 +14,7 @@ import { motion, useMotionValue, useTransform, animate } from "framer-motion";
 import {
   Sparkles, Zap, Play, Users, BookOpen,
   Target, Flame, Star, Mic, MessageSquare,
-  ArrowRight,
+  ArrowRight, CheckCircle,
 } from "lucide-react";
 
 // ─── Particle positions (deterministic, no Math.random()) ─────
@@ -119,10 +119,10 @@ const STATS_BAR = [
 
 // ─── Bottom stats bar data ─────────────────────────────────────
 const HERO_STATS = [
-  { icon: Users,       value: "50,000+",    label: "Learners" },
-  { icon: Flame,       value: "75 Days",    label: "Program" },
-  { icon: BookOpen,    value: "300+",        label: "Words/Day" },
-  { icon: Zap,         value: "AI-Powered", label: "Learning" },
+  { icon: Users,    value: "50,000+",    label: "Learners" },
+  { icon: Flame,    value: "75 Days",    label: "Program" },
+  { icon: BookOpen, value: "300+",       label: "Words/Day" },
+  { icon: Zap,      value: "AI-Powered", label: "Learning" },
 ];
 
 // ─── Vocabulary marquee — scrolling ticker of English words ───
@@ -144,9 +144,20 @@ const AVATAR_COLORS = [
   "from-yellow-400 to-amber-500",
 ];
 
-// ─── Animation helpers (direct props, not named variants) ────────
-// Using direct animate props instead of named variants for reliability
-// in iframe/SSR environments where variant animations can stay at opacity:0
+// ─── Headline words for staggered word-by-word reveal ─────────
+const HEADLINE_WORDS_LINE1 = ["75", "Days", "to"];
+const HEADLINE_WORDS_LINE2 = ["Fluent", "English"];
+
+// ─── Progress mockup data ─────────────────────────────────────
+const PROGRESS_DAYS = [
+  { day: "Day 1",  label: "Basics",    pct: 100, color: "from-emerald-500 to-teal-400"  },
+  { day: "Day 15", label: "Grammar",   pct: 100, color: "from-blue-500 to-indigo-400"   },
+  { day: "Day 30", label: "Vocab",     pct: 86,  color: "from-violet-500 to-purple-400" },
+  { day: "Day 45", label: "Speaking",  pct: 60,  color: "from-amber-500 to-orange-400"  },
+  { day: "Day 75", label: "Fluency",   pct: 24,  color: "from-pink-500 to-rose-400"     },
+];
+
+// ─── Animation helpers (direct props, not named variants) ─────
 const fadeUp = (delay: number, y = 24) => ({
   initial: { opacity: 0, y },
   animate: { opacity: 1, y: 0 },
@@ -220,6 +231,95 @@ function VocabularyMarquee() {
   );
 }
 
+// ─── Progress Mockup Card ─────────────────────────────────────
+function ProgressMockup() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 32, scale: 0.94 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.8, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
+      className="mx-auto max-w-md w-full"
+    >
+      <div
+        className="rounded-2xl border border-white/10 backdrop-blur-xl overflow-hidden"
+        style={{
+          background: "rgba(255,255,255,0.04)",
+          boxShadow: "0 0 0 1px rgba(255,255,255,0.07), 0 32px 64px rgba(0,0,0,0.4), 0 0 80px rgba(139,92,246,0.1)",
+        }}
+      >
+        {/* Card Header */}
+        <div className="px-5 pt-5 pb-3 border-b border-white/[0.06] flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg">
+              <Flame className="h-4 w-4 text-white" />
+            </div>
+            <div>
+              <p className="text-xs font-bold text-foreground">Your Journey</p>
+              <p className="text-[10px] text-muted-foreground">75-Day English Program</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/25 px-2.5 py-1">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="text-[10px] font-bold text-emerald-400">Day 30 Active</span>
+          </div>
+        </div>
+
+        {/* Progress Bars */}
+        <div className="px-5 py-4 space-y-3">
+          {PROGRESS_DAYS.map((item, i) => (
+            <motion.div
+              key={item.day}
+              initial={{ opacity: 0, x: -16 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.9 + i * 0.1 }}
+              className="space-y-1"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-muted-foreground w-10">{item.day}</span>
+                  <span className="text-xs font-semibold text-foreground">{item.label}</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  {item.pct === 100 && (
+                    <CheckCircle className="h-3 w-3 text-emerald-400" />
+                  )}
+                  <span className="text-[10px] font-bold text-muted-foreground">{item.pct}%</span>
+                </div>
+              </div>
+              <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+                <motion.div
+                  className={`h-full rounded-full bg-gradient-to-r ${item.color}`}
+                  initial={{ width: 0 }}
+                  animate={{ width: `${item.pct}%` }}
+                  transition={{ duration: 1, delay: 1.0 + i * 0.1, ease: "easeOut" }}
+                  style={{ boxShadow: `0 0 6px rgba(139,92,246,0.4)` }}
+                />
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Card Footer Stats */}
+        <div className="px-5 pb-5 grid grid-cols-3 gap-2">
+          {[
+            { label: "XP Earned", value: "8,450", color: "text-violet-400" },
+            { label: "Streak",    value: "30 🔥",  color: "text-orange-400" },
+            { label: "Accuracy",  value: "94%",    color: "text-emerald-400" },
+          ].map((s) => (
+            <div
+              key={s.label}
+              className="rounded-xl bg-white/[0.04] border border-white/[0.06] px-3 py-2 text-center"
+            >
+              <p className={`text-sm font-black ${s.color}`}>{s.value}</p>
+              <p className="text-[9px] text-muted-foreground font-medium mt-0.5">{s.label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 // ─── Hero Component ────────────────────────────────────────────
 export function LandingHero() {
   const [mounted, setMounted] = useState(false);
@@ -270,21 +370,24 @@ export function LandingHero() {
       {/* ── Background layers ── */}
       <div className="absolute inset-0 bg-background" aria-hidden="true" />
 
-      {/* Animated gradient mesh background */}
+      {/* Animated aurora gradient background */}
       <div
-        className="absolute inset-0 hero-gradient-animated pointer-events-none"
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: `
+            radial-gradient(ellipse at 20% 50%, rgba(98,114,241,0.18) 0%, transparent 55%),
+            radial-gradient(ellipse at 80% 20%, rgba(139,92,246,0.16) 0%, transparent 55%),
+            radial-gradient(ellipse at 60% 80%, rgba(236,72,153,0.12) 0%, transparent 50%),
+            radial-gradient(ellipse at 50% 50%, rgba(16,185,129,0.05) 0%, transparent 70%)
+          `,
+          animation: "aurora-shift 14s ease-in-out infinite alternate",
+        }}
         aria-hidden="true"
       />
 
-      {/* Gradient mesh overlay */}
+      {/* Fine dot grid texture */}
       <div
-        className="absolute inset-0 pointer-events-none hero-mesh-animated"
-        aria-hidden="true"
-      />
-
-      {/* Dot grid texture */}
-      <div
-        className="absolute inset-0 opacity-[0.04]"
+        className="absolute inset-0 opacity-[0.035]"
         style={{
           backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.9) 1px, transparent 1px)",
           backgroundSize: "28px 28px",
@@ -295,10 +398,10 @@ export function LandingHero() {
       {/* Primary gradient orb — top left */}
       <motion.div
         className="absolute -top-40 -left-40 h-[700px] w-[700px] rounded-full pointer-events-none"
-        animate={{ scale: [1, 1.08, 1], opacity: [0.18, 0.24, 0.18] }}
+        animate={{ scale: [1, 1.08, 1], opacity: [0.18, 0.26, 0.18] }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         style={{
-          background: "radial-gradient(circle, rgba(139,92,246,0.22) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(139,92,246,0.24) 0%, transparent 70%)",
           filter: "blur(60px)",
         }}
         aria-hidden="true"
@@ -307,10 +410,10 @@ export function LandingHero() {
       {/* Secondary orb — top right */}
       <motion.div
         className="absolute top-0 right-0 h-[500px] w-[500px] rounded-full pointer-events-none"
-        animate={{ scale: [1, 1.1, 1], opacity: [0.12, 0.18, 0.12] }}
+        animate={{ scale: [1, 1.1, 1], opacity: [0.12, 0.2, 0.12] }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
         style={{
-          background: "radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(59,130,246,0.18) 0%, transparent 70%)",
           filter: "blur(60px)",
         }}
         aria-hidden="true"
@@ -319,10 +422,10 @@ export function LandingHero() {
       {/* Tertiary orb — bottom center */}
       <motion.div
         className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[400px] w-[600px] rounded-full pointer-events-none"
-        animate={{ scale: [1, 1.05, 1], opacity: [0.08, 0.12, 0.08] }}
+        animate={{ scale: [1, 1.06, 1], opacity: [0.08, 0.14, 0.08] }}
         transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 4 }}
         style={{
-          background: "radial-gradient(circle, rgba(99,102,241,0.1) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%)",
           filter: "blur(80px)",
         }}
         aria-hidden="true"
@@ -377,7 +480,7 @@ export function LandingHero() {
               }}
               transition={{
                 opacity: { duration: 0.6, delay: item.delay + 0.5 },
-                scale: { duration: 0.6, delay: item.delay + 0.5 },
+                scale:   { duration: 0.6, delay: item.delay + 0.5 },
                 y: {
                   delay: item.delay + 0.5,
                   duration: item.duration,
@@ -436,36 +539,64 @@ export function LandingHero() {
           </motion.div>
         </motion.div>
 
-        {/* ── Headline ── */}
-        <div className="mb-6 space-y-1">
-          <motion.h1
-            {...fadeUp(0.1, 24)}
+        {/* ── Headline — word by word reveal ── */}
+        <div className="mb-6">
+          {/* Line 1: "75 Days to" */}
+          <h1
             className="font-black text-foreground leading-[0.92] tracking-tighter font-display-hero"
-            style={{ fontSize: "clamp(3.5rem, 9vw, 8rem)" }}
+            style={{ fontSize: "clamp(3.2rem, 8vw, 7.5rem)" }}
           >
-            Speak English
-          </motion.h1>
+            {HEADLINE_WORDS_LINE1.map((word, i) => (
+              <motion.span
+                key={word}
+                initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
+                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                transition={{
+                  duration: 0.65,
+                  delay: 0.1 + i * 0.12,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className="inline-block mr-[0.22em]"
+              >
+                {word}
+              </motion.span>
+            ))}
+          </h1>
 
-          <motion.h1
-            {...fadeUp(0.2, 24)}
+          {/* Line 2: "Fluent English" — gradient animated */}
+          <h1
             className="font-black leading-[0.92] tracking-tighter font-display-hero"
-            style={{
-              fontSize: "clamp(3.5rem, 9vw, 8rem)",
-              background: "linear-gradient(135deg, #a78bfa 0%, #818cf8 40%, #60a5fa 70%, #a78bfa 100%)",
-              backgroundSize: "200% auto",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-              animation: "gradient-shift 4s linear infinite",
-            }}
+            style={{ fontSize: "clamp(3.2rem, 8vw, 7.5rem)" }}
           >
-            Fluently
-          </motion.h1>
+            {HEADLINE_WORDS_LINE2.map((word, i) => (
+              <motion.span
+                key={word}
+                initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
+                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                transition={{
+                  duration: 0.65,
+                  delay: 0.46 + i * 0.14,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className="inline-block mr-[0.22em]"
+                style={{
+                  background: "linear-gradient(135deg, #a78bfa 0%, #818cf8 40%, #60a5fa 70%, #a78bfa 100%)",
+                  backgroundSize: "200% auto",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  animation: "gradient-shift 4s linear infinite",
+                }}
+              >
+                {word}
+              </motion.span>
+            ))}
+          </h1>
         </div>
 
         {/* ── Subtitle ── */}
         <motion.p
-          {...fadeUp(0.35, 20)}
+          {...fadeUp(0.75, 20)}
           className="mx-auto mb-8 max-w-2xl text-lg md:text-xl text-muted-foreground leading-relaxed"
         >
           From absolute beginner to{" "}
@@ -478,7 +609,7 @@ export function LandingHero() {
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
+          transition={{ duration: 0.6, delay: 0.85 }}
           className="flex flex-wrap items-center justify-center gap-3 mb-10"
         >
           {STATS_BAR.map((stat, idx) => (
@@ -486,7 +617,7 @@ export function LandingHero() {
               key={stat.label}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4, delay: 0.4 + idx * 0.08 }}
+              transition={{ duration: 0.4, delay: 0.9 + idx * 0.08 }}
               whileHover={{ scale: 1.06, y: -2 }}
               className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm px-4 py-2 cursor-default"
             >
@@ -499,8 +630,8 @@ export function LandingHero() {
 
         {/* ── CTA buttons ── */}
         <motion.div
-          {...fadeUp(0.45, 16)}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12"
+          {...fadeUp(0.95, 16)}
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10"
         >
           {/* Primary CTA */}
           <motion.div
@@ -563,9 +694,38 @@ export function LandingHero() {
           </motion.div>
         </motion.div>
 
+        {/* ── Animated stat counters ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1.05 }}
+          className="flex flex-wrap items-center justify-center gap-8 mb-10"
+        >
+          {[
+            { value: 50000, suffix: "+", label: "Students" },
+            { value: 15000, suffix: "+", label: "Words" },
+            { value: 1500,  suffix: "+", label: "Exercises" },
+          ].map((stat, i) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 1.1 + i * 0.1, type: "spring" }}
+              className="text-center cursor-default"
+            >
+              <p className="text-2xl md:text-3xl font-black text-foreground tabular-nums">
+                <CountUp target={stat.value} suffix={stat.suffix} />
+              </p>
+              <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider mt-0.5">
+                {stat.label}
+              </p>
+            </motion.div>
+          ))}
+        </motion.div>
+
         {/* ── Social proof row ── */}
         <motion.div
-          {...fadeUp(0.55, 12)}
+          {...fadeUp(1.1, 12)}
           className="flex items-center justify-center gap-4 mb-10"
         >
           <div className="flex -space-x-2.5">
@@ -574,7 +734,7 @@ export function LandingHero() {
                 key={i}
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.6 + i * 0.1 }}
+                transition={{ delay: 1.15 + i * 0.1 }}
                 className={`h-9 w-9 rounded-full border-2 border-background bg-gradient-to-br ${gradient} shadow-lg`}
               />
             ))}
@@ -586,7 +746,7 @@ export function LandingHero() {
                   key={i}
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.9 + i * 0.08, type: "spring" }}
+                  transition={{ delay: 1.35 + i * 0.07, type: "spring" }}
                 >
                   <Star className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400" />
                 </motion.span>
@@ -598,9 +758,13 @@ export function LandingHero() {
           </div>
         </motion.div>
 
+        {/* ── Progress mockup card ── */}
+        <ProgressMockup />
+
         {/* ── Bottom stats bar — glassmorphism card ── */}
         <motion.div
-          {...fadeUp(0.65, 12)}
+          {...fadeUp(1.2, 12)}
+          className="mt-8"
         >
           <div
             className="inline-grid grid-cols-2 sm:grid-cols-4 gap-px rounded-2xl overflow-hidden
@@ -635,7 +799,7 @@ export function LandingHero() {
         className="relative z-10 w-full mt-12"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.9, duration: 0.8 }}
+        transition={{ delay: 1.4, duration: 0.8 }}
       >
         <div className="text-center mb-3">
           <span className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
@@ -653,7 +817,7 @@ export function LandingHero() {
                      items-center gap-2 text-muted-foreground/40"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 0.8 }}
+          transition={{ delay: 1.8, duration: 0.8 }}
         >
           <motion.div
             animate={{ y: [0, 8, 0] }}
