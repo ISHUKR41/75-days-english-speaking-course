@@ -18,6 +18,9 @@
 import type { PracticeQ } from "./day-1-questions";
 
 // ── Compact question builder ──────────────────────────────────
+// Supports two call signatures:
+//   Full:  q(id, sub, text, type, answer, explanation, hindiExplanation, points, options?, hints?)
+//   Short: q(id, sub, text, type, answer, explanation, points, options?, hints?)
 const q = (
   id: string,
   subtopicId: string,
@@ -25,26 +28,41 @@ const q = (
   questionType: "translation" | "mcq" | "fill_blank" | "error_detection",
   correctAnswer: string,
   explanation: string,
-  hindiExplanation: string,
-  points: number,
-  options?: { a: string; b: string; c: string; d: string },
-  hints?: { word: string; meaning: string }[]
-): PracticeQ => ({
-  id,
-  subtopicId,
-  questionText,
-  questionType,
-  difficulty: points <= 5 ? "beginner" : points <= 8 ? "elementary" : "intermediate",
-  correctAnswer,
-  explanation,
-  hindiExplanation,
-  optionA: options?.a,
-  optionB: options?.b,
-  optionC: options?.c,
-  optionD: options?.d,
-  wordHints: hints || [],
-  points,
-});
+  hindiExplanationOrPoints: string | number,
+  pointsOrOptions?: number | { a: string; b: string; c: string; d: string },
+  optionsOrHints?: { a: string; b: string; c: string; d: string } | { word: string; meaning: string }[],
+  hintsArg?: { word: string; meaning: string }[]
+): PracticeQ => {
+  // Detect which signature is being used
+  const isShortForm = typeof hindiExplanationOrPoints === "number";
+  const hindiExplanation: string = isShortForm ? "" : (hindiExplanationOrPoints as string);
+  const points: number = isShortForm
+    ? (hindiExplanationOrPoints as number)
+    : (pointsOrOptions as number);
+  const options = isShortForm
+    ? (pointsOrOptions as { a: string; b: string; c: string; d: string } | undefined)
+    : (optionsOrHints as { a: string; b: string; c: string; d: string } | undefined);
+  const hints = isShortForm
+    ? (optionsOrHints as { word: string; meaning: string }[] | undefined)
+    : (hintsArg as { word: string; meaning: string }[] | undefined);
+
+  return {
+    id,
+    subtopicId,
+    questionText,
+    questionType,
+    difficulty: points <= 5 ? "beginner" : points <= 8 ? "elementary" : "intermediate",
+    correctAnswer,
+    explanation,
+    hindiExplanation,
+    optionA: options?.a,
+    optionB: options?.b,
+    optionC: options?.c,
+    optionD: options?.d,
+    wordHints: hints || [],
+    points,
+  };
+};
 
 // ══════════════════════════════════════════════════════════════
 // DAY 22 — COULD (Past ability, polite requests, possibility)
@@ -309,7 +327,7 @@ export const D25_COMP_T4_S1: PracticeQ[] = [
   q("d25c039","d25-t4-s1","'Woh camera aur sasta mil sakta tha online.' ko English mein translate karo.","translation","That camera could have been bought cheaper online.","Could have been bought cheaper = sasta mil sakta tha. Past shopping possibility.",8,undefined,[{word:"could have been bought cheaper",meaning:"sasta kharida ja sakta tha"},{word:"online",meaning:"internet par"}]),
   q("d25c040","d25-t4-s1","Fill in the blank: 'She ___ ___ become a singer but she chose engineering.'","fill_blank","could have","Could have become = ban sakti thi. Career path not taken.",5,undefined,[{word:"could have become",meaning:"ban sakti thi"},{word:"but she chose",meaning:"lekin usne chunaa"}]),
   q("d25c041","d25-t4-s1","'Unka rishta bahut achha ja sakta tha.' ko English mein translate karo.","translation","Their relationship could have gone very well.","Could have gone well = achha ja sakta tha. Unrealized relational potential.",8,undefined,[{word:"could have gone well",meaning:"achha ja sakta tha"},{word:"relationship",meaning:"rishta"}]),
-  q("d25c042","d25-t4-s1","Error detect karo: 'They could have wrote a better report.'","error_dictionary","They could have written a better report.","Past participle of 'write' = 'written'. Could have written.",5,{a:"They could have wrote a better report.",b:"They could has written a better report.",c:"They could have written a better report.",d:"They could have write a better report."}),
+  q("d25c042","d25-t4-s1","Error detect karo: 'They could have wrote a better report.'","error_detection","They could have written a better report.","Past participle of 'write' = 'written'. Could have written.",5,{a:"They could have wrote a better report.",b:"They could has written a better report.",c:"They could have written a better report.",d:"They could have write a better report."}),
   q("d25c043","d25-t4-s1","'Main agar rukta toh woh accident rok sakta tha.' ko English mein translate karo.","translation","If I had stayed, I could have prevented that accident.","Could have prevented = rok sakta tha. Conditional past outcome.",10,undefined,[{word:"if I had stayed",meaning:"agar main ruka hota"},{word:"could have prevented",meaning:"rok sakta tha"}]),
 ];
 

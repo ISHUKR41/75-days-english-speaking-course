@@ -24,7 +24,11 @@ import { DAY_10_EXTRA_QUESTIONS, DAY_11_EXTRA_QUESTIONS } from "./days-10-11-ext
 import { DAY_12_EXTRA_QUESTIONS, DAY_13_EXTRA_QUESTIONS, DAY_14_EXTRA_QUESTIONS } from "./days-12-14-extra-questions";
 // Days 15-21 comprehensive hand-crafted questions
 import { getDays15to21Questions } from "./days-15-21-comprehensive";
-// Vocabulary-based auto-generator for days 22-75
+// Days 22-28 comprehensive hand-crafted questions (Could, Should Have, Must Have, Could Have, Would Have, May Have, Might Have)
+import { getDays22to28Questions } from "./days-22-28-comprehensive";
+// Days 29-35 comprehensive hand-crafted questions (Will/Shall, Would+Ought To+Dare, Tenses)
+import { getDays29to35Questions } from "./days-29-35-comprehensive";
+// Vocabulary-based auto-generator for days 36-75
 import { getVocabularyForDay } from "@/data/vocabulary/all-days-vocabulary";
 import { generateQuestionsFromVocab } from "./question-generator";
 
@@ -115,7 +119,27 @@ export function getQuestionsForDayAndSubtopic(
     return generateQuestionsFromVocab(vocab, subtopicId ?? "", dayNumber, 1);
   }
 
-  // ── Days 22-75: Vocabulary-generated questions ────────────────
+  // ── Days 22-28: Hand-crafted comprehensive questions ─────────
+  // Could, Should Have, Must Have, Could Have, Would Have, May Have, Might Have
+  if (dayNumber >= 22 && dayNumber <= 28) {
+    const handCrafted = getDays22to28Questions(dayNumber, subtopicId);
+    if (handCrafted.length > 0) return handCrafted;
+    // Fallback to vocab-generated
+    const vocab = getVocabularyForDay(dayNumber, 40);
+    return generateQuestionsFromVocab(vocab, subtopicId ?? "", dayNumber, 1);
+  }
+
+  // ── Days 29-35: Hand-crafted comprehensive questions ─────────
+  // Will/Shall, Would+Ought To+Dare, Tenses Parts 1-4
+  if (dayNumber >= 29 && dayNumber <= 35) {
+    const handCrafted = getDays29to35Questions(dayNumber, subtopicId);
+    if (handCrafted.length > 0) return handCrafted;
+    // Fallback to vocab-generated
+    const vocab = getVocabularyForDay(dayNumber, 40);
+    return generateQuestionsFromVocab(vocab, subtopicId ?? "", dayNumber, 1);
+  }
+
+  // ── Days 36-75: Vocabulary-generated questions ────────────────
   const vocab = getVocabularyForDay(dayNumber, 40);
   return generateQuestionsFromVocab(vocab, subtopicId ?? "", dayNumber, 1);
 }

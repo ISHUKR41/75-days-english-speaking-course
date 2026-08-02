@@ -9,6 +9,8 @@
 import type { LessonContent as LessonContentType } from "@/data/course-content/day-1-content";
 // Import rich handcrafted content for Days 8-14
 import { DAYS_8_TO_14_CONTENT } from "@/data/course-content/days-8-14-content";
+// Import rich handcrafted content for Days 15-21
+import { DAYS_15_TO_21_CONTENT } from "@/data/course-content/days-15-21-content";
 
 // ─── Day 3: Imperative Sentence ───────────────────────────────
 // Commands, requests, instructions, and suggestions in English
@@ -1287,6 +1289,14 @@ export const SPECIFIC_DAY_CONTENT: Record<number, Partial<LessonContentType>> = 
   12: DAYS_8_TO_14_CONTENT["d12-t1-s1"] || {},  // Use of Wanted
   13: DAYS_8_TO_14_CONTENT["d13-t1-s1"] || {},  // Use of Let
   14: DAYS_8_TO_14_CONTENT["d14-t1-s1"] || {},  // Use of Let's
+  // Days 15-21: Would Like To, Can, Should, May, Must, Revision, Used To
+  15: DAYS_15_TO_21_CONTENT["d15-t1-s1"] || {},
+  16: DAYS_15_TO_21_CONTENT["d16-t1-s1"] || {},
+  17: DAYS_15_TO_21_CONTENT["d17-t1-s1"] || {},
+  18: DAYS_15_TO_21_CONTENT["d18-t1-s1"] || {},
+  19: DAYS_15_TO_21_CONTENT["d19-t1-s1"] || {},
+  20: DAYS_15_TO_21_CONTENT["d20-t1-s1"] || {},
+  21: DAYS_15_TO_21_CONTENT["d21-t1-s1"] || {},
 };
 
 // ─── Helper function ──────────────────────────────────────────
@@ -1945,5 +1955,8 @@ export function getSubtopicSpecificContent(
   // Check Days 8-14 rich content map (covers all d8-* through d14-* subtopics)
   const d8to14 = DAYS_8_TO_14_CONTENT[subtopicId];
   if (d8to14) return d8to14;
+  // Check Days 15-21 rich content map
+  const d15to21 = DAYS_15_TO_21_CONTENT[subtopicId];
+  if (d15to21) return d15to21;
   return null;
 }
